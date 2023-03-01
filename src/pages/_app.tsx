@@ -1,6 +1,7 @@
 import { type AppType } from "next/app";
 import { type Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
+import localFont from "next/font/local";
 
 import { api } from "~/utils/api";
 

@@ -7,12 +7,12 @@
 @tailwind utilities;
 
 @font-face {
-  font-family: Benzin;
-  src: url("../../public/Benzin-Semibold.ttf");
-}
-@font-face {
   font-family: Abibas;
   src: url("../../public/Abibas.ttf");
+}
+@font-face {
+  font-family: Benzin;
+  src: url("../../public/Benzin-Semibold.ttf");
 }
 
 html {
