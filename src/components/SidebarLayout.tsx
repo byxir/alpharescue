@@ -193,7 +193,7 @@ export default function SidebarLayout({ children }: { children: ReactNode }) {
               <nav className="grid h-full auto-rows-max content-center gap-2 px-6">
                 {navigation.map((item) => (
                   <Link
-                    href={`rafflebot/${item.pathname}`}
+                    href={`/rafflebot/${item.pathname}`}
                     key={item.name}
                     className={classNames(
                       item.margin ? "mt-5 mb-32" : "",
