@@ -39,11 +39,9 @@ const config = {
         freenft: "#FFFFFF",
       },
       fontFamily: {
-        mon: ["Montserrat", "sans-serif"],
-        ben: ["Benzin", "sans-serif"],
-        abi: ["Abibas", "sans-serif"],
         benzin: ["var(--font-benzin)"],
         montserratBold: ["var(--font-montserratBold)"],
+        abibas: ["var(--font-abibas)"],
       },
     },
   },

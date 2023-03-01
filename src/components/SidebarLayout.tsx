@@ -1,14 +1,39 @@
 /* eslint-disable @next/next/no-img-element */
-import { Fragment, type ReactNode, useState } from "react";
+import { Fragment, type ReactNode, useState, useEffect } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { Settings } from "~/design/icons/Settings";
+import { useRouter } from "next/router";
 
 const navigation = [
-  { name: "Premint", icon: "../../../../premint.png", current: true },
-  { name: "Alphabot", icon: "../../../../alphabot.png", current: false },
-  { name: "Superfull", icon: "../../../../superfull.png", current: false },
+  {
+    name: "Premint",
+    icon: "../../../../premint.png",
+    pathname: "premint",
+  },
+  {
+    name: "Alphabot",
+    icon: "../../../../alphabot.png",
+    pathname: "alphabot",
+  },
+  {
+    name: "Superfull",
+    icon: "../../../../superfull.png",
+    pathname: "superfull",
+  },
+  {
+    name: "FreeNFT",
+    icon: "../../../../freenft.png",
+    pathname: "freenft",
+    noScale: true,
+  },
+  {
+    name: "Мои раффлы",
+    icon: "../../../../star.png",
+    pathname: "myraffles",
+    margin: true,
+  },
 ];
 
 function classNames(...classes: string[]) {
@@ -17,7 +42,28 @@ function classNames(...classes: string[]) {
 
 export default function SidebarLayout({ children }: { children: ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [current, setCurrent] = useState(false);
+  const pathnames = [
+    "premint",
+    "alphabot",
+    "superfull",
+    "freenft",
+    "myraffles",
+  ];
+  const [current, setCurrent] = useState("");
+
+  const urlCurrent = useRouter();
+  console.log("urlCurrent pathname -> ", urlCurrent.pathname);
+  console.log("current -> ", current);
+
+  useEffect(() => {
+    pathnames.forEach((p) => {
+      if (p === urlCurrent.query.platform) {
+        setCurrent(p);
+      } else if (urlCurrent.pathname === "/rafflebot/myraffles") {
+        setCurrent(p);
+      }
+    });
+  }, [urlCurrent.query.platform]);
 
   return (
     <>
@@ -87,7 +133,7 @@ export default function SidebarLayout({ children }: { children: ReactNode }) {
                         <a
                           key={item.name}
                           className={classNames(
-                            item.current
+                            current === item.pathname
                               ? "bg-indigo-800 text-white"
                               : "text-white hover:bg-indigo-600 hover:bg-opacity-75",
                             "group flex items-center rounded-md px-2 py-2 text-base font-medium"
@@ -137,7 +183,7 @@ export default function SidebarLayout({ children }: { children: ReactNode }) {
           <div className="flex min-h-0 flex-1 flex-col bg-sidebarBg font-montserratBold">
             <div className="flex flex-1 flex-col overflow-y-auto pt-5 pb-4">
               <div className="flex-shrink-0 flex-col items-center justify-center px-4">
-                <div className="flex justify-center font-abi text-9xl text-accent">
+                <div className="flex justify-center font-abibas text-9xl text-accent">
                   AR
                 </div>
                 <div className="flex justify-center text-3xl font-bold text-almostwhite">
@@ -147,10 +193,11 @@ export default function SidebarLayout({ children }: { children: ReactNode }) {
               <nav className="grid h-full auto-rows-max content-center gap-2 px-6">
                 {navigation.map((item) => (
                   <Link
-                    href="#"
+                    href={item.pathname}
                     key={item.name}
                     className={classNames(
-                      item.current
+                      item.margin ? "mt-5 mb-32" : "",
+                      current === item.pathname
                         ? "bg-bg text-white"
                         : "text-almostwhite hover:bg-bg hover:bg-opacity-75",
                       "group flex h-max items-center rounded-xl px-3 py-3 text-lg font-bold transition-colors"
@@ -158,46 +205,14 @@ export default function SidebarLayout({ children }: { children: ReactNode }) {
                   >
                     <img
                       src={item.icon}
-                      className="mr-4 h-9 w-9 rounded-sm"
+                      className={`mr-4 w-9 rounded-sm ${
+                        item.noScale ? "h-4 w-9 self-start rounded-sm" : "h-9"
+                      } `}
                       alt="platform icon"
                     />
                     {item.name}
                   </Link>
                 ))}
-                <Link
-                  href="#"
-                  key={"FreeNFT"}
-                  className={classNames(
-                    current
-                      ? "bg-bg text-white"
-                      : "text-almostwhite hover:bg-bg hover:bg-opacity-75",
-                    "group flex h-max items-center rounded-xl px-3 py-3 text-lg font-bold"
-                  )}
-                >
-                  <img
-                    src="../../../freenft.png"
-                    className="mr-4 h-4 w-9 self-start rounded-sm"
-                    alt="platform icon"
-                  />
-                  FreeNFT
-                </Link>
-                <Link
-                  href="#"
-                  key={"Мои раффлы"}
-                  className={classNames(
-                    current
-                      ? "bg-bg text-white"
-                      : "text-almostwhite hover:bg-bg hover:bg-opacity-75",
-                    "group mb-32 mt-5 flex h-max items-center rounded-xl px-3 py-3 text-lg font-bold"
-                  )}
-                >
-                  <img
-                    src="../../../star.png"
-                    className="mr-4 h-9 w-9 rounded-sm"
-                    alt="platform icon"
-                  />
-                  Мои раффлы
-                </Link>
               </nav>
             </div>
             <div className="grid cursor-pointer grid-cols-[repeat(2,_max-content)] justify-center space-x-2 border-t border-subline p-4 transition-colors hover:bg-bg">
@@ -221,7 +236,7 @@ export default function SidebarLayout({ children }: { children: ReactNode }) {
           </div>
           <main className="flex-1">
             <div className="py-6">
-              <div className="p-14 font-montserratBold">{children}</div>
+              <div className="grid p-14 font-montserratBold">{children}</div>
             </div>
           </main>
         </div>

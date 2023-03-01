@@ -20,6 +20,14 @@ const montserrat = localFont({
   ],
   variable: "--font-montserratBold",
 });
+const abibas = localFont({
+  src: [
+    {
+      path: "../fonts/Abibas.ttf",
+    },
+  ],
+  variable: "--font-abibas",
+});
 
 import { api } from "~/utils/api";
 
@@ -32,7 +40,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
   return (
     <main
       lang="en"
-      className={`${benzin.variable} ${montserrat.variable} font-sans`}
+      className={`${benzin.variable} ${abibas.variable} ${montserrat.variable} font-sans`}
     >
       <SessionProvider session={session}>
         <Component {...pageProps} />
