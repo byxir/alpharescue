@@ -42,7 +42,7 @@ const config = {
         mon: ["Montserrat", "sans-serif"],
         ben: ["Benzin", "sans-serif"],
         abi: ["Abibas", "sans-serif"],
-        benzin: ["var(--font-poppins)"],
+        benzin: ["var(--font-benzin)"],
       },
     },
   },

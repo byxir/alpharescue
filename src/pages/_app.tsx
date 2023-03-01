@@ -9,7 +9,7 @@ const benzin = localFont({
       path: "../fonts/Benzin-Semibold.ttf",
     },
   ],
-  variable: "--font-Benzin",
+  variable: "--font-benzin",
 });
 
 import { api } from "~/utils/api";
