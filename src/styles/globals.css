@@ -20,3 +20,7 @@ html {
   background-color: #121212;
   color: #e2e2e2;
 }
+
+::-webkit-scrollbar {
+  display: none;
+}

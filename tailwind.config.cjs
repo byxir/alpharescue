@@ -43,9 +43,6 @@ const config = {
         ben: ["Benzin", "sans-serif"],
         abi: ["Abibas", "sans-serif"],
       },
-      boxShadow: {
-        equal: "0px 0px 20px 0px rgba(100, 100, 111, 0.2)",
-      },
     },
   },
   plugins: [],
