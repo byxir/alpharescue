@@ -12,7 +12,7 @@ const RaffleList = () => {
   return (
     <SidebarLayout>
       <div className="grid grid-cols-[max-content_max-content] justify-between">
-        <h1 className="font-ben text-4xl">Список Раффлов</h1>
+        <h1 className="font-benzin text-4xl">Список Раффлов</h1>
         <div className="grid grid-cols-4 gap-4">
           <div
             onClick={() => setCurrent(1)}
@@ -83,7 +83,7 @@ const RaffleList = () => {
                 {r.platform}
               </div>
               <div className="grid grid-cols-[80%_48px] items-center justify-between">
-                <div className="mt-1 h-max font-ben text-2xl">{r.name}</div>
+                <div className="mt-1 h-max font-benzin text-2xl">{r.name}</div>
                 <div className="grid h-max w-12 justify-items-center">
                   <img
                     src="../../../../star.png"
