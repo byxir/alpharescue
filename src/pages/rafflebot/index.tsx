@@ -13,7 +13,7 @@ const RaffleList = () => {
     <SidebarLayout>
       <div className="grid grid-cols-[max-content_max-content] justify-between">
         <h1 className="font-benzin text-4xl">Список Раффлов</h1>
-        <div className="grid grid-cols-4 gap-4">
+        <div className="grid grid-cols-4 gap-4 font-montserratBold">
           <div
             onClick={() => setCurrent(1)}
             className={`grid cursor-pointer items-center justify-items-center rounded-xl border-2 px-6 font-bold transition-colors  ${
@@ -58,11 +58,11 @@ const RaffleList = () => {
               className="h-full w-full border-none bg-element placeholder-subtext outline-none"
             />
           </div>
-          <div className="flex h-12 w-max items-center space-x-1 rounded-xl bg-element px-6 text-subtext">
+          <div className="flex h-12 w-max cursor-pointer items-center space-x-1 rounded-xl bg-element px-6 text-subtext transition-colors hover:bg-neutral-900">
             <Filter />
             <p>Фильтр</p>
           </div>
-          <div className="flex h-12 w-max items-center space-x-2 rounded-xl bg-element px-6 text-subtext">
+          <div className="flex h-12 w-max cursor-pointer items-center space-x-2 rounded-xl bg-element px-6 text-subtext transition-colors hover:bg-neutral-900">
             <YourLink />
             <p>Загрузить свою ссылку</p>
           </div>
@@ -79,11 +79,17 @@ const RaffleList = () => {
               />
             </div>
             <div className="mt-3 px-6 pb-6">
-              <div className={`text-${r.platform} font-bold capitalize`}>
-                {r.platform}
-              </div>
               <div className="grid grid-cols-[80%_48px] items-center justify-between">
-                <div className="mt-1 h-max font-benzin text-2xl">{r.name}</div>
+                <div className="relative mt-8 h-max font-benzin text-2xl">
+                  {r.name}
+                  <div className="absolute -top-24 grid h-20 w-20 items-center justify-items-center rounded-lg bg-element shadow-md">
+                    <img
+                      src={r.profilePicture}
+                      className="h-16 w-16 rounded-lg"
+                      alt=""
+                    />
+                  </div>
+                </div>
                 <div className="grid h-max w-12 justify-items-center">
                   <img
                     src="../../../../star.png"
@@ -95,7 +101,7 @@ const RaffleList = () => {
               <div className="mt-2 font-semibold text-subtext">
                 By {r.author}
               </div>
-              <div className="mt-10 grid grid-cols-[max-content_max-content_max-content_56px] gap-6">
+              <div className="mt-10 grid grid-cols-[max-content_max-content_max-content_auto] gap-6">
                 <div className="">
                   <div className="text-lg font-bold text-almostwhite">
                     0.34 ETH
@@ -119,7 +125,20 @@ const RaffleList = () => {
                     <p>Дедлайн</p>
                   </div>
                 </div>
-                <div className="grid grid-cols-2 grid-rows-2"></div>
+                <div className="grid w-full grid-cols-[max-content_max-content] grid-rows-2 justify-end gap-1">
+                  <div className="h-8 w-8">
+                    <img src="../../../../metamask.png" alt="" />
+                  </div>
+                  <div className="h-8 w-8">
+                    <img src="../../../../twitter.png" alt="" />
+                  </div>
+                  <div className="h-8 w-8">
+                    <img src="../../../../discord.png" alt="" />
+                  </div>
+                  <div className="h-8 w-8">
+                    <img src="../../../../nfticon.png" alt="" />
+                  </div>
+                </div>
               </div>
             </div>
           </div>

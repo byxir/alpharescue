@@ -134,7 +134,7 @@ export default function SidebarLayout({ children }: { children: ReactNode }) {
         {/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */}
         <div className="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-64 lg:flex-col">
           {/* Sidebar component, swap this element with another sidebar if you like */}
-          <div className="flex min-h-0 flex-1 flex-col bg-sidebarBg">
+          <div className="flex min-h-0 flex-1 flex-col bg-sidebarBg font-montserratBold">
             <div className="flex flex-1 flex-col overflow-y-auto pt-5 pb-4">
               <div className="flex-shrink-0 flex-col items-center justify-center px-4">
                 <div className="flex justify-center font-abi text-9xl text-accent">
@@ -200,7 +200,7 @@ export default function SidebarLayout({ children }: { children: ReactNode }) {
                 </Link>
               </nav>
             </div>
-            <div className="flex flex-shrink-0 cursor-pointer space-x-2 border-t border-subline p-4 transition-colors hover:bg-bg">
+            <div className="grid cursor-pointer grid-cols-[repeat(2,_max-content)] justify-center space-x-2 border-t border-subline p-4 transition-colors hover:bg-bg">
               <Settings />
               <div className="font-mon font-bold text-almostwhite">
                 Settings
@@ -221,7 +221,7 @@ export default function SidebarLayout({ children }: { children: ReactNode }) {
           </div>
           <main className="flex-1">
             <div className="py-6">
-              <div className="p-14">{children}</div>
+              <div className="p-14 font-montserratBold">{children}</div>
             </div>
           </main>
         </div>
