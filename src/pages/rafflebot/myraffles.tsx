@@ -83,7 +83,7 @@ const RaffleList = () => {
               >
                 {r.platform}
               </div>
-              <div className="grid grid-cols-[80%_48px] items-center justify-between">
+              <div className="grid grid-cols-[auto_48px] items-center justify-between">
                 <div className="relative mt-1 h-max font-benzin text-2xl">
                   {r.name}
                   <div className="absolute -top-24 grid h-20 w-20 items-center justify-items-center rounded-lg bg-element shadow-md">

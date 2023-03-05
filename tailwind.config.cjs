@@ -16,14 +16,11 @@ const config = {
         xl: "1280px",
         // => @media (min-width: 1280px) { ... }
 
-        xls: "1420px",
-        // => @media (min-width: 1400px) { ... }
-
-        "2xl": "1536px",
+        "2xl": "1560px",
         // => @media (min-width: 1536px) { ... }
 
-        "2xls": "1670px",
-        // => @media (min-width: 1660px) { ... }
+        "2xls": "1800px",
+        // => @media (min-width: 1800px) { ... }
       },
       colors: {
         subtext: "#989898",
