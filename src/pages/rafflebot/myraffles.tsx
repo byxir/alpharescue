@@ -1,3 +1,4 @@
+import localFont from "next/font/local";
 import { useState } from "react";
 import SidebarLayout from "~/components/SidebarLayout";
 import { Filter } from "~/design/icons/Filter";
@@ -11,54 +12,48 @@ const RaffleList = () => {
 
   return (
     <SidebarLayout>
-      <div className="grid grid-cols-[max-content_max-content] justify-between">
-        <h1 className="font-benzin text-4xl">Мои Раффлы</h1>
-        <div className="grid grid-cols-5 gap-4 font-montserratBold">
+      <div
+        className={`grid grid-cols-1 justify-between font-sans 2xl:grid-cols-[max-content_max-content]`}
+      >
+        <h1 className="font-benzin text-3xl md:text-4xl">Мои раффлы</h1>
+        <div className="mt-10 grid w-max grid-cols-2 grid-rows-2 gap-4 justify-self-center font-montserratBold md:grid-cols-4 md:grid-rows-1 2xl:mt-0">
           <div
             onClick={() => setCurrent(1)}
-            className={`grid cursor-pointer items-center justify-items-center rounded-xl border-2 px-6 font-bold transition-colors  ${
+            className={`grid h-10 cursor-pointer items-center justify-items-center rounded-xl border-2 px-4 text-xs font-bold transition-colors md:text-base xl:px-6  ${
               current === 1 ? "border-accent" : "border-subline"
             }`}
           >
-            All
+            Подборка
           </div>
           <div
             onClick={() => setCurrent(2)}
-            className={`grid cursor-pointer items-center justify-items-center rounded-xl border-2 px-6 font-bold transition-colors  ${
+            className={`grid h-10 cursor-pointer items-center justify-items-center rounded-xl border-2 px-4 text-xs font-bold transition-colors md:text-base xl:px-6  ${
               current === 2 ? "border-accent" : "border-subline"
             }`}
           >
-            Premint
+            Топ за день
           </div>
           <div
             onClick={() => setCurrent(3)}
-            className={`grid cursor-pointer items-center justify-items-center rounded-xl border-2 px-6 font-bold transition-colors  ${
+            className={`grid h-10 cursor-pointer items-center justify-items-center rounded-xl border-2 px-4 text-xs font-bold transition-colors md:text-base xl:px-6  ${
               current === 3 ? "border-accent" : "border-subline"
             }`}
           >
-            Alphabot
+            Топ за неделю
           </div>
           <div
             onClick={() => setCurrent(4)}
-            className={`grid cursor-pointer items-center justify-items-center rounded-xl border-2 px-6 font-bold transition-colors  ${
+            className={`grid h-10 cursor-pointer items-center justify-items-center rounded-xl border-2 px-4 text-xs font-bold transition-colors md:text-base xl:px-6  ${
               current === 4 ? "border-accent" : "border-subline"
             }`}
           >
-            Superfull
-          </div>
-          <div
-            onClick={() => setCurrent(5)}
-            className={`grid cursor-pointer items-center justify-items-center rounded-xl border-2 px-6 font-bold transition-colors  ${
-              current === 5 ? "border-accent" : "border-subline"
-            }`}
-          >
-            FreeNFT
+            Новые
           </div>
         </div>
       </div>
-      <div className="mt-14 mb-10 grid justify-items-center">
-        <div className="grid grid-cols-[repeat(3,_max-content)] gap-4 font-bold">
-          <div className="flex h-12 w-72 items-center space-x-1 rounded-xl bg-element pl-6 pr-2 text-subtext">
+      <div className="mt-10 mb-10 grid justify-items-center">
+        <div className="grid justify-items-center font-bold">
+          <div className="flex h-12 w-48 items-center space-x-1 rounded-xl bg-element pl-6 pr-2 text-sm text-subtext md:w-72 md:text-base">
             <Search />
             <input
               placeholder="Поиск"
@@ -67,9 +62,12 @@ const RaffleList = () => {
           </div>
         </div>
       </div>
-      <div className="grid grid-flow-row grid-cols-3 gap-7">
+      <div className="grid grid-flow-row grid-cols-1 gap-7 md:grid-cols-2 xl:grid-cols-3">
         {raffles.map((r) => (
-          <div className="grid rounded-xl bg-element shadow-md" key={r.id}>
+          <div
+            className="min-w-104 grid rounded-xl bg-element shadow-md"
+            key={r.id}
+          >
             <div className="h-28">
               <img
                 src={r.benner}
@@ -78,23 +76,21 @@ const RaffleList = () => {
               />
             </div>
             <div className="mt-3 px-6 pb-6">
-              <div
-                className={`text-${r.platform} ml-24 mb-1.5 font-bold capitalize`}
-              >
+              <div className={`text-${r.platform} justify ml-24 capitalize`}>
                 {r.platform}
               </div>
               <div className="grid grid-cols-[auto_48px] items-center justify-between">
-                <div className="relative mt-1 h-max font-benzin text-2xl">
+                <div className="relative mt-4 h-max font-benzin text-2xl">
                   {r.name}
-                  <div className="absolute -top-24 grid h-20 w-20 items-center justify-items-center rounded-lg bg-element shadow-md">
+                  <div className="absolute -top-24 grid h-20 w-20 items-center justify-items-center rounded-xl bg-element shadow-md">
                     <img
                       src={r.profilePicture}
-                      className="h-16 w-16 rounded-lg"
+                      className="h-16 w-16 rounded-xl"
                       alt=""
                     />
                   </div>
                 </div>
-                <div className="grid h-max w-12 justify-items-center">
+                <div className="mt-3 grid h-max w-12 justify-items-center">
                   <img
                     src="../../../../star.png"
                     className="h-6 w-6"
@@ -105,7 +101,7 @@ const RaffleList = () => {
               <div className="mt-2 font-semibold text-subtext">
                 By {r.author}
               </div>
-              <div className="mt-10 grid grid-cols-[max-content_max-content_max-content_auto] gap-6">
+              <div className="mt-10 grid grid-cols-[max-content_max-content] grid-rows-[max-content_max-content] justify-evenly gap-6 sm:grid-cols-[repeat(4,_max-content)] md:grid-cols-[max-content_max-content] md:grid-rows-[max-content_max-content] 2xls:grid-cols-[max-content_max-content_max-content_auto] 2xls:grid-rows-1">
                 <div className="">
                   <div className="text-lg font-bold text-almostwhite">
                     0.34 ETH

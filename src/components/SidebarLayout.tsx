@@ -159,7 +159,7 @@ export default function SidebarLayout({ children }: { children: ReactNode }) {
                         Raffle Bot
                       </div>
                     </div>
-                    <nav className="grid h-full auto-rows-max content-center gap-2 px-6 font-montserratBold">
+                    <nav className="grid h-full auto-rows-max gap-2 px-6 pt-28 font-montserratBold">
                       {navigation.map((item) => (
                         <Link
                           href={`/rafflebot/${item.pathname}`}
