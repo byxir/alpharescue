@@ -5,6 +5,32 @@ import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { Settings } from "~/design/icons/Settings";
 import { useRouter } from "next/router";
+import localFont from "next/font/local";
+
+const benzin = localFont({
+  src: [
+    {
+      path: "../fonts/Benzin-Semibold.ttf",
+    },
+  ],
+  variable: "--font-benzin",
+});
+const montserrat = localFont({
+  src: [
+    {
+      path: "../fonts/Montserrat-Bold.ttf",
+    },
+  ],
+  variable: "--font-montserratBold",
+});
+const abibas = localFont({
+  src: [
+    {
+      path: "../fonts/Abibas.ttf",
+    },
+  ],
+  variable: "--font-abibas",
+});
 
 const navigation = [
   {
@@ -67,7 +93,9 @@ export default function SidebarLayout({ children }: { children: ReactNode }) {
 
   return (
     <>
-      <div>
+      <div
+        className={`${benzin.variable} ${abibas.variable} ${montserrat.variable} font-sans`}
+      >
         <Transition.Root show={sidebarOpen} as={Fragment}>
           <Dialog
             as="div"
@@ -120,16 +148,18 @@ export default function SidebarLayout({ children }: { children: ReactNode }) {
                       </button>
                     </div>
                   </Transition.Child>
-                  <div className="h-0 flex-1 overflow-y-auto pt-5 pb-4">
+                  <div
+                    className={`${benzin.variable} ${abibas.variable} ${montserrat.variable} h-0 flex-1 overflow-y-auto pt-5 pb-4 font-sans`}
+                  >
                     <div className="flex-shrink-0 flex-col items-center justify-center px-4">
                       <div className="flex justify-center font-abibas text-9xl text-accent">
                         AR
                       </div>
-                      <div className="flex justify-center text-3xl font-bold text-almostwhite">
+                      <div className="flex justify-center font-montserratBold text-3xl font-bold text-almostwhite">
                         Raffle Bot
                       </div>
                     </div>
-                    <nav className="grid h-full auto-rows-max content-center gap-2 px-6">
+                    <nav className="grid h-full auto-rows-max content-center gap-2 px-6 font-montserratBold">
                       {navigation.map((item) => (
                         <Link
                           href={`/rafflebot/${item.pathname}`}
@@ -156,7 +186,7 @@ export default function SidebarLayout({ children }: { children: ReactNode }) {
                       ))}
                     </nav>
                   </div>
-                  <div className="grid cursor-pointer grid-cols-[repeat(2,_max-content)] justify-center space-x-2 border-t border-subline p-4 transition-colors hover:bg-bg">
+                  <div className="grid cursor-pointer grid-cols-[repeat(2,_max-content)] justify-center space-x-2 border-t border-subline p-4 font-montserratBold transition-colors hover:bg-bg">
                     <Settings />
                     <div className="font-mon font-bold text-almostwhite">
                       Settings

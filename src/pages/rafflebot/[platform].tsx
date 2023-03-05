@@ -1,3 +1,4 @@
+import localFont from "next/font/local";
 import { useState } from "react";
 import SidebarLayout from "~/components/SidebarLayout";
 import { Filter } from "~/design/icons/Filter";
@@ -11,7 +12,9 @@ const RaffleList = () => {
 
   return (
     <SidebarLayout>
-      <div className="grid grid-cols-1 justify-between 2xl:grid-cols-[max-content_max-content]">
+      <div
+        className={`grid grid-cols-1 justify-between font-sans 2xl:grid-cols-[max-content_max-content]`}
+      >
         <h1 className="font-benzin text-3xl md:text-4xl">Список Раффлов</h1>
         <div className="mt-10 grid w-max grid-cols-2 grid-rows-2 gap-4 justify-self-center font-montserratBold md:grid-cols-4 md:grid-rows-1 2xl:mt-0">
           <div
