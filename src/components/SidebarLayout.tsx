@@ -263,9 +263,9 @@ export default function SidebarLayout({ children }: { children: ReactNode }) {
               />
             </button>
           </div>
-          <main className="flex-1">
-            <div className="py-6">
-              <div className="grid bg-bg px-4 font-montserratBold md:p-10 2xl:p-14">
+          <main className="">
+            <div className="">
+              <div className="grid h-full w-full bg-bg font-montserratBold">
                 {children}
               </div>
             </div>

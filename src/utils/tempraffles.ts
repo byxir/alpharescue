@@ -10,12 +10,23 @@ export const raffles = [
     hold: 0,
     subs: 66000,
     deadline: "10/06/2003",
-    links: {
-      metamask: "twitch.tv/byxirski",
-      discord: "twitch.tv/byxirski",
-      twitter: "twitch.tv/byxirski",
-      nft: "twitch.tv/byxirski",
-    },
+    requirements: [
+      {
+        platform: "twitter",
+        action: "Follow",
+        specification: "@0xDEGEN, @RESCUE",
+      },
+      {
+        platform: "metamask",
+        action: "Hold",
+        specification: "0.5 ETH",
+      },
+      {
+        platform: "discord",
+        action: "Join",
+        specification: "GENESIS DISCORD, MEMBER ROLE",
+      },
+    ],
   },
   {
     id: "falskjdflkajdhfljsf",
@@ -28,12 +39,23 @@ export const raffles = [
     hold: 0,
     subs: 66000,
     deadline: "10/06/2003",
-    links: {
-      metamask: "twitch.tv/byxirski",
-      discord: "twitch.tv/byxirski",
-      twitter: "twitch.tv/byxirski",
-      nft: "twitch.tv/byxirski",
-    },
+    requirements: [
+      {
+        platform: "twitter",
+        action: "Follow",
+        specification: "@0xDEGEN, @RESCUE",
+      },
+      {
+        platform: "metamask",
+        action: "Hold",
+        specification: "0.5 ETH",
+      },
+      {
+        platform: "discord",
+        action: "Join",
+        specification: "GENESIS DISCORD, MEMBER ROLE",
+      },
+    ],
   },
   {
     id: "falskjdflkajdhfljsf",
@@ -46,12 +68,23 @@ export const raffles = [
     hold: 0,
     subs: 66000,
     deadline: "10/06/2003",
-    links: {
-      metamask: "twitch.tv/byxirski",
-      discord: "twitch.tv/byxirski",
-      twitter: "twitch.tv/byxirski",
-      nft: "twitch.tv/byxirski",
-    },
+    requirements: [
+      {
+        platform: "twitter",
+        action: "Follow",
+        specification: "@0xDEGEN, @RESCUE",
+      },
+      {
+        platform: "metamask",
+        action: "Hold",
+        specification: "0.5 ETH",
+      },
+      {
+        platform: "discord",
+        action: "Join",
+        specification: "GENESIS DISCORD, MEMBER ROLE",
+      },
+    ],
   },
   {
     id: "falskjdflkajdhfljsf",
@@ -64,12 +97,23 @@ export const raffles = [
     hold: 0,
     subs: 66000,
     deadline: "10/06/2003",
-    links: {
-      metamask: "twitch.tv/byxirski",
-      discord: "twitch.tv/byxirski",
-      twitter: "twitch.tv/byxirski",
-      nft: "twitch.tv/byxirski",
-    },
+    requirements: [
+      {
+        platform: "twitter",
+        action: "Follow",
+        specification: "@0xDEGEN, @RESCUE",
+      },
+      {
+        platform: "metamask",
+        action: "Hold",
+        specification: "0.5 ETH",
+      },
+      {
+        platform: "discord",
+        action: "Join",
+        specification: "GENESIS DISCORD, MEMBER ROLE",
+      },
+    ],
   },
   {
     id: "falskjdflkajdhfljsf",
@@ -82,12 +126,23 @@ export const raffles = [
     hold: 0,
     subs: 66000,
     deadline: "10/06/2003",
-    links: {
-      metamask: "twitch.tv/byxirski",
-      discord: "twitch.tv/byxirski",
-      twitter: "twitch.tv/byxirski",
-      nft: "twitch.tv/byxirski",
-    },
+    requirements: [
+      {
+        platform: "twitter",
+        action: "Follow",
+        specification: "@0xDEGEN, @RESCUE",
+      },
+      {
+        platform: "metamask",
+        action: "Hold",
+        specification: "0.5 ETH",
+      },
+      {
+        platform: "discord",
+        action: "Join",
+        specification: "GENESIS DISCORD, MEMBER ROLE",
+      },
+    ],
   },
   {
     id: "falskjdflkajdhfljsf",
@@ -100,12 +155,23 @@ export const raffles = [
     hold: 0,
     subs: 66000,
     deadline: "10/06/2003",
-    links: {
-      metamask: "twitch.tv/byxirski",
-      discord: "twitch.tv/byxirski",
-      twitter: "twitch.tv/byxirski",
-      nft: "twitch.tv/byxirski",
-    },
+    requirements: [
+      {
+        platform: "twitter",
+        action: "Follow",
+        specification: "@0xDEGEN, @RESCUE",
+      },
+      {
+        platform: "metamask",
+        action: "Hold",
+        specification: "0.5 ETH",
+      },
+      {
+        platform: "discord",
+        action: "Join",
+        specification: "GENESIS DISCORD, MEMBER ROLE",
+      },
+    ],
   },
   {
     id: "falskjdflkajdhfljsf",
@@ -118,12 +184,23 @@ export const raffles = [
     hold: 0,
     subs: 66000,
     deadline: "10/06/2003",
-    links: {
-      metamask: "twitch.tv/byxirski",
-      discord: "twitch.tv/byxirski",
-      twitter: "twitch.tv/byxirski",
-      nft: "twitch.tv/byxirski",
-    },
+    requirements: [
+      {
+        platform: "twitter",
+        action: "Follow",
+        specification: "@0xDEGEN, @RESCUE",
+      },
+      {
+        platform: "metamask",
+        action: "Hold",
+        specification: "0.5 ETH",
+      },
+      {
+        platform: "discord",
+        action: "Join",
+        specification: "GENESIS DISCORD, MEMBER ROLE",
+      },
+    ],
   },
   {
     id: "falskjdflkajdhfljsf",
@@ -136,12 +213,23 @@ export const raffles = [
     hold: 0,
     subs: 66000,
     deadline: "10/06/2003",
-    links: {
-      metamask: "twitch.tv/byxirski",
-      discord: "twitch.tv/byxirski",
-      twitter: "twitch.tv/byxirski",
-      nft: "twitch.tv/byxirski",
-    },
+    requirements: [
+      {
+        platform: "twitter",
+        action: "Follow",
+        specification: "@0xDEGEN, @RESCUE",
+      },
+      {
+        platform: "metamask",
+        action: "Hold",
+        specification: "0.5 ETH",
+      },
+      {
+        platform: "discord",
+        action: "Join",
+        specification: "GENESIS DISCORD, MEMBER ROLE",
+      },
+    ],
   },
   {
     id: "falskjdflkajdhfljsf",
@@ -154,12 +242,23 @@ export const raffles = [
     hold: 0,
     subs: 66000,
     deadline: "10/06/2003",
-    links: {
-      metamask: "twitch.tv/byxirski",
-      discord: "twitch.tv/byxirski",
-      twitter: "twitch.tv/byxirski",
-      nft: "twitch.tv/byxirski",
-    },
+    requirements: [
+      {
+        platform: "twitter",
+        action: "Follow",
+        specification: "@0xDEGEN, @RESCUE",
+      },
+      {
+        platform: "metamask",
+        action: "Hold",
+        specification: "0.5 ETH",
+      },
+      {
+        platform: "discord",
+        action: "Join",
+        specification: "GENESIS DISCORD, MEMBER ROLE",
+      },
+    ],
   },
   {
     id: "falskjdflkajdhfljsf",
@@ -172,11 +271,22 @@ export const raffles = [
     hold: 0,
     subs: 66000,
     deadline: "10/06/2003",
-    links: {
-      metamask: "twitch.tv/byxirski",
-      discord: "twitch.tv/byxirski",
-      twitter: "twitch.tv/byxirski",
-      nft: "twitch.tv/byxirski",
-    },
+    requirements: [
+      {
+        platform: "twitter",
+        action: "Follow",
+        specification: "@0xDEGEN, @RESCUE",
+      },
+      {
+        platform: "metamask",
+        action: "Hold",
+        specification: "0.5 ETH",
+      },
+      {
+        platform: "discord",
+        action: "Join",
+        specification: "GENESIS DISCORD, MEMBER ROLE",
+      },
+    ],
   },
 ];

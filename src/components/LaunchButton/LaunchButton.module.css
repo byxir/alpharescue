@@ -1,0 +1,53 @@
+.button {
+  position: relative;
+  display: inline-block;
+  margin: -4px 7px 16px 7px;
+  cursor: pointer;
+}
+
+.button span {
+  color: black;
+  font-weight: bold;
+  font-size: 36px;
+  text-align: center;
+  text-decoration: none;
+  background-color: #e2babb;
+  display: block;
+  position: relative;
+  padding: 20px 40px 28px 40px;
+
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  filter: dropshadow(color=#000, offx=0px, offy=1px);
+
+  -webkit-box-shadow: inset 0 1px 0 #fdd4f8, 0 10px 0 #685a5b;
+  -moz-box-shadow: inset 0 1px 0 #fdd4f8, 0 10px 0 #685a5b;
+  box-shadow: inset 0 1px 0 #fdd4f8, 0 10px 0 #685a5b;
+
+  -webkit-border-radius: 12px;
+  -moz-border-radius: 12px;
+  border-radius: 12px;
+}
+
+.button span:active {
+  top: 10px;
+  background-color: #b98d8e;
+
+  -webkit-box-shadow: inset 0 1px 0 #ffc4e0, inset 0 -3px 0 #685a5b;
+  -moz-box-shadow: inset 0 1px 0 #ffc4e0, inset 0 -3pxpx 0 #685a5b;
+  box-shadow: inset 0 1px 0 #ffc4e0, inset 0 -3px 0 #685a5b;
+}
+
+.button:after {
+  content: "";
+  height: 100%;
+  width: 100%;
+  padding: 4px;
+  position: absolute;
+  bottom: -15px;
+  left: -4px;
+  z-index: -1;
+  background-color: #000000;
+  -webkit-border-radius: 12px;
+  -moz-border-radius: 12px;
+  border-radius: 12px;
+}
