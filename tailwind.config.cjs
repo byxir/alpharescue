@@ -3,6 +3,9 @@ const config = {
   content: ["./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
+      spacing: {
+        100: "690px",
+      },
       screens: {
         sm: "640px",
         // => @media (min-width: 640px) { ... }

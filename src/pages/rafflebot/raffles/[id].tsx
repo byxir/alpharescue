@@ -1,9 +1,18 @@
+/* eslint-disable @next/next/no-img-element */
 import LaunchButton from "~/components/LaunchButton/LaunchButton";
 import SidebarLayout from "~/components/SidebarLayout";
 import { raffles } from "~/utils/tempraffles";
+import Slider from "@mui/material/Slider";
+import { useState } from "react";
+import { RangeSlider } from "~/components/RangeSlider";
+import { accounts } from "~/utils/tempaccounts";
 
 const Raffle = () => {
   const r = raffles[0];
+  const [rangeValue, setRangeValue] = useState<number[]>([0, 1000]);
+  const handleChangeRange = (e: Event, newValue: number | number[]) => {
+    setRangeValue(newValue as number[]);
+  };
   return (
     <SidebarLayout>
       <div className="grid h-screen w-full grid-cols-[43%_57%] border-subline text-almostwhite">
@@ -84,7 +93,7 @@ const Raffle = () => {
             </div>
           </div>
         ) : null}
-        <div className="p-14">
+        <div className="h-screen px-10 pt-11">
           <div className="grid grid-cols-[max-content_max-content] items-center justify-between">
             <div className="mb-4">
               <div className="mb-6 text-xl">Выбрать готовую конфигурацию</div>
@@ -104,6 +113,39 @@ const Raffle = () => {
               </div>
             </div>
             <LaunchButton />
+          </div>
+          <div className="mt-16 grid grid-cols-[max-content_300px] items-center justify-between">
+            <div className="text-xl">Настроить конфигурацию</div>
+            <div className="mr-5 grid grid-cols-[max-content_auto_max-content] items-center">
+              <div className="mr-5">0</div>
+              <RangeSlider
+                getAriaLabel={() => "Account range"}
+                value={rangeValue}
+                onChange={handleChangeRange}
+                valueLabelDisplay="auto"
+                min={0}
+                max={1000}
+                step={5}
+              />
+              <div className="ml-5">1320</div>
+            </div>
+          </div>
+          <div className="mt-12">
+            <div className="mb-6 grid grid-cols-[10%_22.5%_22.5%_22.5%_22.5%] rounded-xl border-2 border-subtext bg-element py-4 px-6 text-subtext">
+              <span>#</span>
+              <span>Twitter</span>
+              <span>Discord</span>
+              <span>Metamask</span>
+              <span className="mr-10">Proxy</span>
+            </div>
+            <div className="h-100 overflow-auto">
+              {accounts.map((a) => (
+                <div
+                  className="mb-4 h-14 w-full rounded-xl border border-subline"
+                  key={a.Twitter}
+                ></div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
