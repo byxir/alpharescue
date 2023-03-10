@@ -151,7 +151,7 @@ export default function SidebarLayout({ children }: { children: ReactNode }) {
                   <div
                     className={`${benzin.variable} ${abibas.variable} ${montserrat.variable} h-0 flex-1 overflow-y-auto pt-5 pb-4 font-sans`}
                   >
-                    <div className="flex-shrink-0 flex-col items-center justify-center px-4">
+                    <div className="h-max items-center justify-center px-4">
                       <div className="flex justify-center font-abibas text-9xl text-accent">
                         AR
                       </div>
@@ -159,13 +159,13 @@ export default function SidebarLayout({ children }: { children: ReactNode }) {
                         Raffle Bot
                       </div>
                     </div>
-                    <nav className="grid h-full auto-rows-max gap-2 px-6 pt-28 font-montserratBold">
+                    <nav className="mt-20 grid h-max auto-rows-max gap-2 px-6 font-montserratBold">
                       {navigation.map((item) => (
                         <Link
                           href={`/rafflebot/${item.pathname}`}
                           key={item.name}
                           className={classNames(
-                            item.margin ? "mt-5 mb-32" : "",
+                            item.margin ? "mt-5" : "",
                             current === item.pathname
                               ? "bg-bg text-white"
                               : "text-almostwhite hover:bg-bg hover:bg-opacity-75",
