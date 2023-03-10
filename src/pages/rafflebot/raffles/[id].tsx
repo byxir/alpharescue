@@ -14,6 +14,7 @@ const Raffle = () => {
     setRangeValue(newValue as number[]);
   };
   const [activeAccounts, setActiveAccounts] = useState<string[]>([]);
+  const [activeConfiguration, setActiveConfiguration] = useState(0);
 
   const handleActive = (account: string) => {
     if (activeAccounts.includes(account)) {
@@ -61,7 +62,7 @@ const Raffle = () => {
                   {r.name}
                 </div>
                 <div className="mt-3 text-subtext">By {r.author}</div>
-                <div className="mt-10 grid grid-cols-[repeat(3,_max-content)] gap-6">
+                <div className="mt-10 grid grid-cols-[repeat(2,_max-content)] gap-3 sm:grid-cols-[repeat(3,_max-content)] sm:gap-6">
                   <div className="grid h-20 grid-rows-[repeat(2,_max-content)]">
                     <div className="h-max text-2xl">{r.hold} ETH</div>
                     <div className="text-md text-sm text-subtext">
@@ -116,16 +117,44 @@ const Raffle = () => {
                 Выбрать готовую конфигурацию
               </div>
               <div className="grid grid-cols-[repeat(4,_max-content)] gap-2">
-                <div className="grid h-12 w-12 cursor-pointer items-center justify-items-center rounded-lg bg-element text-2xl shadow-md transition-colors hover:bg-neutral-900">
+                <div
+                  onClick={() => setActiveConfiguration(1)}
+                  className={`grid h-12 w-12 cursor-pointer items-center justify-items-center rounded-lg bg-element text-2xl shadow-md transition-colors hover:bg-neutral-900 ${
+                    activeConfiguration === 1
+                      ? "border-2 border-almostwhite"
+                      : ""
+                  }`}
+                >
                   1
                 </div>
-                <div className="grid h-12 w-12 cursor-pointer items-center justify-items-center rounded-lg bg-element text-2xl shadow-md transition-colors hover:bg-neutral-900">
+                <div
+                  onClick={() => setActiveConfiguration(2)}
+                  className={`grid h-12 w-12 cursor-pointer items-center justify-items-center rounded-lg bg-element text-2xl shadow-md transition-colors hover:bg-neutral-900 ${
+                    activeConfiguration === 2
+                      ? "border-2 border-almostwhite"
+                      : ""
+                  }`}
+                >
                   2
                 </div>
-                <div className="grid h-12 w-12 cursor-pointer items-center justify-items-center rounded-lg bg-element text-2xl shadow-md transition-colors hover:bg-neutral-900">
+                <div
+                  onClick={() => setActiveConfiguration(3)}
+                  className={`grid h-12 w-12 cursor-pointer items-center justify-items-center rounded-lg bg-element text-2xl shadow-md transition-colors hover:bg-neutral-900 ${
+                    activeConfiguration === 3
+                      ? "border-2 border-almostwhite"
+                      : ""
+                  }`}
+                >
                   3
                 </div>
-                <div className="grid h-12 w-12 cursor-pointer items-center justify-items-center rounded-lg bg-element text-2xl shadow-md transition-colors hover:bg-neutral-900">
+                <div
+                  onClick={() => setActiveConfiguration(4)}
+                  className={`grid h-12 w-12 cursor-pointer items-center justify-items-center rounded-lg bg-element text-2xl shadow-md transition-colors hover:bg-neutral-900 ${
+                    activeConfiguration === 4
+                      ? "border-2 border-almostwhite"
+                      : ""
+                  }`}
+                >
                   4
                 </div>
               </div>
