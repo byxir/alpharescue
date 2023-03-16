@@ -215,7 +215,7 @@ const RaffleList = () => {
                 </div>
               </div>
             </div>
-            <div className="grid h-32 cursor-pointer items-center justify-items-center self-end rounded-xl bg-element text-2xl text-almostwhite shadow-md transition-colors hover:bg-neutral-900">
+            <div className="mt-8 grid h-32 cursor-pointer items-center justify-items-center self-end rounded-xl bg-element text-2xl text-almostwhite shadow-md transition-colors hover:bg-neutral-900">
               Изменить аккаунты
             </div>
           </div>
