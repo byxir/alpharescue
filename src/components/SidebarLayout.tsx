@@ -69,10 +69,10 @@ function classNames(...classes: string[]) {
 export default function SidebarLayout({ children }: { children: ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const pathnames = [
-    "premint",
-    "alphabot",
-    "superfull",
-    "freenft",
+    "platforms/premint",
+    "platforms/alphabot",
+    "platforms/superfull",
+    "platforms/freenft",
     "myraffles",
   ];
   const [current, setCurrent] = useState("");
