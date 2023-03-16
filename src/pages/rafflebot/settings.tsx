@@ -1,6 +1,5 @@
-import { useState } from "react";
 import SidebarLayout from "~/components/SidebarLayout";
-import { Forbidden } from "~/design/icons/forbidden";
+import { Forbidden } from "~/design/icons/Forbidden";
 import { Plus } from "~/design/icons/Plus";
 import { ServerIcon } from "~/design/icons/ServerIcon";
 
