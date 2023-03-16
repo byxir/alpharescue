@@ -86,10 +86,10 @@ const RaffleList = () => {
                   <div className="grid grid-cols-[auto_48px] items-center justify-between">
                     <div className="relative mt-4 h-max font-benzin text-2xl">
                       {r.name}
-                      <div className="absolute -top-24 grid h-20 w-20 items-center justify-items-center rounded-xl bg-element shadow-md">
+                      <div className="absolute -top-22 grid h-20 w-20 items-center justify-items-center rounded-full bg-element">
                         <img
                           src={r.profilePicture}
-                          className="h-16 w-16 rounded-xl"
+                          className="h-16 w-16 rounded-full"
                           alt=""
                         />
                       </div>
