@@ -36,22 +36,22 @@ const navigation = [
   {
     name: "Premint",
     icon: "../../../../premint.png",
-    pathname: "premint",
+    pathname: "platforms/premint",
   },
   {
     name: "Alphabot",
     icon: "../../../../alphabot.png",
-    pathname: "alphabot",
+    pathname: "platforms/alphabot",
   },
   {
     name: "Superfull",
     icon: "../../../../superfull.png",
-    pathname: "superfull",
+    pathname: "platforms/superfull",
   },
   {
     name: "FreeNFT",
     icon: "../../../../freenft.png",
-    pathname: "freenft",
+    pathname: "platforms/freenft",
     noScale: true,
   },
   {
@@ -241,12 +241,15 @@ export default function SidebarLayout({ children }: { children: ReactNode }) {
                 ))}
               </nav>
             </div>
-            <div className="grid cursor-pointer grid-cols-[repeat(2,_max-content)] justify-center space-x-2 border-t border-subline p-4 transition-colors hover:bg-bg">
+            <Link
+              href="/rafflebot/settings"
+              className="grid cursor-pointer grid-cols-[repeat(2,_max-content)] justify-center space-x-2 border-t border-subline p-4 transition-colors hover:bg-bg"
+            >
               <Settings />
               <div className="font-mon font-bold text-almostwhite">
                 Settings
               </div>
-            </div>
+            </Link>
           </div>
         </div>
         <div className="flex flex-1 flex-col lg:pl-64">
