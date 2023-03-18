@@ -38,6 +38,7 @@ const config = {
         alphabot: "#63FF1E",
         superfull: "#6767AB",
         freenft: "#FFFFFF",
+        pressedAccent: "#b98d8e",
       },
       fontFamily: {
         benzin: ["var(--font-benzin)"],
