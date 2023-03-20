@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { useState } from "react";
 import { Dialog } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
@@ -55,7 +56,7 @@ export default function Header() {
             <a
               key={item.name}
               href={item.href}
-              className="text-sm font-semibold leading-6 text-almostwhite transition-colors hover:text-neutral-500"
+              className="font-benzin text-sm leading-6 text-almostwhite transition-colors hover:text-neutral-500"
             >
               {item.name}
             </a>
@@ -63,7 +64,11 @@ export default function Header() {
         </div>
         <div className="flex flex-1 items-center justify-end gap-x-6">
           <div className="flex cursor-pointer items-center space-x-2 rounded-md bg-indigo-600 py-2 px-3 font-montserratBold text-sm font-semibold text-white shadow-sm transition-colors hover:bg-indigo-800">
-            <img src="../../../discordwhite.png" className="w-8" />
+            <img
+              src="../../../discordwhite.png"
+              className="w-8"
+              alt="discord"
+            />
             <p>Log in</p>
           </div>
         </div>

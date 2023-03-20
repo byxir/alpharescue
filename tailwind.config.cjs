@@ -39,15 +39,18 @@ const config = {
         superfull: "#6767AB",
         freenft: "#FFFFFF",
         pressedAccent: "#b98d8e",
+        speedMint: "#FFC700",
+        community: "#73D047",
       },
       fontFamily: {
         benzin: ["var(--font-benzin)"],
         montserratBold: ["var(--font-montserratBold)"],
         abibas: ["var(--font-abibas)"],
+        montserratRegular: ["var(--font-montserratRegular"],
       },
     },
   },
-  plugins: [],
+  plugins: [require("@tailwindcss/line-clamp")],
 };
 
 module.exports = config;
