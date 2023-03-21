@@ -14,7 +14,7 @@ const navigation = [
 const benzin = localFont({
   src: [
     {
-      path: "../../fonts/Benzin-Semibold.ttf",
+      path: "../fonts/Benzin-Semibold.ttf",
     },
   ],
   variable: "--font-benzin",
@@ -22,7 +22,7 @@ const benzin = localFont({
 const montserrat = localFont({
   src: [
     {
-      path: "../../fonts/Montserrat-Bold.ttf",
+      path: "../fonts/Montserrat-Bold.ttf",
     },
   ],
   variable: "--font-montserratBold",
@@ -30,7 +30,7 @@ const montserrat = localFont({
 const abibas = localFont({
   src: [
     {
-      path: "../../fonts/Abibas.ttf",
+      path: "../fonts/Abibas.ttf",
     },
   ],
   variable: "--font-abibas",

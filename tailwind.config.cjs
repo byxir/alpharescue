@@ -40,13 +40,17 @@ const config = {
         freenft: "#FFFFFF",
         pressedAccent: "#b98d8e",
         speedMint: "#FFC700",
-        community: "#73D047",
+        community: "#91DB6E",
+        raffleBot: "#85DBE0",
       },
       fontFamily: {
         benzin: ["var(--font-benzin)"],
         montserratBold: ["var(--font-montserratBold)"],
         abibas: ["var(--font-abibas)"],
         montserratRegular: ["var(--font-montserratRegular)"],
+      },
+      maxWidth: {
+        xss: "240px",
       },
     },
   },

@@ -2,7 +2,7 @@ import { type NextPage } from "next";
 import Head from "next/head";
 
 import { api } from "~/utils/api";
-import Header from "~/components/landing/Header";
+import Header from "~/components/Header";
 import Hero from "~/components/landing/Hero";
 import Features from "~/components/landing/Features";
 import { SecondaryFeatures } from "~/components/landing/SecondaryFeatures";
@@ -10,7 +10,7 @@ import CallToActionBar from "~/components/landing/CallToActionBar";
 import EarnExamples from "~/components/landing/EarnExamples";
 import Subscriptions from "~/components/landing/Subscriptions";
 import FAQ from "~/components/landing/FAQ";
-import Footer from "~/components/landing/Footer";
+import Footer from "~/components/Footer";
 
 const Home: NextPage = () => {
   const hello = api.example.hello.useQuery({ text: "from tRPC" });
