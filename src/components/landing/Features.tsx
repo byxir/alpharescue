@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-import { Fragment, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Tab } from "@headlessui/react";
 import clsx from "clsx";
 import { motion } from "framer-motion";
@@ -153,17 +153,34 @@ function FeaturesMobile() {
     <>
       <div
         ref={slideContainerRef}
-        className="-mb-4 flex snap-x snap-mandatory -space-x-4 overflow-x-auto overscroll-x-contain scroll-smooth pb-4 [scrollbar-width:none] sm:-space-x-6 [&::-webkit-scrollbar]:hidden"
+        className="-mb-4 flex snap-x snap-mandatory -space-x-4 overflow-x-auto overscroll-x-contain scroll-smooth pb-4 font-montserratRegular [scrollbar-width:none] sm:-space-x-6 [&::-webkit-scrollbar]:hidden"
       >
         {features.map((feature, featureIndex) => (
           <div
             key={featureIndex}
             ref={(ref) => (slideRefs.current[featureIndex] = ref)}
-            className="w-full flex-none snap-center px-4 sm:px-6"
+            className="w-full flex-none snap-center px-10 sm:px-6"
           >
-            <div className="relative transform overflow-hidden rounded-2xl bg-gray-800 px-5 py-6">
-              <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"></div>
-              <div className="absolute inset-x-0 bottom-0 bg-gray-800/95 p-6 backdrop-blur sm:p-10">
+            <div className="mb-10 max-h-max">
+              <div
+                className={`grid justify-items-center transition-all ${
+                  featureIndex != 0 ? "hidden" : ""
+                }`}
+              >
+                <div className="max-w-lg">
+                  <img src="../../../tempterminal.png" alt="" className="" />
+                </div>
+                <div className="mt-8">
+                  <LaunchButton>
+                    <p className="text-xl">Запустить</p>
+                    <p className="text-xl">скрипт</p>
+                  </LaunchButton>
+                </div>
+              </div>
+            </div>
+            <div className="transform overflow-hidden rounded-2xl bg-element px-5">
+              <div className="-translate-x-1/2"></div>
+              <div className="inset-x-0 bottom-0 bg-element/95 p-6 backdrop-blur sm:p-10">
                 <feature.icon className="h-8 w-8" />
                 <h3 className="mt-6 font-montserratBold text-sm font-semibold text-almostwhite sm:text-lg">
                   {feature.name}

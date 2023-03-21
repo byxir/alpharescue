@@ -191,7 +191,7 @@ export function SecondaryFeatures() {
     <section
       id="secondary-features"
       aria-label="Features for building a portfolio"
-      className="bg-sidebarBg py-20 sm:py-32"
+      className="bg-sidebarBg py-20 font-montserratRegular sm:py-32"
     >
       <Container className={[]}>
         <div className="mx-auto sm:text-center">

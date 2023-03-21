@@ -76,7 +76,7 @@ const posts = [
 
 export default function Example() {
   return (
-    <div className="bg-sidebarBg py-24 sm:py-32">
+    <div className="bg-sidebarBg py-24 font-montserratRegular sm:py-32">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-2xl text-center">
           <h2 className="font-benzin text-2xl font-bold text-almostwhite sm:text-4xl">
@@ -111,7 +111,7 @@ export default function Example() {
                 </div>
                 <div className="group relative">
                   <h3 className="mt-3 text-lg font-semibold leading-6 text-almostwhite group-hover:text-subtext">
-                    <a href={post.href}>
+                    <a href={post.href} className="font-montserratBold">
                       <span className="absolute inset-0" />
                       {post.title}
                     </a>

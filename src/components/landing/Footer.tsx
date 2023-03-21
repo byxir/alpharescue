@@ -22,7 +22,7 @@ const navigation = {
 export default function Footer() {
   return (
     <footer
-      className="bg-cover bg-bottom bg-no-repeat"
+      className="bg-cover bg-bottom bg-no-repeat font-montserratRegular"
       style={{ backgroundImage: "url('../../../herobg.png')" }}
       aria-labelledby="footer-heading"
     >

@@ -64,14 +64,14 @@ export default function Subscriptions() {
   const [frequency, setFrequency] = useState(0);
   console.log("fequency -> ", frequency);
   return (
-    <div className="bg-bg py-24 sm:py-32">
+    <div className="bg-bg py-24 font-montserratRegular sm:py-32">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto text-center">
           <p className="mt-2 font-benzin text-4xl  text-almostwhite sm:text-5xl">
             Добро пожаловать в ALPHA RESCUE
           </p>
         </div>
-        <p className="mx-auto mt-6 max-w-xl text-center font-montserratBold text-xl leading-8 text-subtext">
+        <p className="mx-auto mt-6 max-w-xl text-center text-lg leading-8 text-subtext">
           С нашей модульной подпиской вам не придется платить за то, в чем нет
           необходимости.
         </p>

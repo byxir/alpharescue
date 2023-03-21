@@ -46,7 +46,7 @@ const config = {
         benzin: ["var(--font-benzin)"],
         montserratBold: ["var(--font-montserratBold)"],
         abibas: ["var(--font-abibas)"],
-        montserratRegular: ["var(--font-montserratRegular"],
+        montserratRegular: ["var(--font-montserratRegular)"],
       },
     },
   },

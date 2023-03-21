@@ -32,7 +32,7 @@ const faqs = [
 
 export default function FAQ() {
   return (
-    <div className="bg-sidebarBg">
+    <div className="bg-sidebarBg font-montserratRegular">
       <div className="mx-auto max-w-7xl px-6 py-24 sm:py-32 lg:py-40 lg:px-8">
         <div className="mx-auto max-w-5xl divide-y divide-white/10">
           <h2 className="font-benzin text-2xl font-bold leading-10  text-almostwhite sm:text-4xl">

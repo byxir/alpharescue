@@ -159,7 +159,10 @@ const Raffle = () => {
                 </div>
               </div>
             </div>
-            <LaunchButton />
+            <LaunchButton>
+              <p className="text-2xl">Запустить</p>
+              <p className="text-2xl">абуз</p>
+            </LaunchButton>
           </div>
           <div className="mt-16 grid justify-items-center text-center">
             <div className="grid w-5/6 grid-cols-1 items-center justify-center md:w-full md:grid-cols-[max-content_300px] md:justify-between">
