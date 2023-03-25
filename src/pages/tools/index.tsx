@@ -48,7 +48,7 @@ const CommunityPass = () => {
             сигналы на NFT и фьючерсы, а так же доступ к софту и гивам на WL в
             различные проекты.
           </div>
-          <div className="mt-10 grid items-center sm:grid-cols-[repeat(2,_max-content)] sm:flex-row sm:justify-center sm:space-x-6 lg:mt-16 lg:flex lg:justify-start">
+          <div className="mt-10 grid items-center justify-center justify-items-center sm:grid-cols-[repeat(2,_max-content)] sm:flex-row sm:space-x-6 lg:mt-16 lg:flex lg:justify-start">
             <button className="w-max rounded-xl bg-community px-6 py-4 font-montserratBold text-xl text-bg shadow-md">
               Купить подписку
             </button>
