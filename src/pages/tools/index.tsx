@@ -68,7 +68,7 @@ const RaffleBot = () => {
       <div className="mb-16 bg-gradient-to-r from-raffleBot to-almostwhite bg-clip-text font-benzin text-3xl text-transparent lg:justify-self-start ">
         Rescue Raffle Bot
       </div>
-      <div className="grid w-full grid-cols-1 grid-rows-[repeat(2,_max-content)] items-center justify-items-center gap-6 lg:grid-cols-[6fr_5fr] lg:grid-rows-1 lg:justify-items-start lg:gap-16">
+      <div className="rid-cols-[5fr_6fr] grid w-full grid-cols-1 grid-rows-[repeat(2,_max-content)] items-center justify-items-center gap-6 lg:grid-cols-[5fr_6fr] lg:grid-rows-1 lg:justify-items-start lg:gap-16">
         <div className="mb-8 grid sm:justify-items-center lg:justify-items-start">
           <div className="max-w-xl font-montserratRegular text-base text-almostwhite sm:text-lg">
             Доступ к боту, который позволит вам, после быстрой настройки,
@@ -85,7 +85,7 @@ const RaffleBot = () => {
             </button>
           </div>
         </div>
-        <div className="row-start-1 mb-8 grid gap-8 sm:max-w-lg lg:col-start-2 lg:mb-0 lg:max-w-lg">
+        <div className="row-start-1 mb-8 grid gap-8 justify-self-center sm:max-w-lg lg:col-start-2 lg:mb-0 lg:max-w-lg">
           <ToolFolder small={false} mt="16" textSize="4xl">
             <div className="grid w-max grid-cols-[repeat(2,_max-content)] grid-rows-2">
               <div className="row-span-2 self-center bg-gradient-to-r from-raffleBot to-almostwhite bg-clip-text text-transparent">
@@ -123,20 +123,7 @@ const SpeedMint = () => {
         Rescue SpeedMint Bot
       </div>
       <div className="grid w-full grid-cols-1 grid-rows-[repeat(2,_max-content)] items-center justify-items-center gap-6 lg:grid-cols-[6fr_5fr] lg:grid-rows-1 lg:justify-items-start lg:gap-16">
-        <div className="mb-8 grid sm:justify-items-center lg:justify-items-start">
-          <div className="max-w-xl font-montserratRegular text-base text-almostwhite sm:text-lg">
-            Доступ к боту, который поможет вам добиться успеха и забрать NFT на
-            важном минте. Включает в себя поддержку ETH и SOL минтов.
-            Поддерживает минт с нескольких кошельков. Остальная информация будет
-            раскрыта позже...
-          </div>
-          <div className="mt-10 grid items-center justify-center sm:mt-16 sm:grid-cols-[repeat(2,_max-content)] sm:flex-row sm:space-x-6 lg:justify-start">
-            <button className="w-max rounded-xl bg-element px-6 py-4 font-montserratBold text-xl text-red-500 shadow-md">
-              Coming Soon
-            </button>
-          </div>
-        </div>
-        <div className="row-start-1 mb-8 grid gap-8 sm:max-w-lg lg:col-start-2 lg:mb-0 lg:max-w-lg">
+        <div className="row-start-1 mb-8 grid gap-8 sm:max-w-lg lg:mb-0 lg:max-w-lg">
           <ToolFolder small={false} mt="16" textSize="4xl">
             <div className="grid w-max grid-cols-[repeat(2,_max-content)] gap-8">
               <div className="self-center bg-gradient-to-r from-speedMint to-almostwhite bg-clip-text text-transparent">
@@ -153,6 +140,19 @@ const SpeedMint = () => {
             <div className="w-60 rounded-xl border-2 border-dashed border-community p-6 text-lg text-almostwhite sm:w-auto sm:text-xl">
               Rescue Community Pass
             </div>
+          </div>
+        </div>
+        <div className="mb-8 grid sm:justify-items-center lg:justify-items-start">
+          <div className="max-w-xl font-montserratRegular text-base text-almostwhite sm:text-lg">
+            Доступ к боту, который поможет вам добиться успеха и забрать NFT на
+            важном минте. Включает в себя поддержку ETH и SOL минтов.
+            Поддерживает минт с нескольких кошельков. Остальная информация будет
+            раскрыта позже...
+          </div>
+          <div className="mt-10 grid items-center justify-center sm:mt-16 sm:grid-cols-[repeat(2,_max-content)] sm:flex-row sm:space-x-6 lg:justify-start">
+            <button className="w-max rounded-xl bg-element px-6 py-4 font-montserratBold text-xl text-red-500 shadow-md">
+              Coming Soon
+            </button>
           </div>
         </div>
       </div>

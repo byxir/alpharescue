@@ -113,7 +113,7 @@ export default function Header() {
                   <a
                     key={item.name}
                     href={item.href}
-                    className="-mx-3 block rounded-lg py-2 px-3 pl-2 font-montserratBold text-base font-semibold leading-7 text-almostwhite hover:bg-indigo-500"
+                    className="-mx-3 block rounded-lg py-2 px-3 pl-2 font-montserratBold text-base font-semibold leading-7 text-almostwhite hover:bg-neutral-900"
                   >
                     {item.name}
                   </a>
@@ -122,7 +122,7 @@ export default function Header() {
               <div className="py-4">
                 <a
                   href="#"
-                  className="-mx-3 block rounded-lg py-2.5 px-3 pl-2 font-montserratBold text-base font-semibold leading-7 text-almostwhite hover:bg-indigo-500"
+                  className="-mx-3 block rounded-lg py-2.5 px-3 pl-2 font-montserratBold text-base font-semibold leading-7 text-almostwhite hover:bg-neutral-900"
                 >
                   Log in
                 </a>
