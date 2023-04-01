@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function CallToActionBar() {
   return (
     <div
@@ -9,12 +11,16 @@ export default function CallToActionBar() {
         <span className="font-benzin text-bg sm:ml-0">крипто-абуза</span>
       </div>
       <div className="mt-7 grid grid-cols-[repeat(2,_max-content)] gap-4 lg:mt-0 lg:grid-cols-2">
-        <button className="w-36 rounded-xl bg-almostwhite px-2 py-2 font-montserratBold text-sm text-bg shadow-xl  transition-colors hover:bg-neutral-400 sm:w-44 sm:px-4 sm:py-3 sm:text-base lg:w-auto lg:text-lg 2xl:p-6 2xl:text-xl">
-          Инструменты
-        </button>
-        <button className="w-36 rounded-xl bg-element px-2 py-2 font-montserratBold text-sm text-almostwhite shadow-xl  transition-colors hover:bg-neutral-900 sm:w-44 sm:px-4 sm:py-3 sm:text-base lg:w-auto lg:text-lg 2xl:p-6 2xl:text-xl">
-          Услуги
-        </button>
+        <Link href="/tools">
+          <button className="w-36 rounded-xl bg-almostwhite px-2 py-2 font-montserratBold text-sm text-bg shadow-xl  transition-colors hover:bg-neutral-400 sm:w-44 sm:px-4 sm:py-3 sm:text-base lg:w-auto lg:text-lg 2xl:p-6 2xl:text-xl">
+            Инструменты
+          </button>
+        </Link>
+        <Link href="/services">
+          <button className="w-36 rounded-xl bg-element px-2 py-2 font-montserratBold text-sm text-almostwhite shadow-xl  transition-colors hover:bg-neutral-900 sm:w-44 sm:px-4 sm:py-3 sm:text-base lg:w-auto lg:text-lg 2xl:p-6 2xl:text-xl">
+            Услуги
+          </button>
+        </Link>
       </div>
     </div>
   );

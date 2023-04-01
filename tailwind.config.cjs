@@ -35,7 +35,7 @@ const config = {
       colors: {
         subtext: "#989898",
         bg: "#121212",
-        sidebarBg: "#191919",
+        sidebarBg: "#151515",
         almostwhite: "#E2E2E2",
         subline: "#3A3A3A",
         accent: "#E2BABB",

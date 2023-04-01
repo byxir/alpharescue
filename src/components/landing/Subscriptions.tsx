@@ -89,7 +89,7 @@ export default function Subscriptions() {
               value={frequency}
               className={`${
                 frequency === 0 ? "bg-almostwhite text-element" : "text-subtext"
-              } cursor-pointer rounded-full py-1 px-2.5 font-montserratBold`}
+              } cursor-pointer rounded-full px-2.5 py-1 font-montserratBold`}
             >
               <span>Ежемесячно</span>
             </button>
@@ -98,7 +98,7 @@ export default function Subscriptions() {
               value={frequency}
               className={`${
                 frequency === 1 ? "bg-almostwhite text-element" : "text-subtext"
-              } cursor-pointer rounded-full py-1 px-2.5 font-montserratBold`}
+              } cursor-pointer rounded-full px-2.5 py-1 font-montserratBold`}
             >
               <span>Ежегодно</span>
             </button>
@@ -118,12 +118,12 @@ export default function Subscriptions() {
                   {tier.name}
                 </h3>
                 {tier.new ? (
-                  <p className="rounded-full bg-almostwhite/10 py-1 px-2.5 text-xs font-semibold leading-5 text-almostwhite">
+                  <p className="rounded-full bg-almostwhite/10 px-2.5 py-1 text-xs font-semibold leading-5 text-almostwhite">
                     Новое
                   </p>
                 ) : null}
               </div>
-              <p className="mt-4 text-sm leading-6 text-subtext">
+              <p className="mt-4 w-64 text-sm leading-6 text-subtext">
                 {tier.description}
               </p>
               <p className="mt-6 flex items-baseline gap-x-1">
@@ -139,7 +139,7 @@ export default function Subscriptions() {
                 aria-describedby={tier.id}
                 className={`${
                   tier.available ? tier.bg : "bg-element text-red-500"
-                } mt-6 block rounded-md py-2 px-3 text-center font-montserratBold text-sm font-semibold leading-6 text-element`}
+                } mt-6 block rounded-md px-3 py-2 text-center font-montserratBold text-sm font-semibold leading-6 text-element`}
               >
                 {tier.available ? "Подписаться" : "Coming soon"}
               </a>

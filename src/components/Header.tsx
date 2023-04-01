@@ -3,12 +3,13 @@ import { useState } from "react";
 import { Dialog } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import localFont from "next/font/local";
+import Link from "next/link";
 
 const navigation = [
-  { name: "Главная", href: "#" },
-  { name: "Инструменты", href: "#" },
-  { name: "Услуги", href: "#" },
-  { name: "О нас", href: "#" },
+  { name: "Главная", href: "/" },
+  { name: "Инструменты", href: "/tools" },
+  { name: "Услуги", href: "/services" },
+  { name: "О нас", href: "/about" },
 ];
 
 const benzin = localFont({
@@ -46,24 +47,24 @@ export default function Header() {
         aria-label="Global"
       >
         <div className="flex lg:flex-1">
-          <a href="#" className="-m-1.5 p-1.5">
+          <Link href="/" className="-m-1.5 p-1.5">
             <span className="sr-only">Your Company</span>
             <div className="font-abibas text-6xl text-accent">AR</div>
-          </a>
+          </Link>
         </div>
         <div className="hidden font-benzin lg:flex lg:gap-x-12">
           {navigation.map((item) => (
-            <a
+            <Link
               key={item.name}
               href={item.href}
               className="font-benzin text-sm leading-6 text-almostwhite transition-colors hover:text-neutral-500"
             >
               {item.name}
-            </a>
+            </Link>
           ))}
         </div>
         <div className="flex flex-1 items-center justify-end gap-x-6">
-          <div className="flex cursor-pointer items-center space-x-2 rounded-md bg-indigo-600 py-2 px-3 font-montserratBold text-sm font-semibold text-white shadow-sm transition-colors hover:bg-indigo-800">
+          <div className="flex cursor-pointer items-center space-x-2 rounded-md bg-indigo-600 px-3 py-2 font-montserratBold text-sm font-semibold text-white shadow-sm transition-colors hover:bg-indigo-800">
             <img
               src="../../../discordwhite.png"
               className="w-8"
@@ -94,9 +95,9 @@ export default function Header() {
           className={`fixed inset-y-0 right-0 z-10 w-full overflow-y-auto bg-sidebarBg px-6 py-4 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10 ${benzin.variable} ${abibas.variable} ${montserrat.variable} font-sans`}
         >
           <div className="flex items-center gap-x-6 font-montserratBold">
-            <a href="#" className="-m-1.5 p-1.5">
+            <Link href="/" className="-m-1.5 p-1.5">
               <div className="font-abibas text-6xl text-accent">AR</div>
-            </a>
+            </Link>
             <button
               type="button"
               className="-m-2.5 ml-auto rounded-md p-2.5 text-almostwhite"
@@ -110,22 +111,19 @@ export default function Header() {
             <div className="-my-6 divide-y divide-subline">
               <div className="space-y-2 py-6">
                 {navigation.map((item) => (
-                  <a
+                  <Link
                     key={item.name}
                     href={item.href}
-                    className="-mx-3 block rounded-lg py-2 px-3 pl-2 font-montserratBold text-base font-semibold leading-7 text-almostwhite hover:bg-neutral-900"
+                    className="-mx-3 block rounded-lg px-3 py-2 pl-2 font-montserratBold text-base font-semibold leading-7 text-almostwhite hover:bg-neutral-900"
                   >
                     {item.name}
-                  </a>
+                  </Link>
                 ))}
               </div>
               <div className="py-4">
-                <a
-                  href="#"
-                  className="-mx-3 block rounded-lg py-2.5 px-3 pl-2 font-montserratBold text-base font-semibold leading-7 text-almostwhite hover:bg-neutral-900"
-                >
+                <div className="-mx-3 block rounded-lg px-3 py-2.5 pl-2 font-montserratBold text-base font-semibold leading-7 text-almostwhite hover:bg-neutral-900">
                   Log in
-                </a>
+                </div>
               </div>
             </div>
           </div>
