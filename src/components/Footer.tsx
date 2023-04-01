@@ -31,14 +31,17 @@ export default function Footer() {
       </h2>
       <div className="mx-auto max-w-7xl px-6 pb-8 pt-10 sm:pt-24 lg:px-8 lg:pt-20">
         <div className="justify-between xl:grid xl:grid-cols-[repeat(2,_max-content)] xl:gap-8">
-          <div className="text-5xl text-bg">
+          <div className="grid text-5xl text-bg">
             <div className="mt-2 font-benzin">
               <span className="text-almostwhite">ALPHA</span>{" "}
               <span className="text-bg">RESCUE</span>
             </div>
-            <button className="mt-10 w-72 rounded-xl bg-element px-3 py-4 font-montserratBold text-base leading-6 text-almostwhite">
-              Обратиться в тех. поддержку
-            </button>
+            <a
+              href="t.me"
+              className="w-max self-end rounded-md bg-bg bg-opacity-0 px-3 py-2 font-montserratRegular text-base leading-6 text-element transition-all hover:bg-opacity-5"
+            >
+              Обратиться в тех. поддержку...
+            </a>
           </div>
           <div className="mt-16 w-max gap-8 xl:mt-0">
             <div className="grid gap-6 md:grid md:grid-cols-3 md:gap-12">

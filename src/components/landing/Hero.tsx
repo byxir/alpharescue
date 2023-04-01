@@ -17,10 +17,10 @@ export default function Example() {
               href="/tools/rafflebot"
               className="inline-flex space-x-6 font-montserratBold"
             >
-              <span className="rounded-full bg-accent/10 px-3 py-1 text-sm font-semibold leading-6 text-accent ring-1 ring-inset ring-accent/20">
+              <span className="grid items-center rounded-full bg-accent/10 px-3 py-1 text-center text-sm font-semibold leading-6 text-accent ring-1 ring-inset ring-accent/20 xs:text-start">
                 Что нового?
               </span>
-              <span className="inline-flex items-center space-x-2 text-sm font-medium leading-6 text-almostwhite">
+              <span className="inline-flex w-36 items-center space-x-2 text-sm font-medium leading-6 text-almostwhite xs:w-auto">
                 <span>Raffle Bot уже доступен</span>
                 <ChevronRightIcon
                   className="h-5 w-5 text-almostwhite"

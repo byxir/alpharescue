@@ -58,6 +58,9 @@ const config = {
       maxWidth: {
         xss: "240px",
       },
+      minHeight: {
+        16: "64px",
+      },
     },
   },
   plugins: [require("@tailwindcss/line-clamp")],
