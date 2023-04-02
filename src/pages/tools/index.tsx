@@ -1,4 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
+import Link from "next/link";
 import Footer from "~/components/Footer";
 import Header from "~/components/Header";
 import { Clock } from "~/design/icons/Clock";
@@ -9,7 +10,7 @@ export default function Tools() {
     <>
       <Header />
       <div className="grid justify-items-center bg-bg p-4 pb-20 sm:p-6">
-        <div className="mt-20 mb-36 text-center font-benzin text-3xl sm:text-4xl lg:text-5xl">
+        <div className="mb-36 mt-20 text-center font-benzin text-3xl sm:text-4xl lg:text-5xl">
           Инструменты RESCUE
         </div>
         <CommunityPass />
@@ -29,18 +30,26 @@ const CommunityPass = () => {
       </div>
       <div className="grid w-full grid-cols-1 items-center justify-items-center gap-6 lg:grid-cols-[6fr_5fr] lg:justify-items-start xl:gap-16">
         <div className="mb-8 grid grid-cols-2 grid-rows-2 gap-4 lg:mb-0 xl:gap-8">
-          <ToolFolder small={true} textSize="lg" mt="6">
-            Зеркала
-          </ToolFolder>
-          <ToolFolder small={true} textSize="lg" mt="6">
-            Софт для абуза
-          </ToolFolder>
-          <ToolFolder small={true} textSize="lg" mt="6">
-            Доступ в Discord
-          </ToolFolder>
-          <ToolFolder small={true} textSize="lg" mt="6">
-            Розыгрыши WL
-          </ToolFolder>
+          <Link href="tools/utilities">
+            <ToolFolder small={true} textSize="lg" mt="6">
+              Утилиты
+            </ToolFolder>
+          </Link>
+          <Link href="tools/software">
+            <ToolFolder small={true} textSize="lg" mt="6">
+              Софт для абуза
+            </ToolFolder>
+          </Link>
+          <Link href="tools/discord">
+            <ToolFolder small={true} textSize="lg" mt="6">
+              Доступ в Discord
+            </ToolFolder>
+          </Link>
+          <Link href="tools/giveaways">
+            <ToolFolder small={true} textSize="lg" mt="6">
+              Розыгрыши WL
+            </ToolFolder>
+          </Link>
         </div>
         <div className="mb-8 grid sm:justify-items-center lg:justify-items-start">
           <div className="w-11/12 max-w-xl font-montserratRegular text-base text-almostwhite sm:text-lg">
@@ -52,7 +61,7 @@ const CommunityPass = () => {
             <button className="w-max rounded-xl bg-community px-6 py-4 font-montserratBold text-xl text-bg shadow-md">
               Купить подписку
             </button>
-            <button className="mt-5 h-max w-max rounded-xl bg-element py-3 px-10 font-montserratBold text-base text-subtext shadow-md sm:mt-0">
+            <button className="mt-5 h-max w-max rounded-xl bg-element px-10 py-3 font-montserratBold text-base text-subtext shadow-md sm:mt-0">
               Отчет
             </button>
           </div>
@@ -80,7 +89,7 @@ const RaffleBot = () => {
             <button className="w-max rounded-xl bg-raffleBot px-6 py-4 font-montserratBold text-xl text-bg shadow-md">
               Купить подписку
             </button>
-            <button className="mt-5 h-max w-max rounded-xl bg-element py-3 px-10 font-montserratBold text-base text-subtext shadow-md sm:mt-0">
+            <button className="mt-5 h-max w-max rounded-xl bg-element px-10 py-3 font-montserratBold text-base text-subtext shadow-md sm:mt-0">
               Как работает бот?
             </button>
           </div>

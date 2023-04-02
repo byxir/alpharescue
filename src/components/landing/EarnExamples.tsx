@@ -79,11 +79,11 @@ export default function Example() {
     <div className="bg-sidebarBg py-24 font-montserratRegular sm:py-32">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-2xl text-center">
-          <h2 className="font-benzin text-2xl font-bold text-almostwhite sm:text-4xl">
+          <h2 className="text-start font-benzin text-2xl font-bold text-almostwhite sm:text-4xl lg:text-center">
             Примеры заработка участников коммьюнити
           </h2>
         </div>
-        <div className="mx-auto mt-16 grid max-w-2xl grid-cols-1 gap-y-20 gap-x-8 lg:mx-0 lg:max-w-none lg:grid-cols-3">
+        <div className="mx-auto mt-16 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-20 lg:mx-0 lg:max-w-none lg:grid-cols-3">
           {posts.map((post) => (
             <article
               key={post.id}
@@ -104,7 +104,7 @@ export default function Example() {
                   </time>
                   <a
                     href={post.category.href}
-                    className="relative z-10 rounded-full bg-element py-1.5 px-3 font-medium text-subtext hover:bg-neutral-900"
+                    className="relative z-10 rounded-full bg-element px-3 py-1.5 font-medium text-subtext hover:bg-neutral-900"
                   >
                     {post.category.title}
                   </a>

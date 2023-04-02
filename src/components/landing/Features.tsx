@@ -86,12 +86,14 @@ function FeaturesDesktop() {
             <div className="relative z-10 p-8">
               <feature.icon className="h-8 w-8" />
               <h3 className="mt-6 text-lg font-semibold text-white">
-                <Tab className="text-left font-montserratBold [&:not(:focus-visible)]:focus:outline-none">
+                <Tab className="text-left font-montserratBold focus:outline-none [&:not(:focus-visible)]:focus:outline-none">
                   <span className="absolute inset-0 rounded-2xl" />
                   {feature.name}
                 </Tab>
               </h3>
-              <p className="mt-2 text-sm text-subtext">{feature.description}</p>
+              <p className="mt-2 font-montserratRegular text-sm text-subtext">
+                {feature.description}
+              </p>
             </div>
           </div>
         ))}
@@ -178,18 +180,18 @@ function FeaturesMobile() {
                 </div>
               </div>
             </div>
-            <div className="transform overflow-hidden rounded-2xl bg-element px-5">
+            <button className="transform overflow-hidden rounded-2xl bg-element px-5">
               <div className="-translate-x-1/2"></div>
-              <div className="inset-x-0 bottom-0 bg-element/95 p-6 backdrop-blur sm:p-10">
+              <div className="inset-x-0 bottom-0 bg-element/95 p-6 text-start backdrop-blur sm:p-10">
                 <feature.icon className="h-8 w-8" />
                 <h3 className="mt-6 font-montserratBold text-sm font-semibold text-almostwhite sm:text-lg">
                   {feature.name}
                 </h3>
-                <p className="mt-2 text-sm text-subtext">
+                <p className="mt-2 font-montserratRegular text-sm text-subtext">
                   {feature.description}
                 </p>
               </div>
-            </div>
+            </button>
           </div>
         ))}
       </div>

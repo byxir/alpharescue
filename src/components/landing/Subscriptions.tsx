@@ -67,7 +67,7 @@ export default function Subscriptions() {
     <div className="bg-bg py-24 font-montserratRegular sm:py-32">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto text-center">
-          <p className="mt-2 font-benzin text-4xl  text-almostwhite sm:text-5xl">
+          <p className="mt-2 font-benzin text-4xl text-almostwhite sm:text-5xl">
             Добро пожаловать в ALPHA RESCUE
           </p>
         </div>

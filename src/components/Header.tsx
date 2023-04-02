@@ -49,7 +49,9 @@ export default function Header() {
         <div className="flex lg:flex-1">
           <Link href="/" className="-m-1.5 p-1.5">
             <span className="sr-only">Your Company</span>
-            <div className="font-abibas text-6xl text-accent">AR</div>
+            <div className="font-abibas text-6xl text-accent focus:outline-none">
+              AR
+            </div>
           </Link>
         </div>
         <div className="hidden font-benzin lg:flex lg:gap-x-12">
@@ -96,7 +98,9 @@ export default function Header() {
         >
           <div className="flex items-center gap-x-6 font-montserratBold">
             <Link href="/" className="-m-1.5 p-1.5">
-              <div className="font-abibas text-6xl text-accent">AR</div>
+              <div className="font-abibas text-6xl text-accent focus:outline-none">
+                AR
+              </div>
             </Link>
             <button
               type="button"

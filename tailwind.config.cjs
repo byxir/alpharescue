@@ -61,6 +61,9 @@ const config = {
       minHeight: {
         16: "64px",
       },
+      fontSize: {
+        "10xl": "200px",
+      },
     },
   },
   plugins: [require("@tailwindcss/line-clamp")],
