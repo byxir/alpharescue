@@ -6,32 +6,32 @@ export default function Discord() {
   return (
     <div className="grid">
       <Header />
-      <div className="grid max-w-7xl justify-self-center px-14 py-20 font-montserratRegular text-xl text-subtext">
-        <div className="mb-28 grid grid-cols-[2fr_1fr] gap-10">
+      <div className="grid max-w-7xl justify-self-center px-4 py-10 font-montserratRegular text-lg text-subtext sm:text-xl md:px-8 md:py-12 lg:px-14 lg:py-20">
+        <div className="mb-20 grid grid-cols-1 gap-10 md:mb-28 md:grid-cols-[2fr_1fr]">
           <div className="">
             <h1 className="font-benzin text-5xl text-almostwhite">
               RESCUE Discord
             </h1>
-            <p className="mt-4 w-5/6">
+            <p className="mt-4">
               Дискорд – наша основная социальная сеть, в которой мы делимся
               информацией, общаемся и проводим АМА сессии.
             </p>
             <h2 className="mt-8 font-montserratBold text-3xl text-almostwhite">
               Контент в дискорде делится на две категории:
             </h2>
-            <div className="mt-4 flex w-5/6 space-x-2">
+            <div className="mt-4 flex space-x-2">
               <div>1. </div>
               <div>
                 Зеркала некоторых западных альфа-групп, список которых постоянно
                 пополняется
               </div>
             </div>
-            <div className="mt-2 flex w-5/6 space-x-2">
+            <div className="mt-2 flex space-x-2">
               <div>2.</div>
               <div>Информация от нашей команды</div>
             </div>
           </div>
-          <div className="grid h-96 w-96 items-center justify-items-center rounded-full border-2 border-subline p-10 font-abibas text-10xl text-accent">
+          <div className="grid h-80 w-80 items-center justify-items-center justify-self-center rounded-full border-2 border-subline p-10 font-abibas text-9xl text-accent md:h-64 md:w-64 md:text-9xl lg:h-96 lg:w-96 lg:text-10xl">
             <div className="h-max p-0">AR</div>
           </div>
         </div>
@@ -112,7 +112,7 @@ export default function Discord() {
         </div>
 
         <div className="px-6">
-          <h1 className="mt-36 font-benzin text-4xl text-almostwhite">
+          <h1 className="mt-28 font-benzin text-4xl text-almostwhite md:mt-36">
             Информация от команды
           </h1>
 
@@ -153,7 +153,7 @@ export default function Discord() {
         </div>
 
         <div className="px-6">
-          <h1 className="mb-6 mt-36 font-benzin text-4xl text-almostwhite">
+          <h1 className="mb-6 mt-28 font-benzin text-4xl text-almostwhite md:mt-36">
             Коммьюнити
           </h1>
 
@@ -171,7 +171,7 @@ export default function Discord() {
         </div>
 
         <div className="px-6">
-          <h1 className="mb-6 mt-36 font-benzin text-4xl text-almostwhite">
+          <h1 className="mb-6 mt-28 font-benzin text-4xl text-almostwhite md:mt-36">
             AMA - сессии
           </h1>
 
@@ -185,11 +185,11 @@ export default function Discord() {
           </div>
         </div>
 
-        <div className="mt-48 grid justify-items-end">
-          <div className="flex items-center space-x-6 font-benzin text-2xl text-almostwhite">
+        <div className="mt-32 grid justify-items-end sm:mt-48">
+          <div className="flex items-center space-x-3 font-benzin text-sm text-almostwhite md:space-x-6 md:text-2xl">
             <span>Читать далее:</span>
             <Link href="tools/utilities">
-              <button className="rounded-xl bg-element p-6 hover:bg-opacity-60">
+              <button className="rounded-xl bg-element p-3  hover:bg-opacity-60 md:p-6">
                 Утилиты RESCUE
               </button>
             </Link>
