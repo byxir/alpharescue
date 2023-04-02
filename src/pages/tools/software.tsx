@@ -135,7 +135,7 @@ export default function Software() {
           <div className="flex items-center space-x-3 font-benzin text-sm text-almostwhite md:space-x-6 md:text-2xl">
             <span>Читать далее:</span>
             <Link href="software">
-              <button className="rounded-xl bg-element p-3  hover:bg-opacity-60 md:p-6">
+              <button className="rounded-xl bg-element p-3 shadow-md  hover:bg-opacity-60 md:p-6">
                 Розыгрыши WL
               </button>
             </Link>

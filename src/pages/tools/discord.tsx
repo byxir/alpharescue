@@ -36,7 +36,9 @@ export default function Discord() {
           </div>
         </div>
         <div className="md:px-6">
-          <h1 className="font-benzin text-4xl text-almostwhite">Зеркала</h1>
+          <h1 className="font-benzin text-4xl text-almostwhite">
+            Контент RESCUE
+          </h1>
           <div className="mt-10 space-x-2 md:px-8">
             <span className="font-montserratBold text-2xl text-almostwhite">
               ETH Calls
@@ -109,12 +111,6 @@ export default function Discord() {
               новостей и анонсов от различных проектов можно найти именно тут.
             </span>
           </div>
-        </div>
-
-        <div className="md:px-6">
-          <h1 className="mt-28 font-benzin text-4xl text-almostwhite md:mt-36">
-            Информация от команды
-          </h1>
 
           <div className="mt-12 space-x-2 md:px-8">
             <span className="font-montserratBold text-2xl text-almostwhite">
@@ -137,6 +133,12 @@ export default function Discord() {
               интересен, поэтому заслуживает отдельной категории с  12 каналами.
             </span>
           </div>
+        </div>
+
+        <div className="md:px-6">
+          <h1 className="mt-28 font-benzin text-4xl text-almostwhite md:mt-36">
+            Информация от команды
+          </h1>
 
           <div className="mt-12 space-x-2 md:px-8">
             <span className="font-montserratBold text-2xl text-almostwhite">
@@ -189,7 +191,7 @@ export default function Discord() {
           <div className="flex items-center space-x-3 font-benzin text-sm text-almostwhite md:space-x-6 md:text-2xl">
             <span>Читать далее:</span>
             <Link href="utilities">
-              <button className="rounded-xl bg-element p-3  hover:bg-opacity-60 md:p-6">
+              <button className="rounded-xl bg-element p-3 shadow-md hover:bg-opacity-60 md:p-6">
                 Утилиты RESCUE
               </button>
             </Link>
