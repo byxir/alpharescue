@@ -35,9 +35,9 @@ export default function Discord() {
             <div className="h-max p-0">AR</div>
           </div>
         </div>
-        <div className="px-6">
+        <div className="md:px-6">
           <h1 className="font-benzin text-4xl text-almostwhite">Зеркала</h1>
-          <div className="mt-10 space-x-2 px-8">
+          <div className="mt-10 space-x-2 md:px-8">
             <span className="font-montserratBold text-2xl text-almostwhite">
               ETH Calls
             </span>
@@ -48,12 +48,12 @@ export default function Discord() {
               профиту с сигналов.
             </span>
           </div>
-          <div className="mt-8 px-8 font-montserratBold text-2xl text-almostwhite">
+          <div className="mt-8 font-montserratBold text-2xl text-almostwhite md:px-8">
             <h2>Примеры профита:</h2>
             <div className="mt-4"></div>
           </div>
 
-          <div className="mt-36 space-x-2 px-8">
+          <div className="mt-36 space-x-2 md:px-8">
             <span className="font-montserratBold text-2xl text-almostwhite">
               SOL Calls
             </span>
@@ -64,12 +64,12 @@ export default function Discord() {
               насчитывает 6 каналов
             </span>
           </div>
-          <div className="mt-8 px-8 font-montserratBold text-2xl text-almostwhite">
+          <div className="mt-8 font-montserratBold text-2xl text-almostwhite md:px-8">
             <h2>Примеры профита:</h2>
             <div className="mt-4"></div>
           </div>
 
-          <div className="mt-36 space-x-2 px-8">
+          <div className="mt-36 space-x-2 md:px-8">
             <span className="font-montserratBold text-2xl text-almostwhite">
               Trading Calls
             </span>
@@ -79,12 +79,12 @@ export default function Discord() {
               поэтому можем смело рекомендовать. В категории 6 каналов.
             </span>
           </div>
-          <div className="mt-8 px-8 font-montserratBold text-2xl text-almostwhite">
+          <div className="mt-8 font-montserratBold text-2xl text-almostwhite md:px-8">
             <h2>Примеры профита:</h2>
             <div className="mt-4"></div>
           </div>
 
-          <div className="mt-36 space-x-2 px-8">
+          <div className="mt-36 space-x-2 md:px-8">
             <span className="font-montserratBold text-2xl text-almostwhite">
               Tools
             </span>
@@ -95,12 +95,12 @@ export default function Discord() {
               подборки рафлов и многое другое, более подробно читайте тут
             </span>
           </div>
-          <div className="mt-8 px-8 font-montserratBold text-2xl text-almostwhite">
+          <div className="mt-8 font-montserratBold text-2xl text-almostwhite md:px-8">
             <h2>Примеры профита:</h2>
             <div className="mt-4"></div>
           </div>
 
-          <div className="mt-36 space-x-2 px-8">
+          <div className="mt-36 space-x-2 md:px-8">
             <span className="font-montserratBold text-2xl text-almostwhite">
               News Mirror
             </span>
@@ -111,12 +111,12 @@ export default function Discord() {
           </div>
         </div>
 
-        <div className="px-6">
+        <div className="md:px-6">
           <h1 className="mt-28 font-benzin text-4xl text-almostwhite md:mt-36">
             Информация от команды
           </h1>
 
-          <div className="mt-12 space-x-2 px-8">
+          <div className="mt-12 space-x-2 md:px-8">
             <span className="font-montserratBold text-2xl text-almostwhite">
               NFT Analytics
             </span>
@@ -127,7 +127,7 @@ export default function Discord() {
             </span>
           </div>
 
-          <div className="mt-12 space-x-2 px-8">
+          <div className="mt-12 space-x-2 md:px-8">
             <span className="font-montserratBold text-2xl text-almostwhite">
               Asian Calls
             </span>
@@ -138,7 +138,7 @@ export default function Discord() {
             </span>
           </div>
 
-          <div className="mt-12 space-x-2 px-8">
+          <div className="mt-12 space-x-2 md:px-8">
             <span className="font-montserratBold text-2xl text-almostwhite">
               Rescue Team
             </span>
@@ -152,12 +152,12 @@ export default function Discord() {
           </div>
         </div>
 
-        <div className="px-6">
+        <div className="md:px-6">
           <h1 className="mb-6 mt-28 font-benzin text-4xl text-almostwhite md:mt-36">
             Коммьюнити
           </h1>
 
-          <div className="px-8">
+          <div className="md:px-8">
             <span className="">
               Нам удалось собрать в своем дискорде достаточно дружное и
               сплоченное комьюнити, которое помогает друг другу и открыто
@@ -170,12 +170,12 @@ export default function Discord() {
           </div>
         </div>
 
-        <div className="px-6">
+        <div className="md:px-6">
           <h1 className="mb-6 mt-28 font-benzin text-4xl text-almostwhite md:mt-36">
             AMA - сессии
           </h1>
 
-          <div className="px-8">
+          <div className="md:px-8">
             <span className="">
               Мы часто проводим войсы и АМА сессии, на них анонсируем важные
               новости, делимся своим опытом и информацией с сообществом. Иногда

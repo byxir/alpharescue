@@ -6,7 +6,7 @@ export default function Software() {
   return (
     <div className="grid">
       <Header />
-      <div className="grid max-w-7xl justify-self-center px-4 py-10 font-montserratRegular text-lg text-subtext sm:text-xl md:px-8 md:py-12 lg:px-14 lg:py-20">
+      <div className="grid max-w-7xl justify-self-center px-4 py-10 font-montserratRegular text-lg text-subtext sm:text-xl md:md:px-8 md:py-12 lg:px-14 lg:py-20">
         <div className="mb-20 grid grid-cols-1 gap-10 md:mb-28 md:grid-cols-[1fr_2fr]">
           <div className="md:col-start-2">
             <h1 className="font-benzin text-5xl text-almostwhite">
@@ -33,12 +33,12 @@ export default function Software() {
           </div>
         </div>
 
-        <div className="px-6">
+        <div className="md:px-6">
           <h1 className="mb-6 font-benzin text-4xl text-almostwhite">
             Как это происходит?
           </h1>
 
-          <div className="px-8">
+          <div className="md:px-8">
             <p className="">
               Наша команда находит интересную активность, которая потенциально
               может принести хорошую прибыль, но на нескольких аккаунтах мы не
@@ -86,12 +86,12 @@ export default function Software() {
           </div>
         </div>
 
-        <div className="px-6">
+        <div className="md:px-6">
           <h1 className="mb-6 mt-20 font-benzin text-4xl text-almostwhite md:mt-28">
             Насколько актуален софт?
           </h1>
 
-          <div className="px-8">
+          <div className="md:px-8">
             <p className="">
               Так как мы сами заинтересованы в заработке на абузе событий, софт
               выходит очень быстро и, следовательно, он всегда максимально
