@@ -62,7 +62,7 @@ const config = {
         16: "64px",
       },
       fontSize: {
-        "10xl": "200px",
+        "10xl": "180px",
       },
     },
   },

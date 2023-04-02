@@ -7,7 +7,7 @@ export default function Discord() {
     <div className="grid">
       <Header />
       <div className="grid max-w-7xl justify-self-center px-4 py-10 font-montserratRegular text-lg text-subtext sm:text-xl md:px-8 md:py-12 lg:px-14 lg:py-20">
-        <div className="mb-20 grid grid-cols-1 gap-10 md:mb-28 md:grid-cols-[2fr_1fr]">
+        <div className="mb-20 grid grid-cols-1 gap-10 md:mb-28 md:grid-cols-[1fr_2fr]">
           <div className="">
             <h1 className="font-benzin text-5xl text-almostwhite">
               RESCUE Discord
@@ -16,7 +16,7 @@ export default function Discord() {
               Дискорд – наша основная социальная сеть, в которой мы делимся
               информацией, общаемся и проводим АМА сессии.
             </p>
-            <h2 className="mt-8 font-montserratBold text-3xl text-almostwhite">
+            <h2 className="mt-8 font-montserratBold text-2xl text-almostwhite">
               Контент в дискорде делится на две категории:
             </h2>
             <div className="mt-4 flex space-x-2">
@@ -31,14 +31,14 @@ export default function Discord() {
               <div>Информация от нашей команды</div>
             </div>
           </div>
-          <div className="grid h-80 w-80 items-center justify-items-center justify-self-center rounded-full border-2 border-subline p-10 font-abibas text-9xl text-accent md:h-64 md:w-64 md:text-9xl lg:h-96 lg:w-96 lg:text-10xl">
+          <div className="grid h-80 w-80 items-center justify-items-center justify-self-center rounded-full border-2 border-subline p-10 font-abibas text-9xl text-accent md:col-start-1 md:row-start-1 md:h-64 md:w-64 md:text-9xl lg:h-80 lg:w-80 lg:text-10xl">
             <div className="h-max p-0">AR</div>
           </div>
         </div>
         <div className="px-6">
           <h1 className="font-benzin text-4xl text-almostwhite">Зеркала</h1>
           <div className="mt-10 space-x-2 px-8">
-            <span className="font-montserratBold text-3xl text-almostwhite">
+            <span className="font-montserratBold text-2xl text-almostwhite">
               ETH Calls
             </span>
             <span>
@@ -48,13 +48,13 @@ export default function Discord() {
               профиту с сигналов.
             </span>
           </div>
-          <div className="mt-8 px-8 font-montserratBold text-3xl text-almostwhite">
+          <div className="mt-8 px-8 font-montserratBold text-2xl text-almostwhite">
             <h2>Примеры профита:</h2>
             <div className="mt-4"></div>
           </div>
 
           <div className="mt-36 space-x-2 px-8">
-            <span className="font-montserratBold text-3xl text-almostwhite">
+            <span className="font-montserratBold text-2xl text-almostwhite">
               SOL Calls
             </span>
             <span>
@@ -64,13 +64,13 @@ export default function Discord() {
               насчитывает 6 каналов
             </span>
           </div>
-          <div className="mt-8 px-8 font-montserratBold text-3xl text-almostwhite">
+          <div className="mt-8 px-8 font-montserratBold text-2xl text-almostwhite">
             <h2>Примеры профита:</h2>
             <div className="mt-4"></div>
           </div>
 
           <div className="mt-36 space-x-2 px-8">
-            <span className="font-montserratBold text-3xl text-almostwhite">
+            <span className="font-montserratBold text-2xl text-almostwhite">
               Trading Calls
             </span>
             <span>
@@ -79,13 +79,13 @@ export default function Discord() {
               поэтому можем смело рекомендовать. В категории 6 каналов.
             </span>
           </div>
-          <div className="mt-8 px-8 font-montserratBold text-3xl text-almostwhite">
+          <div className="mt-8 px-8 font-montserratBold text-2xl text-almostwhite">
             <h2>Примеры профита:</h2>
             <div className="mt-4"></div>
           </div>
 
           <div className="mt-36 space-x-2 px-8">
-            <span className="font-montserratBold text-3xl text-almostwhite">
+            <span className="font-montserratBold text-2xl text-almostwhite">
               Tools
             </span>
             <span>
@@ -95,13 +95,13 @@ export default function Discord() {
               подборки рафлов и многое другое, более подробно читайте тут
             </span>
           </div>
-          <div className="mt-8 px-8 font-montserratBold text-3xl text-almostwhite">
+          <div className="mt-8 px-8 font-montserratBold text-2xl text-almostwhite">
             <h2>Примеры профита:</h2>
             <div className="mt-4"></div>
           </div>
 
           <div className="mt-36 space-x-2 px-8">
-            <span className="font-montserratBold text-3xl text-almostwhite">
+            <span className="font-montserratBold text-2xl text-almostwhite">
               News Mirror
             </span>
             <span>
@@ -117,7 +117,7 @@ export default function Discord() {
           </h1>
 
           <div className="mt-12 space-x-2 px-8">
-            <span className="font-montserratBold text-3xl text-almostwhite">
+            <span className="font-montserratBold text-2xl text-almostwhite">
               NFT Analytics
             </span>
             <span>
@@ -128,7 +128,7 @@ export default function Discord() {
           </div>
 
           <div className="mt-12 space-x-2 px-8">
-            <span className="font-montserratBold text-3xl text-almostwhite">
+            <span className="font-montserratBold text-2xl text-almostwhite">
               Asian Calls
             </span>
             <span>
@@ -139,7 +139,7 @@ export default function Discord() {
           </div>
 
           <div className="mt-12 space-x-2 px-8">
-            <span className="font-montserratBold text-3xl text-almostwhite">
+            <span className="font-montserratBold text-2xl text-almostwhite">
               Rescue Team
             </span>
             <span>
@@ -188,7 +188,7 @@ export default function Discord() {
         <div className="mt-32 grid justify-items-end sm:mt-48">
           <div className="flex items-center space-x-3 font-benzin text-sm text-almostwhite md:space-x-6 md:text-2xl">
             <span>Читать далее:</span>
-            <Link href="tools/utilities">
+            <Link href="utilities">
               <button className="rounded-xl bg-element p-3  hover:bg-opacity-60 md:p-6">
                 Утилиты RESCUE
               </button>
