@@ -1,14 +1,27 @@
-import localFont from "next/font/local";
 import { useState } from "react";
 import SidebarLayout from "~/components/SidebarLayout";
-import { Filter } from "~/design/icons/Filter";
 import { Search } from "~/design/icons/Search";
-import { YourLink } from "~/design/icons/YourLink";
 import { raffles } from "~/utils/tempraffles";
+import { useSession } from "next-auth/react";
+import NoSubscription from "~/components/NoSubscription";
+
+export default function RaffleListRestricted() {
+  const { data, status } = useSession();
+
+  if (data?.user.raffleBotUser && status === "authenticated") {
+    return <RaffleList />;
+  } else {
+    return <NoSubscription service={"RaffleBot"} link={"/tools"} />;
+  }
+}
 
 /* eslint-disable @next/next/no-img-element */
 const RaffleList = () => {
   const [current, setCurrent] = useState(1);
+
+  const session = useSession();
+
+  console.log("community member -> ", session.data?.user.communityMember);
 
   return (
     <SidebarLayout>
@@ -53,7 +66,7 @@ const RaffleList = () => {
               </div>
             </div>
           </div>
-          <div className="mt-10 mb-10 grid justify-items-center">
+          <div className="mb-10 mt-10 grid justify-items-center">
             <div className="grid justify-items-center font-bold">
               <div className="flex h-12 w-48 items-center space-x-1 rounded-xl bg-element pl-6 pr-2 text-sm text-subtext md:w-72 md:text-base">
                 <Search />
@@ -155,5 +168,3 @@ const RaffleList = () => {
     </SidebarLayout>
   );
 };
-
-export default RaffleList;

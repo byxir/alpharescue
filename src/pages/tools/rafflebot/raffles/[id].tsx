@@ -2,10 +2,11 @@
 import LaunchButton from "~/components/LaunchButton/LaunchButton";
 import SidebarLayout from "~/components/SidebarLayout";
 import { raffles } from "~/utils/tempraffles";
-import Slider from "@mui/material/Slider";
 import { useState } from "react";
 import { RangeSlider } from "~/components/RangeSlider";
 import { accounts } from "~/utils/tempaccounts";
+import { useSession } from "next-auth/react";
+import Link from "next/link";
 
 const Raffle = () => {
   const r = raffles[0];
@@ -15,6 +16,8 @@ const Raffle = () => {
   };
   const [activeAccounts, setActiveAccounts] = useState<string[]>([]);
   const [activeConfiguration, setActiveConfiguration] = useState(0);
+
+  const { data, status } = useSession();
 
   const handleActive = (account: string) => {
     if (activeAccounts.includes(account)) {
@@ -26,6 +29,11 @@ const Raffle = () => {
       setActiveAccounts(newActiveAccounts);
     } else {
       setActiveAccounts((prevAccounts) => [...prevAccounts, account]);
+    }
+  };
+  const handleChangeConfiguration = (newActiveConfiguration: number) => {
+    if (data?.user.raffleBotUser && status === "authenticated") {
+      setActiveConfiguration(newActiveConfiguration);
     }
   };
   return (
@@ -43,7 +51,7 @@ const Raffle = () => {
               </div>
               <div className="relative px-6 md:px-14">
                 <div
-                  className={`text-${r.platform} mt-3 ml-28 capitalize md:ml-32`}
+                  className={`text-${r.platform} ml-28 mt-3 capitalize md:ml-32`}
                 >
                   {r.platform}
                 </div>
@@ -86,7 +94,7 @@ const Raffle = () => {
               </div>
             </div>
             <div className="mb-12 grid grid-rows-[max-content_max-content] px-6 md:px-14 2xl:mb-0">
-              <div className="mt-12 mb-8 text-3xl">Требования для входа</div>
+              <div className="mb-8 mt-12 text-3xl">Требования для входа</div>
               <div className="grid gap-4">
                 {r.requirements.map((rq) => (
                   <div
@@ -118,7 +126,7 @@ const Raffle = () => {
               </div>
               <div className="grid grid-cols-[repeat(4,_max-content)] gap-2">
                 <div
-                  onClick={() => setActiveConfiguration(1)}
+                  onClick={() => handleChangeConfiguration(1)}
                   className={`grid h-12 w-12 cursor-pointer items-center justify-items-center rounded-lg bg-element text-2xl shadow-md transition-colors hover:bg-neutral-900 ${
                     activeConfiguration === 1
                       ? "border-2 border-almostwhite"
@@ -128,7 +136,7 @@ const Raffle = () => {
                   1
                 </div>
                 <div
-                  onClick={() => setActiveConfiguration(2)}
+                  onClick={() => handleChangeConfiguration(2)}
                   className={`grid h-12 w-12 cursor-pointer items-center justify-items-center rounded-lg bg-element text-2xl shadow-md transition-colors hover:bg-neutral-900 ${
                     activeConfiguration === 2
                       ? "border-2 border-almostwhite"
@@ -138,7 +146,7 @@ const Raffle = () => {
                   2
                 </div>
                 <div
-                  onClick={() => setActiveConfiguration(3)}
+                  onClick={() => handleChangeConfiguration(3)}
                   className={`grid h-12 w-12 cursor-pointer items-center justify-items-center rounded-lg bg-element text-2xl shadow-md transition-colors hover:bg-neutral-900 ${
                     activeConfiguration === 3
                       ? "border-2 border-almostwhite"
@@ -148,7 +156,7 @@ const Raffle = () => {
                   3
                 </div>
                 <div
-                  onClick={() => setActiveConfiguration(4)}
+                  onClick={() => handleChangeConfiguration(4)}
                   className={`grid h-12 w-12 cursor-pointer items-center justify-items-center rounded-lg bg-element text-2xl shadow-md transition-colors hover:bg-neutral-900 ${
                     activeConfiguration === 4
                       ? "border-2 border-almostwhite"
@@ -159,7 +167,11 @@ const Raffle = () => {
                 </div>
               </div>
             </div>
-            <LaunchButton>
+            <LaunchButton
+              authorized={
+                data?.user.raffleBotUser && status === "authenticated"
+              }
+            >
               <p className="text-2xl">Запустить</p>
               <p className="text-2xl">абуз</p>
             </LaunchButton>
@@ -169,24 +181,26 @@ const Raffle = () => {
               <div className="mb-16 w-full text-xl md:mb-0 lg:text-2xl">
                 Настроить конфигурацию
               </div>
-              <div className="mr-5 grid w-full grid-cols-[max-content_auto_max-content] items-center">
-                <div className="mr-5">0</div>
-                <RangeSlider
-                  getAriaLabel={() => "Account range"}
-                  value={rangeValue}
-                  onChange={handleChangeRange}
-                  valueLabelDisplay="auto"
-                  min={0}
-                  max={1000}
-                  step={5}
-                />
-                <div className="ml-5">All</div>
-              </div>
+              {data?.user.raffleBotUser && status === "authenticated" ? (
+                <div className="mr-5 grid w-full grid-cols-[max-content_auto_max-content] items-center">
+                  <div className="mr-5">0</div>
+                  <RangeSlider
+                    getAriaLabel={() => "Account range"}
+                    value={rangeValue}
+                    onChange={handleChangeRange}
+                    valueLabelDisplay="auto"
+                    min={0}
+                    max={1000}
+                    step={5}
+                  />
+                  <div className="ml-5">All</div>
+                </div>
+              ) : null}
             </div>
           </div>
           <div className="mt-12">
             <div className="grid grid-cols-[auto_40px] gap-2">
-              <div className="mb-6 grid grid-cols-[6%_20%_20%_27%_27%] rounded-xl border-2 border-subtext bg-element py-4 px-6 text-xs text-subtext sm:text-base">
+              <div className="mb-6 grid grid-cols-[6%_20%_20%_27%_27%] rounded-xl border-2 border-subtext bg-element px-6 py-4 text-xs text-subtext sm:text-base">
                 <span>#</span>
                 <span>Twitter</span>
                 <span>Discord</span>
@@ -210,24 +224,42 @@ const Raffle = () => {
                 </svg>
               </div>
             </div>
-            <div className="h-[calc(100vh-440px)] 2xl:overflow-auto">
-              {accounts.map((a, index) => (
-                <div
-                  className="grid grid-cols-[auto_40px] gap-2"
-                  key={a.Twitter}
-                >
-                  <div className="mb-4 h-14 w-full rounded-xl border border-subline"></div>
+            {data?.user.raffleBotUser && status === "authenticated" ? (
+              <div className="h-[calc(100vh-440px)] 2xl:overflow-auto">
+                {accounts.map((a, index) => (
                   <div
-                    onClick={() => handleActive(a.id)}
-                    className="mb-4 h-10 cursor-pointer self-center rounded-lg border border-subline p-2.5"
+                    className="grid grid-cols-[auto_40px] gap-2"
+                    key={a.Twitter}
                   >
-                    {activeAccounts.includes(a.id) ? (
-                      <div className="h-full w-full rounded-md bg-accent"></div>
-                    ) : null}
+                    <div className="mb-4 h-14 w-full rounded-xl border border-subline"></div>
+                    <div
+                      onClick={() => handleActive(a.id)}
+                      className="mb-4 h-10 cursor-pointer self-center rounded-lg border border-subline p-2.5"
+                    >
+                      {activeAccounts.includes(a.id) ? (
+                        <div className="h-full w-full rounded-md bg-accent"></div>
+                      ) : null}
+                    </div>
                   </div>
+                ))}
+              </div>
+            ) : (
+              <div className="mt-6 h-full w-full items-center justify-items-center font-montserratRegular text-subtext">
+                <p>
+                  Вы не можете добавлять аккаунты и запускать абуз без подписки
+                  на RaffleBot.
+                </p>
+                <br></br>
+                <div className="flex space-x-1">
+                  <p>Приобрести подписку можно </p>
+                  <span>
+                    <Link href="/tools" className="underline">
+                      здесь.
+                    </Link>
+                  </span>
                 </div>
-              ))}
-            </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

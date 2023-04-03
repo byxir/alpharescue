@@ -55,6 +55,11 @@ model User {
     image         String?
     accounts      Account[]
     sessions      Session[]
+    role          Role      @default(USER)
+
+    communityMember  Boolean @default(false)
+    raffleBotUser    Boolean @default(false)
+    speedMintBotUser Boolean @default(false)
 }
 
 model VerificationToken {
@@ -63,4 +68,9 @@ model VerificationToken {
     expires    DateTime
 
     @@unique([identifier, token])
+}
+
+enum Role {
+    USER
+    ADMIN
 }

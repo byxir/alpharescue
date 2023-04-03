@@ -38,7 +38,7 @@ export default function Footer() {
             </div>
             <a
               href="t.me"
-              className="w-max self-end rounded-md bg-bg bg-opacity-0 px-3 py-2 font-montserratRegular text-base leading-6 text-element transition-all hover:bg-opacity-5"
+              className="mt-20 w-max self-end rounded-md bg-bg bg-opacity-0 px-3 py-2 font-montserratBold text-base leading-6 text-element transition-all hover:bg-opacity-5 xl:mt-0"
             >
               Обратиться в тех. поддержку...
             </a>

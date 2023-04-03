@@ -36,22 +36,22 @@ const navigation = [
   {
     name: "Premint",
     icon: "../../../../premint.png",
-    pathname: "platforms/premint",
+    pathname: "/tools/rafflebot/platforms/premint",
   },
   {
     name: "Alphabot",
     icon: "../../../../alphabot.png",
-    pathname: "platforms/alphabot",
+    pathname: "/tools/rafflebot/platforms/alphabot",
   },
   {
     name: "Superfull",
     icon: "../../../../superfull.png",
-    pathname: "platforms/superfull",
+    pathname: "/tools/rafflebot/platforms/superfull",
   },
   {
     name: "FreeNFT",
     icon: "../../../../freenft.png",
-    pathname: "platforms/freenft",
+    pathname: "/tools/rafflebot/platforms/freenft",
     noScale: true,
   },
   {
@@ -69,11 +69,11 @@ function classNames(...classes: string[]) {
 export default function SidebarLayout({ children }: { children: ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const pathnames = [
-    "platforms/premint",
-    "platforms/alphabot",
-    "platforms/superfull",
-    "platforms/freenft",
-    "myraffles",
+    "/tools/rafflebot/platforms/premint",
+    "/tools/rafflebot/platforms/alphabot",
+    "/tools/rafflebot/platforms/superfull",
+    "/tools/rafflebot/platforms/freenft",
+    "/tools/rafflebot/myraffles",
   ];
   const [current, setCurrent] = useState("");
 
@@ -83,14 +83,19 @@ export default function SidebarLayout({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     pathnames.forEach((p) => {
-      if (p === urlCurrent.query.platform) {
+      if (
+        p === `/tools/rafflebot/platforms/${String(urlCurrent.query.platform)}`
+      ) {
+        console.log("made it to if in useeffect");
         setCurrent(p);
-      } else if (urlCurrent.pathname === "/rafflebot/myraffles") {
+      } else if (urlCurrent.pathname === "/tools/rafflebot/myraffles") {
+        console.log("made it to else in useeffect");
         setCurrent(p);
       }
     });
   }, [urlCurrent.query.platform]);
 
+  console.log("new new current pathname -> ", urlCurrent.pathname);
   return (
     <>
       <div
@@ -134,7 +139,7 @@ export default function SidebarLayout({ children }: { children: ReactNode }) {
                     leaveFrom="opacity-100"
                     leaveTo="opacity-0"
                   >
-                    <div className="absolute top-0 right-0 -mr-12 pt-2">
+                    <div className="absolute right-0 top-0 -mr-12 pt-2">
                       <button
                         type="button"
                         className="ml-1 flex h-10 w-10 items-center justify-center"
@@ -149,7 +154,7 @@ export default function SidebarLayout({ children }: { children: ReactNode }) {
                     </div>
                   </Transition.Child>
                   <div
-                    className={`${benzin.variable} ${abibas.variable} ${montserrat.variable} h-0 flex-1 overflow-y-auto pt-5 pb-4 font-sans`}
+                    className={`${benzin.variable} ${abibas.variable} ${montserrat.variable} h-0 flex-1 overflow-y-auto pb-4 pt-5 font-sans`}
                   >
                     <div className="h-max items-center justify-center px-4">
                       <div className="flex justify-center font-abibas text-9xl text-accent">
@@ -162,11 +167,12 @@ export default function SidebarLayout({ children }: { children: ReactNode }) {
                     <nav className="mt-20 grid h-max auto-rows-max gap-2 px-6 font-montserratBold">
                       {navigation.map((item) => (
                         <Link
-                          href={`/rafflebot/${item.pathname}`}
+                          href={`${item.pathname}`}
                           key={item.name}
                           className={classNames(
                             item.margin ? "mt-5" : "",
-                            current === item.pathname
+                            `/tools/rafflebot/platforms/${current}` ===
+                              item.pathname
                               ? "bg-bg text-white"
                               : "text-almostwhite hover:bg-bg hover:bg-opacity-75",
                             "group flex h-max items-center rounded-xl px-3 py-3 text-lg font-bold transition-colors"
@@ -207,7 +213,7 @@ export default function SidebarLayout({ children }: { children: ReactNode }) {
         <div className="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-64 lg:flex-col">
           {/* Sidebar component, swap this element with another sidebar if you like */}
           <div className="flex min-h-0 flex-1 flex-col bg-sidebarBg font-montserratBold">
-            <div className="flex flex-1 flex-col overflow-y-auto pt-5 pb-4">
+            <div className="flex flex-1 flex-col overflow-y-auto pb-4 pt-5">
               <div className="flex-shrink-0 flex-col items-center justify-center px-4">
                 <div className="flex justify-center font-abibas text-9xl text-accent">
                   AR
@@ -219,10 +225,10 @@ export default function SidebarLayout({ children }: { children: ReactNode }) {
               <nav className="grid h-full auto-rows-max content-center gap-2 px-6">
                 {navigation.map((item) => (
                   <Link
-                    href={`/rafflebot/${item.pathname}`}
+                    href={`${item.pathname}`}
                     key={item.name}
                     className={classNames(
-                      item.margin ? "mt-5 mb-32" : "",
+                      item.margin ? "mb-32 mt-5" : "",
                       current === item.pathname
                         ? "bg-bg text-white"
                         : "text-almostwhite hover:bg-bg hover:bg-opacity-75",
@@ -242,7 +248,7 @@ export default function SidebarLayout({ children }: { children: ReactNode }) {
               </nav>
             </div>
             <Link
-              href="/rafflebot/settings"
+              href="/tools/rafflebot/settings"
               className="grid cursor-pointer grid-cols-[repeat(2,_max-content)] justify-center space-x-2 border-t border-subline p-4 transition-colors hover:bg-bg"
             >
               <Settings />
@@ -253,7 +259,7 @@ export default function SidebarLayout({ children }: { children: ReactNode }) {
           </div>
         </div>
         <div className="flex flex-1 flex-col lg:pl-64">
-          <div className="sticky top-0 z-10 bg-sidebarBg py-1 px-3 lg:hidden">
+          <div className="sticky top-0 z-10 bg-sidebarBg px-3 py-1 lg:hidden">
             <button
               type="button"
               className="-ml-0.5 -mt-0.5 inline-flex h-12 w-12 items-center justify-center rounded-md text-gray-500 hover:text-gray-900"

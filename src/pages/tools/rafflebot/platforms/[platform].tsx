@@ -1,4 +1,3 @@
-import localFont from "next/font/local";
 import { useState } from "react";
 import SidebarLayout from "~/components/SidebarLayout";
 import { Filter } from "~/design/icons/Filter";
@@ -56,7 +55,7 @@ const RaffleList = () => {
               Premint
             </p>
           </div>
-          <div className="mt-10 mb-10 grid justify-items-center">
+          <div className="mb-10 mt-10 grid justify-items-center">
             <div className="grid grid-cols-[repeat(2,_max-content)] justify-center gap-4 font-bold xl:grid-cols-[repeat(3,_max-content)]">
               <div className="flex h-12 w-40 items-center space-x-1 rounded-xl bg-element pl-6 pr-2 text-sm text-subtext md:w-72 md:text-base">
                 <Search />
