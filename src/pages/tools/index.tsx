@@ -97,24 +97,26 @@ const RaffleBot = () => {
           </div>
         </div>
         <div className="row-start-1 mb-8 grid gap-8 justify-self-center sm:max-w-lg lg:col-start-2 lg:mb-0 lg:max-w-lg">
-          <ToolFolder small={false} mt="16" textSize="4xl">
-            <div className="grid w-max grid-cols-[repeat(2,_max-content)] grid-rows-2">
-              <div className="row-span-2 self-center bg-gradient-to-r from-raffleBot to-almostwhite bg-clip-text text-transparent">
-                Raffle Bot
-              </div>
-              <div className="grid justify-items-center">
-                <Robot />
-              </div>
-              <div className="grid grid-cols-2 justify-items-center gap-2">
-                <div className="ml-8 w-max">
+          <Link href="/tools/rafflebot/platforms/Premint">
+            <ToolFolder small={false} mt="16" textSize="4xl">
+              <div className="grid w-max grid-cols-[repeat(2,_max-content)] grid-rows-2">
+                <div className="row-span-2 self-center bg-gradient-to-r from-raffleBot to-almostwhite bg-clip-text text-transparent">
+                  Raffle Bot
+                </div>
+                <div className="grid justify-items-center">
                   <Robot />
                 </div>
-                <div className="mr-8 w-max">
-                  <Robot />
+                <div className="grid grid-cols-2 justify-items-center gap-2">
+                  <div className="ml-8 w-max">
+                    <Robot />
+                  </div>
+                  <div className="mr-8 w-max">
+                    <Robot />
+                  </div>
                 </div>
               </div>
-            </div>
-          </ToolFolder>
+            </ToolFolder>
+          </Link>
           <div className="flex items-center justify-center space-x-10 font-montserratBold">
             <div className="text-lg text-almostwhite sm:text-xl">Bonus:</div>
             <div className="w-60 rounded-xl border-2 border-dashed border-community p-6 text-lg text-almostwhite sm:w-auto sm:text-xl">

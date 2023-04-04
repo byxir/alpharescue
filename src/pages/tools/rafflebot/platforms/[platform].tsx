@@ -1,13 +1,57 @@
-import { useState } from "react";
-import SidebarLayout from "~/components/SidebarLayout";
-import { Filter } from "~/design/icons/Filter";
-import { Search } from "~/design/icons/Search";
-import { YourLink } from "~/design/icons/YourLink";
-import { raffles } from "~/utils/tempraffles";
-
 /* eslint-disable @next/next/no-img-element */
+import { useQuery } from "@tanstack/react-query";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import SidebarLayout from "~/components/SidebarLayout";
+import { Search } from "~/design/icons/Search";
+import { Star } from "~/design/icons/Star";
+import { YourLink } from "~/design/icons/YourLink";
+
+type IRaffle = {
+  banner: string;
+  captcha: string;
+  category: string;
+  deadline: string;
+  hold?: string;
+  id: string;
+  name: string;
+  platform: string;
+  platformLink: string;
+  profilePicture: string;
+  requirements: {
+    action: string;
+    clarification: string;
+    platform: string;
+  }[];
+  subscribers: number;
+};
+
 const RaffleList = () => {
   const [current, setCurrent] = useState(1);
+  const router = useRouter();
+
+  const raffles = useQuery<IRaffle[]>(
+    ["raffles"],
+    async () => {
+      const res = await fetch(
+        `https://alpharescue.online/raffles?platform=${String(
+          router.query.platform
+        )}`
+      );
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+      return res.json();
+    },
+    {
+      enabled: false,
+    }
+  );
+
+  useEffect(() => {
+    if (!router.isReady) return;
+    void raffles.refetch();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [router.isReady, router.query.platform]);
 
   return (
     <SidebarLayout>
@@ -65,8 +109,8 @@ const RaffleList = () => {
                 />
               </div>
               <div className="flex h-12 w-max cursor-pointer items-center space-x-1 rounded-xl bg-element px-6 text-subtext transition-colors hover:bg-neutral-900">
-                <Filter />
-                <p className="hidden md:block">Фильтр</p>
+                <Star />
+                <p className="hidden md:block">Избранное</p>
               </div>
               <div className="col-span-2 flex h-12 w-max cursor-pointer items-center space-x-2 justify-self-center rounded-xl bg-element px-6 text-xs text-subtext transition-colors hover:bg-neutral-900 md:text-base xl:col-span-1">
                 <YourLink />
@@ -75,14 +119,15 @@ const RaffleList = () => {
             </div>
           </div>
           <div className="grid grid-flow-row grid-cols-1 gap-7 md:grid-cols-2 xl:grid-cols-3">
-            {raffles.map((r) => (
-              <div
+            {raffles.data?.map((r) => (
+              <Link
+                href={`/tools/rafflebot/raffles/${r.id}`}
                 className="min-w-104 grid rounded-xl bg-element shadow-md"
                 key={r.id}
               >
                 <div className="h-28">
                   <img
-                    src={r.benner}
+                    src={r.banner}
                     className="h-full w-full rounded-t-xl object-cover"
                     alt=""
                   />
@@ -99,16 +144,13 @@ const RaffleList = () => {
                         />
                       </div>
                     </div>
+
                     <div className="mt-7 grid h-max w-12 justify-items-center">
-                      <img
-                        src="../../../../star.png"
-                        className="h-6 w-6"
-                        alt="favorite"
-                      />
+                      <Star />
                     </div>
                   </div>
                   <div className="mt-2 font-semibold text-subtext">
-                    By {r.author}
+                    Deadline - {r.deadline ? r.deadline : "Не указано"}
                   </div>
                   <div className="mt-10 grid grid-cols-[max-content_max-content] grid-rows-[max-content_max-content] justify-evenly gap-6 sm:grid-cols-[repeat(4,_max-content)] md:grid-cols-[max-content_max-content] md:grid-rows-[max-content_max-content] 2xls:grid-cols-[max-content_max-content_max-content_auto] 2xls:grid-rows-1">
                     <div className="">
@@ -152,7 +194,7 @@ const RaffleList = () => {
                     </div>
                   </div>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         </div>

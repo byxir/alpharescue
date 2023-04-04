@@ -7,7 +7,6 @@ const LaunchButton = ({
   children: React.ReactNode;
   authorized?: boolean;
 }) => {
-  console.log("authorized -> ", authorized);
   return (
     <div className="h-max w-max rounded-xl bg-black">
       <button

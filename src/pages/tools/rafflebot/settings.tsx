@@ -139,7 +139,6 @@ const RaffleList = () => {
           </div>
           <div className="grid grid-cols-2 grid-rows-[repeat(4,_max-content)] gap-6 text-center text-sm text-subtext">
             <button
-              onClick={() => console.log("button pressed")}
               className={`grid h-52 justify-items-center rounded-xl border-2 border-dashed border-subline p-4 transition-colors ${
                 data?.user.raffleBotUser && status === "authenticated"
                   ? "cursor-pointer hover:bg-neutral-900"
@@ -160,7 +159,6 @@ const RaffleList = () => {
               </div>
             </button>
             <button
-              onClick={() => console.log("button pressed")}
               className={`grid h-52 justify-items-center rounded-xl border-2 border-dashed border-subline p-4 transition-colors ${
                 data?.user.raffleBotUser && status === "authenticated"
                   ? "cursor-pointer hover:bg-neutral-900"
@@ -181,7 +179,6 @@ const RaffleList = () => {
               </div>
             </button>
             <button
-              onClick={() => console.log("button pressed")}
               className={`grid h-52 justify-items-center rounded-xl border-2 border-dashed border-subline p-4 transition-colors ${
                 data?.user.raffleBotUser && status === "authenticated"
                   ? "cursor-pointer hover:bg-neutral-900"
@@ -202,7 +199,6 @@ const RaffleList = () => {
               </div>
             </button>
             <button
-              onClick={() => console.log("button pressed")}
               className={`grid h-52 justify-items-center rounded-xl border-2 border-dashed border-subline p-4 transition-colors ${
                 data?.user.raffleBotUser && status === "authenticated"
                   ? "cursor-pointer hover:bg-neutral-900"
@@ -237,7 +233,6 @@ const RaffleList = () => {
               </div>
             </button>
             <button
-              onClick={() => console.log("button pressed")}
               disabled={
                 !(data?.user.raffleBotUser && status === "authenticated")
               }

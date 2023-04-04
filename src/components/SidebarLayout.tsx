@@ -36,22 +36,22 @@ const navigation = [
   {
     name: "Premint",
     icon: "../../../../premint.png",
-    pathname: "/tools/rafflebot/platforms/premint",
+    pathname: "/tools/rafflebot/platforms/Premint",
   },
   {
     name: "Alphabot",
     icon: "../../../../alphabot.png",
-    pathname: "/tools/rafflebot/platforms/alphabot",
+    pathname: "/tools/rafflebot/platforms/Alphabot",
   },
   {
     name: "Superfull",
     icon: "../../../../superfull.png",
-    pathname: "/tools/rafflebot/platforms/superfull",
+    pathname: "/tools/rafflebot/platforms/Superfull",
   },
   {
     name: "FreeNFT",
     icon: "../../../../freenft.png",
-    pathname: "/tools/rafflebot/platforms/freenft",
+    pathname: "/tools/rafflebot/platforms/FreeNFT",
     noScale: true,
   },
   {
@@ -69,33 +69,28 @@ function classNames(...classes: string[]) {
 export default function SidebarLayout({ children }: { children: ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const pathnames = [
-    "/tools/rafflebot/platforms/premint",
-    "/tools/rafflebot/platforms/alphabot",
-    "/tools/rafflebot/platforms/superfull",
-    "/tools/rafflebot/platforms/freenft",
+    "/tools/rafflebot/platforms/Premint",
+    "/tools/rafflebot/platforms/Alphabot",
+    "/tools/rafflebot/platforms/Superfull",
+    "/tools/rafflebot/platforms/FreeNFT",
     "/tools/rafflebot/myraffles",
   ];
   const [current, setCurrent] = useState("");
 
   const urlCurrent = useRouter();
-  console.log("urlCurrent pathname -> ", urlCurrent.pathname);
-  console.log("current -> ", current);
 
   useEffect(() => {
     pathnames.forEach((p) => {
       if (
         p === `/tools/rafflebot/platforms/${String(urlCurrent.query.platform)}`
       ) {
-        console.log("made it to if in useeffect");
         setCurrent(p);
       } else if (urlCurrent.pathname === "/tools/rafflebot/myraffles") {
-        console.log("made it to else in useeffect");
         setCurrent(p);
       }
     });
   }, [urlCurrent.query.platform]);
 
-  console.log("new new current pathname -> ", urlCurrent.pathname);
   return (
     <>
       <div
@@ -156,14 +151,17 @@ export default function SidebarLayout({ children }: { children: ReactNode }) {
                   <div
                     className={`${benzin.variable} ${abibas.variable} ${montserrat.variable} h-0 flex-1 overflow-y-auto pb-4 pt-5 font-sans`}
                   >
-                    <div className="h-max items-center justify-center px-4">
+                    <Link
+                      href="/"
+                      className="h-max items-center justify-center px-4"
+                    >
                       <div className="flex justify-center font-abibas text-9xl text-accent">
                         AR
                       </div>
                       <div className="flex justify-center font-montserratBold text-3xl font-bold text-almostwhite">
                         Raffle Bot
                       </div>
-                    </div>
+                    </Link>
                     <nav className="mt-20 grid h-max auto-rows-max gap-2 px-6 font-montserratBold">
                       {navigation.map((item) => (
                         <Link
@@ -214,14 +212,17 @@ export default function SidebarLayout({ children }: { children: ReactNode }) {
           {/* Sidebar component, swap this element with another sidebar if you like */}
           <div className="flex min-h-0 flex-1 flex-col bg-sidebarBg font-montserratBold">
             <div className="flex flex-1 flex-col overflow-y-auto pb-4 pt-5">
-              <div className="flex-shrink-0 flex-col items-center justify-center px-4">
+              <Link
+                href="/"
+                className="flex-shrink-0 flex-col items-center justify-center px-4"
+              >
                 <div className="flex justify-center font-abibas text-9xl text-accent">
                   AR
                 </div>
                 <div className="flex justify-center text-3xl font-bold text-almostwhite">
                   Raffle Bot
                 </div>
-              </div>
+              </Link>
               <nav className="grid h-full auto-rows-max content-center gap-2 px-6">
                 {navigation.map((item) => (
                   <Link

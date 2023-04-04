@@ -21,8 +21,6 @@ const RaffleList = () => {
 
   const session = useSession();
 
-  console.log("community member -> ", session.data?.user.communityMember);
-
   return (
     <SidebarLayout>
       <div className="py-6">

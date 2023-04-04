@@ -1,8 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import LaunchButton from "~/components/LaunchButton/LaunchButton";
 import SidebarLayout from "~/components/SidebarLayout";
-import { raffles } from "~/utils/tempraffles";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { RangeSlider } from "~/components/RangeSlider";
 import { accounts } from "~/utils/tempaccounts";
 import { useSession } from "next-auth/react";
@@ -28,25 +27,31 @@ type IRaffle = {
     platform: string;
   }[];
   subscribers: number;
+  TotalSupply: string;
+  NumberOfWinners: string;
 };
 
 const Raffle = () => {
-  const raffleId = useRouter().query.id;
-  console.log("raffleId -> ", raffleId);
+  const router = useRouter();
 
   const raffle: UseQueryResult<IRaffle> = useQuery<IRaffle>(
     ["raffle"],
     async () => {
       const res = await axios.get(
-        `https://alpharescue.online/raffles/c7daef08-419b-48f3-a0da-643eb466baad`
+        `https://alpharescue.online/raffles/${String(router.query.id)}`
       );
-      console.log("response -> ", res);
       // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       return res.data;
-    }
+    },
+    { enabled: false }
   );
 
-  const r = raffles[0];
+  useEffect(() => {
+    if (!router.isReady) return;
+    void raffle.refetch();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [router.isReady, router.query.id]);
+
   const [rangeValue, setRangeValue] = useState<number[]>([0, 1000]);
   const handleChangeRange = (e: Event, newValue: number | number[]) => {
     setRangeValue(newValue as number[]);
@@ -86,35 +91,37 @@ const Raffle = () => {
                   className="h-full w-full object-cover"
                 />
               </div>
-              <div className="relative px-6 md:px-14">
+              <div className="relative px-4 md:px-14">
                 <div
                   className={`text-${String(
-                    raffle.data?.platform
-                  )} ml-28 mt-3 capitalize md:ml-32`}
+                    raffle.data?.platform.toLowerCase()
+                  )} ml-28 mt-3 md:ml-32`}
                 >
                   {raffle.data?.platform}
                 </div>
-                <div className="absolute -top-16 grid h-24 w-24 items-center justify-items-center rounded-xl bg-element md:-top-20 md:h-28 md:w-28">
+                <div className="absolute -top-12 grid h-24 w-24 items-center justify-items-center rounded-full bg-bg md:-top-16 md:h-28 md:w-28">
                   <img
                     src={raffle.data?.profilePicture}
                     alt=""
-                    className="h-20 w-20 rounded-xl md:h-24 md:w-24"
+                    className="h-20 w-20 rounded-full md:h-24 md:w-24"
                   />
                 </div>
               </div>
-              <div className="px-6 md:px-14">
+              <div className="px-4 md:px-14">
                 <div
                   className={`mt-6 cursor-pointer font-benzin text-4xl hover:underline`}
                 >
-                  {raffle.data?.name}
+                  <Link href={String(raffle.data?.platformLink)}>
+                    {raffle.data?.name}
+                  </Link>
                 </div>
                 <div className="mt-3 text-subtext">
-                  By {raffle.data?.platform}
+                  Deadline: {raffle.data?.deadline}
                 </div>
-                <div className="mt-10 grid grid-cols-[repeat(2,_max-content)] gap-3 sm:grid-cols-[repeat(3,_max-content)] sm:gap-6">
+                <div className="mt-10 grid grid-cols-[repeat(2,_max-content)] gap-3 sm:grid-cols-[repeat(4,_max-content)] sm:gap-6">
                   <div className="grid h-20 grid-rows-[repeat(2,_max-content)]">
                     <div className="h-max text-2xl">
-                      {raffle.data?.hold} ETH
+                      {raffle.data?.hold ? raffle.data.hold : 0} ETH
                     </div>
                     <div className="text-md text-sm text-subtext">
                       Сумма холда
@@ -134,19 +141,30 @@ const Raffle = () => {
                   </div>
                   <div className="grid h-20 grid-rows-[repeat(2,_max-content)]">
                     <div className="h-max text-2xl">
-                      {raffle.data?.deadline}
+                      {raffle.data?.TotalSupply}
                     </div>
-                    <div className="text-md text-sm text-subtext">Дедлайн</div>
+                    <div className="text-md text-sm text-subtext">
+                      Количество NFT
+                    </div>
+                  </div>
+                  <div className="grid h-20 grid-rows-[repeat(2,_max-content)]">
+                    <div className="h-max text-2xl">
+                      {raffle.data?.NumberOfWinners}
+                    </div>
+                    <div className="text-md text-sm text-subtext">
+                      <div className="">Количество</div>
+                      <div className="">Победителей</div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-            <div className="mb-12 grid grid-rows-[max-content_max-content] px-6 md:px-14 2xl:mb-0">
+            <div className="mb-12 grid grid-rows-[max-content_max-content] px-4 md:px-14 2xl:mb-0">
               <div className="mb-8 mt-12 text-3xl">Требования для входа</div>
               <div className="grid gap-4">
                 {raffle.data?.requirements.map((rq) => (
                   <div
-                    className="grid h-12 grid-cols-[50px_70px_auto] gap-4"
+                    className="grid h-12 grid-cols-[50px_120px_auto] gap-4"
                     key={rq.clarification}
                   >
                     <div className="grid h-12 w-12 items-center">
@@ -156,9 +174,22 @@ const Raffle = () => {
                         className="w-full"
                       />
                     </div>
-                    <div className="grid items-center text-xl">{rq.action}</div>
+                    <div className="grid items-center text-lg">{rq.action}</div>
                     <div className="grid items-center text-sm">
-                      {rq.clarification}
+                      {rq.clarification.split("|")[1] ? (
+                        <div className="">{rq.clarification.split("|")[0]}</div>
+                      ) : (
+                        <a
+                          href={
+                            rq.platform === "Twitter"
+                              ? `https://twitter.com/screenname/status/${rq.clarification}`
+                              : rq.clarification
+                          }
+                          className="text-blue-400 underline"
+                        >
+                          {rq.platform === "Twitter" ? "Tweet" : "Link"}
+                        </a>
+                      )}
                     </div>
                   </div>
                 ))}
@@ -248,7 +279,7 @@ const Raffle = () => {
           </div>
           <div className="mt-12">
             <div className="grid grid-cols-[auto_40px] gap-2">
-              <div className="mb-6 grid grid-cols-[6%_20%_20%_27%_27%] rounded-xl border-2 border-subtext bg-element px-6 py-4 text-xs text-subtext sm:text-base">
+              <div className="mb-6 grid grid-cols-[6%_20%_20%_27%_27%] rounded-xl border-2 border-subtext bg-element px-4 py-4 text-xs text-subtext sm:text-base">
                 <span>#</span>
                 <span>Twitter</span>
                 <span>Discord</span>
@@ -265,8 +296,8 @@ const Raffle = () => {
                   className="h-full w-full text-subtext"
                 >
                   <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                     d="M4.5 12.75l6 6 9-13.5"
                   />
                 </svg>

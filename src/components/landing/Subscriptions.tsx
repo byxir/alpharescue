@@ -62,7 +62,6 @@ const tiers = [
 
 export default function Subscriptions() {
   const [frequency, setFrequency] = useState(0);
-  console.log("fequency -> ", frequency);
   return (
     <div className="bg-bg py-24 font-montserratRegular sm:py-32">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">

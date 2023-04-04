@@ -14,7 +14,7 @@ export default function Example() {
         <div className="grid max-w-3xl content-center pt-20 xl:mx-0 xl:w-auto xl:pb-36">
           <div className="">
             <Link
-              href="/tools/rafflebot"
+              href="/tools/rafflebot/platforms/Premint"
               className="inline-flex space-x-6 font-montserratBold"
             >
               <span className="grid items-center rounded-full bg-accent/10 px-3 py-1 text-center text-sm font-semibold leading-6 text-accent ring-1 ring-inset ring-accent/20 xs:text-start">
