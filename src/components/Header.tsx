@@ -4,6 +4,7 @@ import { Dialog } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import localFont from "next/font/local";
 import Link from "next/link";
+import { signIn, useSession } from "next-auth/react";
 
 const navigation = [
   { name: "Главная", href: "/" },
@@ -40,6 +41,13 @@ const abibas = localFont({
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  const session = useSession();
+
+  const handleDiscordSignIn = async () => {
+    await signIn("discord", {
+      callbackUrl: `${window.location.origin}`,
+    });
+  };
   return (
     <header className="bg-sidebarBg">
       <nav
@@ -66,14 +74,28 @@ export default function Header() {
           ))}
         </div>
         <div className="flex flex-1 items-center justify-end gap-x-6">
-          <div className="flex cursor-pointer items-center space-x-2 rounded-md bg-indigo-600 px-3 py-2 font-montserratBold text-sm font-semibold text-white shadow-sm transition-colors hover:bg-indigo-800">
-            <img
-              src="../../../discordwhite.png"
-              className="w-8"
-              alt="discord"
-            />
-            <p>Log in</p>
-          </div>
+          {session.status != "authenticated" ? (
+            <div
+              // eslint-disable-next-line @typescript-eslint/no-misused-promises
+              onClick={handleDiscordSignIn}
+              className="flex cursor-pointer items-center space-x-2 rounded-md bg-indigo-600 px-3 py-2 font-montserratBold text-sm font-semibold text-white shadow-sm transition-colors hover:bg-indigo-800"
+            >
+              <img
+                src="../../../discordwhite.png"
+                className="w-8"
+                alt="discord"
+              />
+              <p>Log in</p>
+            </div>
+          ) : (
+            <div className="cursor-pointer items-center font-montserratBold text-sm">
+              <Link href="/tools/rafflebot/platforms/premint">
+                <button className="rounded-md bg-element px-3 py-2 shadow-md transition-all hover:bg-opacity-60">
+                  Raffle Bot
+                </button>
+              </Link>
+            </div>
+          )}
         </div>
         <div className="flex lg:hidden">
           <button
@@ -126,7 +148,14 @@ export default function Header() {
               </div>
               <div className="py-4">
                 <div className="-mx-3 block rounded-lg px-3 py-2.5 pl-2 font-montserratBold text-base font-semibold leading-7 text-almostwhite hover:bg-neutral-900">
-                  Log in
+                  {session.status != "authenticated" ? (
+                    // eslint-disable-next-line @typescript-eslint/no-misused-promises
+                    <div onClick={handleDiscordSignIn}>Log in</div>
+                  ) : (
+                    <Link href="/tools/rafflebot/platforms/premint">
+                      Raffle Bot
+                    </Link>
+                  )}
                 </div>
               </div>
             </div>

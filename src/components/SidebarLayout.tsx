@@ -57,7 +57,7 @@ const navigation = [
   {
     name: "Мои раффлы",
     icon: "../../../../star.png",
-    pathname: "myraffles",
+    pathname: "/tools/rafflebot/myraffles",
     margin: true,
   },
 ];

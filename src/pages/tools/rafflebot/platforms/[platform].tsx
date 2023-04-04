@@ -51,7 +51,7 @@ const RaffleList = () => {
                 Новые
               </div>
             </div>
-            <p className="row-start-2 ml-3 mt-1 font-bold text-premint">
+            <p className="row-start-2 ml-3 mt-1 font-montserratBold font-bold text-premint">
               Premint
             </p>
           </div>

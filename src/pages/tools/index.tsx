@@ -61,9 +61,11 @@ const CommunityPass = () => {
             <button className="w-max rounded-xl bg-community px-6 py-4 font-montserratBold text-xl text-bg shadow-md">
               Купить подписку
             </button>
-            <button className="mt-5 h-max w-max rounded-xl bg-element px-10 py-3 font-montserratBold text-base text-subtext shadow-md sm:mt-0">
-              Отчет
-            </button>
+            <Link href="https://alpharescue.notion.site/Alpha-Rescue-58a5a2bfc2ca4c259f629c0dad8085db">
+              <button className="mt-5 h-max w-max rounded-xl bg-element px-10 py-3 font-montserratBold text-base text-subtext shadow-md transition-all hover:bg-opacity-60 sm:mt-0">
+                Отчет
+              </button>
+            </Link>
           </div>
         </div>
       </div>

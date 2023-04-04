@@ -48,6 +48,7 @@ const config = {
         speedMint: "#FFC700",
         community: "#91DB6E",
         raffleBot: "#85DBE0",
+        discord: "#7289da",
       },
       fontFamily: {
         benzin: ["var(--font-benzin)"],
