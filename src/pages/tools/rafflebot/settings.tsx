@@ -1,4 +1,5 @@
-import { useSession } from "next-auth/react";
+/* eslint-disable jsx-a11y/alt-text */
+import { signIn, useSession } from "next-auth/react";
 import SidebarLayout from "~/components/SidebarLayout";
 import { Forbidden } from "~/design/icons/Forbidden";
 import { Plus } from "~/design/icons/Plus";
@@ -7,6 +8,22 @@ import { ServerIcon } from "~/design/icons/ServerIcon";
 /* eslint-disable @next/next/no-img-element */
 const RaffleList = () => {
   const { data, status } = useSession();
+
+  const handleDiscordSignIn = async () => {
+    await signIn("discord", {
+      callbackUrl: `${window.location.origin}`,
+    });
+  };
+
+  const handleSubscriptionData = async () => {
+    if (status === "authenticated") {
+      if (!data.user.raffleBotUser) {
+        //whop logic here
+      }
+    } else {
+      await handleDiscordSignIn();
+    }
+  };
 
   return (
     <SidebarLayout>
@@ -64,9 +81,24 @@ const RaffleList = () => {
                       </div>
                     </div>
                   </div>
-                ) : (
-                  <button className="w-5/6 self-center justify-self-center rounded-xl bg-raffleBot p-6 text-center font-montserratBold text-2xl text-bg">
+                ) : status === "authenticated" ? (
+                  <button
+                    // eslint-disable-next-line @typescript-eslint/no-misused-promises
+                    onClick={() => {
+                      console.log("whop logic here");
+                    }}
+                    className="w-5/6 cursor-pointer self-center justify-self-center rounded-xl bg-raffleBot p-6 text-center font-montserratBold text-2xl text-bg shadow-md transition-all hover:bg-opacity-60"
+                  >
                     Купить подписку
+                  </button>
+                ) : (
+                  <button
+                    // eslint-disable-next-line @typescript-eslint/no-misused-promises
+                    onClick={handleSubscriptionData}
+                    className="flex w-5/6 cursor-pointer items-center justify-center space-x-4 self-center justify-self-center rounded-xl bg-indigo-600 p-6 text-center font-montserratBold text-2xl text-almostwhite shadow-md transition-all hover:bg-opacity-60"
+                  >
+                    <img src="../../../../discordwhite.png" className="w-20" />
+                    <div>Log in</div>
                   </button>
                 )}
               </div>
