@@ -91,7 +91,7 @@ const Raffle = () => {
                   className="h-full w-full object-cover"
                 />
               </div>
-              <div className="relative px-4 md:px-14">
+              <div className="relative px-4 md:px-10">
                 <div
                   className={`text-${String(
                     raffle.data?.platform.toLowerCase()
@@ -107,7 +107,7 @@ const Raffle = () => {
                   />
                 </div>
               </div>
-              <div className="px-4 md:px-14">
+              <div className="px-4 md:px-10 ">
                 <div
                   className={`mt-6 cursor-pointer font-benzin text-4xl hover:underline`}
                 >
@@ -118,7 +118,7 @@ const Raffle = () => {
                 <div className="mt-3 text-subtext">
                   Deadline: {raffle.data?.deadline}
                 </div>
-                <div className="mt-10 grid grid-cols-[repeat(2,_max-content)] gap-3 sm:grid-cols-[repeat(4,_max-content)] sm:gap-6">
+                <div className="mt-10 grid grid-cols-[repeat(2,_max-content)] gap-3 sm:gap-6 2xls:grid-cols-[repeat(4,_max-content)]">
                   <div className="grid h-20 grid-rows-[repeat(2,_max-content)]">
                     <div className="h-max text-2xl">
                       {raffle.data?.hold ? raffle.data.hold : 0} ETH
@@ -129,10 +129,9 @@ const Raffle = () => {
                   </div>
                   <div className="grid h-20 grid-rows-[repeat(2,_max-content)]">
                     <div className="text-2xl">
-                      {raffle.data?.subscribers &&
-                      raffle.data.subscribers >= 10000
-                        ? `${raffle.data?.subscribers / 1000}K`
-                        : raffle.data?.subscribers}
+                      {raffle.data?.subscribers
+                        ? raffle.data?.subscribers
+                        : "Не указано"}
                     </div>
                     <div className="text-md text-sm text-subtext">
                       <p>Подписчики в </p>
@@ -141,7 +140,9 @@ const Raffle = () => {
                   </div>
                   <div className="grid h-20 grid-rows-[repeat(2,_max-content)]">
                     <div className="h-max text-2xl">
-                      {raffle.data?.TotalSupply}
+                      {raffle.data?.TotalSupply
+                        ? raffle.data?.TotalSupply
+                        : "Не указано"}
                     </div>
                     <div className="text-md text-sm text-subtext">
                       Количество NFT
@@ -149,7 +150,9 @@ const Raffle = () => {
                   </div>
                   <div className="grid h-20 grid-rows-[repeat(2,_max-content)]">
                     <div className="h-max text-2xl">
-                      {raffle.data?.NumberOfWinners}
+                      {raffle.data?.NumberOfWinners
+                        ? raffle.data?.NumberOfWinners
+                        : "Не указано"}
                     </div>
                     <div className="text-md text-sm text-subtext">
                       <div className="">Количество</div>
@@ -159,7 +162,7 @@ const Raffle = () => {
                 </div>
               </div>
             </div>
-            <div className="mb-12 grid grid-rows-[max-content_max-content] px-4 md:px-14 2xl:mb-0">
+            <div className="mb-12 grid grid-rows-[max-content_max-content] px-4 md:px-10 2xl:mb-0">
               <div className="mb-8 mt-12 text-3xl">Требования для входа</div>
               <div className="grid gap-4">
                 {raffle.data?.requirements.map((rq) => (
@@ -206,7 +209,7 @@ const Raffle = () => {
               <div className="grid grid-cols-[repeat(4,_max-content)] gap-2">
                 <div
                   onClick={() => handleChangeConfiguration(1)}
-                  className={`grid h-12 w-12 cursor-pointer items-center justify-items-center rounded-lg bg-element text-2xl shadow-md transition-colors hover:bg-neutral-900 ${
+                  className={`grid h-12 w-12 cursor-pointer items-center justify-items-center rounded-lg bg-element text-2xl shadow-md transition-all hover:bg-opacity-60 ${
                     activeConfiguration === 1
                       ? "border-2 border-almostwhite"
                       : ""
@@ -216,7 +219,7 @@ const Raffle = () => {
                 </div>
                 <div
                   onClick={() => handleChangeConfiguration(2)}
-                  className={`grid h-12 w-12 cursor-pointer items-center justify-items-center rounded-lg bg-element text-2xl shadow-md transition-colors hover:bg-neutral-900 ${
+                  className={`grid h-12 w-12 cursor-pointer items-center justify-items-center rounded-lg bg-element text-2xl shadow-md transition-all hover:bg-opacity-60 ${
                     activeConfiguration === 2
                       ? "border-2 border-almostwhite"
                       : ""
@@ -226,7 +229,7 @@ const Raffle = () => {
                 </div>
                 <div
                   onClick={() => handleChangeConfiguration(3)}
-                  className={`grid h-12 w-12 cursor-pointer items-center justify-items-center rounded-lg bg-element text-2xl shadow-md transition-colors hover:bg-neutral-900 ${
+                  className={`grid h-12 w-12 cursor-pointer items-center justify-items-center rounded-lg bg-element text-2xl shadow-md transition-all hover:bg-opacity-60 ${
                     activeConfiguration === 3
                       ? "border-2 border-almostwhite"
                       : ""
@@ -236,7 +239,7 @@ const Raffle = () => {
                 </div>
                 <div
                   onClick={() => handleChangeConfiguration(4)}
-                  className={`grid h-12 w-12 cursor-pointer items-center justify-items-center rounded-lg bg-element text-2xl shadow-md transition-colors hover:bg-neutral-900 ${
+                  className={`grid h-12 w-12 cursor-pointer items-center justify-items-center rounded-lg bg-element text-2xl shadow-md transition-all hover:bg-opacity-60 ${
                     activeConfiguration === 4
                       ? "border-2 border-almostwhite"
                       : ""
@@ -329,7 +332,7 @@ const Raffle = () => {
                   на RaffleBot.
                 </p>
                 <br></br>
-                <div className="flex space-x-1">
+                <div className="flex space-x-1 pb-10">
                   <p>Приобрести подписку можно </p>
                   <span>
                     <Link href="/tools" className="underline">

@@ -4,6 +4,7 @@ const config = {
   theme: {
     extend: {
       spacing: {
+        18: "72px",
         22: "88px",
         100: "690px",
       },

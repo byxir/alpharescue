@@ -17,7 +17,7 @@ export default function CallToActionBar() {
           </button>
         </Link>
         <Link href="/services">
-          <button className="w-36 rounded-xl bg-element px-2 py-2 font-montserratBold text-sm text-almostwhite shadow-xl  transition-colors hover:bg-neutral-900 sm:w-44 sm:px-4 sm:py-3 sm:text-base lg:w-auto lg:text-lg 2xl:p-6 2xl:text-xl">
+          <button className="w-36 rounded-xl bg-element px-2 py-2 font-montserratBold text-sm text-almostwhite shadow-xl  transition-all hover:bg-opacity-60 sm:w-44 sm:px-4 sm:py-3 sm:text-base lg:w-auto lg:text-lg 2xl:p-6 2xl:text-xl">
             Услуги
           </button>
         </Link>

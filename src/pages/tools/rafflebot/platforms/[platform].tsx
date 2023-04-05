@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import SidebarLayout from "~/components/SidebarLayout";
+import { Filter } from "~/design/icons/Filter";
 import { Search } from "~/design/icons/Search";
 import { Star } from "~/design/icons/Star";
 import { YourLink } from "~/design/icons/YourLink";
@@ -24,7 +25,9 @@ type IRaffle = {
     clarification: string;
     platform: string;
   }[];
-  subscribers: number;
+  subscribers: string;
+  TotalSupply: string;
+  NumberOfWinners: string;
 };
 
 const RaffleList = () => {
@@ -46,6 +49,19 @@ const RaffleList = () => {
       enabled: false,
     }
   );
+
+  const determineColor = (platform = String(router.query.platform)) => {
+    if (platform === "Premint") {
+      return "#2CBBDB";
+    } else if (platform === "Alphabot") {
+      return "#63FF1E";
+    } else if (platform === "Superfull") {
+      return "#6767AB";
+    } else if (platform === "FreeNFT") {
+      return "#FFFFFF";
+    }
+    return "";
+  };
 
   useEffect(() => {
     if (!router.isReady) return;
@@ -95,8 +111,13 @@ const RaffleList = () => {
                 Новые
               </div>
             </div>
-            <p className="row-start-2 ml-3 mt-1 font-montserratBold font-bold text-premint">
-              Premint
+            <p
+              className={`row-start-2 ml-3 mt-1 font-montserratBold font-bold`}
+              style={{
+                color: determineColor(),
+              }}
+            >
+              {router.query.platform}
             </p>
           </div>
           <div className="mb-10 mt-10 grid justify-items-center">
@@ -108,11 +129,11 @@ const RaffleList = () => {
                   className="h-full w-full border-none bg-element placeholder-subtext outline-none"
                 />
               </div>
-              <div className="flex h-12 w-max cursor-pointer items-center space-x-1 rounded-xl bg-element px-6 text-subtext transition-colors hover:bg-neutral-900">
-                <Star />
-                <p className="hidden md:block">Избранное</p>
+              <div className="flex h-12 w-max cursor-pointer items-center space-x-1 rounded-xl bg-element px-6 text-subtext transition-all hover:bg-opacity-60">
+                <Filter />
+                <p className="hidden md:block">Фильтры</p>
               </div>
-              <div className="col-span-2 flex h-12 w-max cursor-pointer items-center space-x-2 justify-self-center rounded-xl bg-element px-6 text-xs text-subtext transition-colors hover:bg-neutral-900 md:text-base xl:col-span-1">
+              <div className="col-span-2 flex h-12 w-max cursor-pointer items-center space-x-2 justify-self-center rounded-xl bg-element px-6 text-xs text-subtext transition-all hover:bg-opacity-60 md:text-base xl:col-span-1">
                 <YourLink />
                 <p>Загрузить свою ссылку</p>
               </div>
@@ -122,21 +143,32 @@ const RaffleList = () => {
             {raffles.data?.map((r) => (
               <Link
                 href={`/tools/rafflebot/raffles/${r.id}`}
-                className="min-w-104 grid rounded-xl bg-element shadow-md"
+                className="min-w-104 relative grid grid-rows-[112px_auto] rounded-xl bg-element shadow-md"
                 key={r.id}
               >
-                <div className="h-28">
+                <div className="relative h-28">
                   <img
-                    src={r.banner}
+                    src={r.banner ? r.banner : "../../../../herobg.png"}
                     className="h-full w-full rounded-t-xl object-cover"
                     alt=""
                   />
+                  {!r.banner && (
+                    <div className="absolute right-8 top-1/3 flex space-x-3 font-benzin text-2xl text-bg 2xl:text-3xl">
+                      ALPHA RESCUE
+                    </div>
+                  )}
                 </div>
                 <div className="mt-3 px-6 pb-6">
+                  <div
+                    className={`justify ml-24`}
+                    style={{ color: determineColor(r.platform) }}
+                  >
+                    {r.platform}
+                  </div>
                   <div className="grid grid-cols-[auto_48px] items-center justify-between">
-                    <div className="relative mt-8 h-max font-benzin text-2xl">
+                    <div className="mt-3 h-max font-benzin text-2xl">
                       {r.name}
-                      <div className="absolute -top-22 grid h-20 w-20 items-center justify-items-center rounded-full bg-element">
+                      <div className="absolute top-18 grid h-20 w-20 items-center justify-items-center rounded-full bg-element">
                         <img
                           src={r.profilePicture}
                           className="h-16 w-16 rounded-full"
@@ -149,21 +181,21 @@ const RaffleList = () => {
                       <Star />
                     </div>
                   </div>
-                  <div className="mt-2 font-semibold text-subtext">
-                    Deadline - {r.deadline ? r.deadline : "Не указано"}
+                  <div className="mt-2 text-sm font-semibold text-subtext">
+                    Дедлайн - {r.deadline ? r.deadline : "Не указано"}
                   </div>
                   <div className="mt-10 grid grid-cols-[max-content_max-content] grid-rows-[max-content_max-content] justify-start gap-6 sm:grid-cols-[repeat(4,_max-content)] md:grid-cols-[max-content_max-content] md:grid-rows-[max-content_max-content] 2xls:grid-cols-[max-content_max-content_max-content_auto] 2xls:grid-rows-1 2xls:justify-evenly">
                     <div className="">
-                      <div className="text-xl font-bold text-almostwhite">
-                        0.34 ETH
+                      <div className="text-lg font-bold text-almostwhite">
+                        {r.hold ? r.hold : 0} ETH
                       </div>
                       <div className="text-xs font-semibold text-subtext">
                         <p>Сумма холда</p>
                       </div>
                     </div>
-                    <div className="ml-12 2xls:ml-0">
-                      <div className="text-xl font-bold text-almostwhite">
-                        66K
+                    <div className="ml-10 2xls:ml-0">
+                      <div className="text-lg font-bold text-almostwhite">
+                        {r.subscribers ? r.subscribers : "Не указано"}
                       </div>
                       <div className="text-xs font-semibold text-subtext">
                         <p>Подписчики</p>
@@ -171,15 +203,15 @@ const RaffleList = () => {
                       </div>
                     </div>
                     <div className="">
-                      <div className="text-xl font-bold text-almostwhite">
-                        500 Spots
+                      <div className="text-lg font-bold text-almostwhite">
+                        {r.NumberOfWinners ? r.NumberOfWinners : "Не указано"}
                       </div>
                       <div className="text-xs font-semibold text-subtext">
                         <p>Количество</p>
                         <p>Победителей</p>
                       </div>
                     </div>
-                    <div className="ml-12 grid grid-cols-[max-content_max-content] grid-rows-2 gap-1 2xls:ml-0">
+                    <div className="ml-10 grid grid-cols-[max-content_max-content] grid-rows-2 gap-1 2xls:ml-0">
                       <div className="h-8 w-8">
                         <img src="../../../../metamask.png" alt="" />
                       </div>

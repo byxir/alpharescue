@@ -45,7 +45,7 @@ const RaffleList = () => {
                           <p className="text-base text-almostwhite xl:text-xl">
                             20/12/2023
                           </p>
-                          <button className="h-9 w-28 rounded-xl border-2 border-green-400 bg-bg px-4 py-2 text-xs transition-colors hover:bg-neutral-900 lg:w-28">
+                          <button className="h-9 w-28 rounded-xl border-2 border-green-400 bg-bg px-4 py-2 text-xs transition-all hover:bg-opacity-60 lg:w-28">
                             Продлить
                           </button>
                         </div>
@@ -55,7 +55,7 @@ const RaffleList = () => {
                       <p>Раффлов осталось сегодня:</p>
                       <div className="flex items-center space-x-4">
                         <p className="text-lg text-almostwhite xl:text-xl">3</p>
-                        <button className="h-9 w-28 rounded-xl bg-element px-4 py-2 text-xs shadow-md transition-colors hover:bg-neutral-900 lg:w-28">
+                        <button className="h-9 w-28 rounded-xl bg-element px-4 py-2 text-xs shadow-md transition-all hover:bg-opacity-60 lg:w-28">
                           Докупить
                         </button>
                       </div>
@@ -64,7 +64,7 @@ const RaffleList = () => {
                       <p>Всего раффлов в сутки:</p>
                       <div className="flex items-center space-x-4">
                         <p className="text-lg text-almostwhite xl:text-xl">5</p>
-                        <button className="h-9 w-28 rounded-xl bg-element px-4 py-2 text-xs shadow-md transition-colors hover:bg-neutral-900 lg:w-28">
+                        <button className="h-9 w-28 rounded-xl bg-element px-4 py-2 text-xs shadow-md transition-all hover:bg-opacity-60 lg:w-28">
                           Добавить
                         </button>
                       </div>
@@ -75,7 +75,7 @@ const RaffleList = () => {
                         <p className="text-lg text-almostwhite xl:text-xl">
                           250
                         </p>
-                        <button className="h-9 w-28 rounded-xl bg-element px-4 py-2 text-xs shadow-md transition-colors hover:bg-neutral-900 lg:w-28">
+                        <button className="h-9 w-28 rounded-xl bg-element px-4 py-2 text-xs shadow-md transition-all hover:bg-opacity-60 lg:w-28">
                           Добавить
                         </button>
                       </div>
@@ -106,31 +106,31 @@ const RaffleList = () => {
             <div className="mt-16 text-sm xl:text-base">
               <div className="text-xl">Инструкции</div>
               <div className="mt-8">
-                <div className="grid cursor-pointer grid-cols-[repeat(2,_max-content)] justify-between rounded-xl border-2 border-subline bg-bg px-8 py-4 text-subtext shadow-md transition-colors hover:bg-neutral-900">
+                <div className="grid cursor-pointer grid-cols-[repeat(2,_max-content)] justify-between rounded-xl border-2 border-subline bg-bg px-8 py-4 text-subtext shadow-md transition-all hover:bg-opacity-60">
                   <p className="mr-3">Как использовать бота?</p>
                   <Plus />
                 </div>
               </div>
               <div className="mt-3 space-x-2">
-                <div className="grid cursor-pointer grid-cols-[repeat(2,_max-content)] justify-between rounded-xl border-2 border-subline bg-bg px-8 py-4 text-subtext shadow-md transition-colors hover:bg-neutral-900">
+                <div className="grid cursor-pointer grid-cols-[repeat(2,_max-content)] justify-between rounded-xl border-2 border-subline bg-bg px-8 py-4 text-subtext shadow-md transition-all hover:bg-opacity-60">
                   <p className="mr-3">Как загрузить аккаунты?</p>
                   <Plus />
                 </div>
               </div>
               <div className="mt-3 space-x-2">
-                <div className="grid cursor-pointer grid-cols-[repeat(2,_max-content)] justify-between rounded-xl border-2 border-subline bg-bg px-8 py-4 text-subtext shadow-md transition-colors hover:bg-neutral-900">
+                <div className="grid cursor-pointer grid-cols-[repeat(2,_max-content)] justify-between rounded-xl border-2 border-subline bg-bg px-8 py-4 text-subtext shadow-md transition-all hover:bg-opacity-60">
                   <p className="mr-3">Как загрузить аккаунты из антика?</p>
                   <Plus />
                 </div>
               </div>
               <div className="mt-3 space-x-2">
-                <div className="grid cursor-pointer grid-cols-[repeat(2,_max-content)] justify-between rounded-xl border-2 border-subline bg-bg px-8 py-4 text-subtext shadow-md transition-colors hover:bg-neutral-900">
+                <div className="grid cursor-pointer grid-cols-[repeat(2,_max-content)] justify-between rounded-xl border-2 border-subline bg-bg px-8 py-4 text-subtext shadow-md transition-all hover:bg-opacity-60">
                   <p className="mr-3">Где купить аккаунты?</p>
                   <Plus />
                 </div>
               </div>
               <div className="mt-3 space-x-2">
-                <div className="grid cursor-pointer grid-cols-[repeat(2,_max-content)] justify-between rounded-xl border-2 border-subline bg-bg px-8 py-4 text-subtext shadow-md transition-colors hover:bg-neutral-900">
+                <div className="grid cursor-pointer grid-cols-[repeat(2,_max-content)] justify-between rounded-xl border-2 border-subline bg-bg px-8 py-4 text-subtext shadow-md transition-all hover:bg-opacity-60">
                   <p className="mr-3">Как настраивать конфигурации?</p>
                   <Plus />
                 </div>
