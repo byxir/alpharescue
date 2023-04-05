@@ -152,17 +152,17 @@ const RaffleList = () => {
                   <div className="mt-2 font-semibold text-subtext">
                     Deadline - {r.deadline ? r.deadline : "Не указано"}
                   </div>
-                  <div className="mt-10 grid grid-cols-[max-content_max-content] grid-rows-[max-content_max-content] justify-evenly gap-6 sm:grid-cols-[repeat(4,_max-content)] md:grid-cols-[max-content_max-content] md:grid-rows-[max-content_max-content] 2xls:grid-cols-[max-content_max-content_max-content_auto] 2xls:grid-rows-1">
+                  <div className="mt-10 grid grid-cols-[max-content_max-content] grid-rows-[max-content_max-content] justify-start gap-6 sm:grid-cols-[repeat(4,_max-content)] md:grid-cols-[max-content_max-content] md:grid-rows-[max-content_max-content] 2xls:grid-cols-[max-content_max-content_max-content_auto] 2xls:grid-rows-1 2xls:justify-evenly">
                     <div className="">
-                      <div className="text-lg font-bold text-almostwhite">
+                      <div className="text-xl font-bold text-almostwhite">
                         0.34 ETH
                       </div>
                       <div className="text-xs font-semibold text-subtext">
                         <p>Сумма холда</p>
                       </div>
                     </div>
-                    <div className="">
-                      <div className="text-lg font-bold text-almostwhite">
+                    <div className="ml-12 2xls:ml-0">
+                      <div className="text-xl font-bold text-almostwhite">
                         66K
                       </div>
                       <div className="text-xs font-semibold text-subtext">
@@ -171,14 +171,15 @@ const RaffleList = () => {
                       </div>
                     </div>
                     <div className="">
-                      <div className="text-lg font-bold text-almostwhite">
-                        10/06/2003
+                      <div className="text-xl font-bold text-almostwhite">
+                        500 Spots
                       </div>
                       <div className="text-xs font-semibold text-subtext">
-                        <p>Дедлайн</p>
+                        <p>Количество</p>
+                        <p>Победителей</p>
                       </div>
                     </div>
-                    <div className="grid w-full grid-cols-[max-content_max-content] grid-rows-2 justify-end gap-1">
+                    <div className="ml-12 grid grid-cols-[max-content_max-content] grid-rows-2 gap-1 2xls:ml-0">
                       <div className="h-8 w-8">
                         <img src="../../../../metamask.png" alt="" />
                       </div>

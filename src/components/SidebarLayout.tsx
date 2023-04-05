@@ -152,6 +152,7 @@ export default function SidebarLayout({ children }: { children: ReactNode }) {
                     className={`${benzin.variable} ${abibas.variable} ${montserrat.variable} h-0 flex-1 overflow-y-auto pb-4 pt-5 font-sans`}
                   >
                     <Link
+                      onClick={() => setSidebarOpen(false)}
                       href="/"
                       className="h-max items-center justify-center px-4"
                     >
@@ -165,6 +166,7 @@ export default function SidebarLayout({ children }: { children: ReactNode }) {
                     <nav className="mt-20 grid h-max auto-rows-max gap-2 px-6 font-montserratBold">
                       {navigation.map((item) => (
                         <Link
+                          onClick={() => setSidebarOpen(false)}
                           href={`${item.pathname}`}
                           key={item.name}
                           className={classNames(
@@ -190,12 +192,16 @@ export default function SidebarLayout({ children }: { children: ReactNode }) {
                       ))}
                     </nav>
                   </div>
-                  <div className="grid cursor-pointer grid-cols-[repeat(2,_max-content)] justify-center space-x-2 border-t border-subline p-4 font-montserratBold transition-colors hover:bg-bg">
+                  <Link
+                    href="/tools/rafflebot/settings"
+                    onClick={() => setSidebarOpen(false)}
+                    className="grid cursor-pointer grid-cols-[repeat(2,_max-content)] justify-center space-x-2 border-t border-subline p-4 font-montserratBold transition-colors hover:bg-bg"
+                  >
                     <Settings />
                     <div className="font-mon font-bold text-almostwhite">
                       Settings
                     </div>
-                  </div>
+                  </Link>
                 </Dialog.Panel>
               </Transition.Child>
               <div className="w-14 flex-shrink-0" aria-hidden="true">
