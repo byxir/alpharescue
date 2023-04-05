@@ -72,7 +72,7 @@ const RaffleList = () => {
   return (
     <SidebarLayout>
       <div className="py-6">
-        <div className="px-4 md:p-10 2xl:p-14">
+        <div className="px-4 md:p-6 2xl:p-14">
           <div
             className={`grid grid-cols-1 justify-between font-sans 2xl:grid-cols-[max-content_max-content]`}
           >
@@ -113,9 +113,13 @@ const RaffleList = () => {
             </div>
             <p
               className={`row-start-2 ml-3 mt-1 font-montserratBold font-bold`}
-              style={{
-                color: determineColor(),
-              }}
+              style={
+                router.query.platform
+                  ? {
+                      color: determineColor(String(router.query.platform)),
+                    }
+                  : {}
+              }
             >
               {router.query.platform}
             </p>
@@ -184,7 +188,7 @@ const RaffleList = () => {
                   <div className="mt-2 text-sm font-semibold text-subtext">
                     Дедлайн - {r.deadline ? r.deadline : "Не указано"}
                   </div>
-                  <div className="mt-10 grid grid-cols-[max-content_max-content] grid-rows-[max-content_max-content] justify-start gap-6 sm:grid-cols-[repeat(4,_max-content)] md:grid-cols-[max-content_max-content] md:grid-rows-[max-content_max-content] 2xls:grid-cols-[max-content_max-content_max-content_auto] 2xls:grid-rows-1 2xls:justify-evenly">
+                  <div className="mt-8 grid grid-cols-[max-content_max-content] grid-rows-[max-content_max-content] justify-start gap-6 sm:grid-cols-[repeat(4,_max-content)] md:grid-cols-[max-content_max-content] md:grid-rows-[max-content_max-content] 2xls:grid-cols-[max-content_max-content_max-content_auto] 2xls:grid-rows-1 2xls:justify-evenly">
                     <div className="">
                       <div className="text-lg font-bold text-almostwhite">
                         {r.hold ? r.hold : 0} ETH
@@ -193,7 +197,7 @@ const RaffleList = () => {
                         <p>Сумма холда</p>
                       </div>
                     </div>
-                    <div className="ml-10 2xls:ml-0">
+                    <div className="ml-8 2xls:ml-0">
                       <div className="text-lg font-bold text-almostwhite">
                         {r.subscribers ? r.subscribers : "Не указано"}
                       </div>
@@ -222,7 +226,11 @@ const RaffleList = () => {
                         <img src="../../../../discord.png" alt="" />
                       </div>
                       <div className="h-8 w-8">
-                        <img src="../../../../nfticon.png" alt="" />
+                        <img
+                          src="../../../../nfticon.png"
+                          alt=""
+                          className="h-6 w-7"
+                        />
                       </div>
                     </div>
                   </div>

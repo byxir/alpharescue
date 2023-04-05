@@ -43,7 +43,7 @@ const config = {
         element: "#262626",
         premint: "#2CBBDB",
         alphabot: "#63FF1E",
-        superfull: "#6767AB",
+        superful: "#6767AB",
         freenft: "#FFFFFF",
         pressedAccent: "#b98d8e",
         speedMint: "#FFC700",

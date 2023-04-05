@@ -84,12 +84,21 @@ const Raffle = () => {
         {raffle ? (
           <div className="border-subline 2xl:border-r-2">
             <div className="grid border-b-2 border-subline pb-12">
-              <div className="h-32 w-full md:h-44">
+              <div className="relative h-32 w-full md:h-44">
                 <img
-                  src={raffle.data?.banner}
+                  src={
+                    raffle.data?.banner
+                      ? raffle.data?.banner
+                      : "../../../herobg.png"
+                  }
                   alt=""
                   className="h-full w-full object-cover"
                 />
+                {!raffle.data?.banner && (
+                  <div className="absolute right-8 top-1/3 flex space-x-3 font-benzin text-4xl text-bg 2xl:text-5xl">
+                    ALPHA RESCUE
+                  </div>
+                )}
               </div>
               <div className="relative px-4 md:px-10">
                 <div

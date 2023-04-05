@@ -45,7 +45,7 @@ const navigation = [
   },
   {
     name: "Superfull",
-    icon: "../../../../superfull.png",
+    icon: "../../../../superful.png",
     pathname: "/tools/rafflebot/platforms/Superfull",
   },
   {
