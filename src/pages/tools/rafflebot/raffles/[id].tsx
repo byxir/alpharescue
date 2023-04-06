@@ -194,7 +194,9 @@ const Raffle = () => {
                   >
                     <div className="grid h-12 w-12 items-center">
                       <img
-                        src={`../../../../${rq.platform}.png`}
+                        src={`../../../../${String(
+                          rq.platform
+                        ).toLowerCase()}.png`}
                         alt=""
                         className="w-full"
                       />
