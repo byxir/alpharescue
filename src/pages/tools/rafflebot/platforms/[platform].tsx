@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import FilterDropdown from "~/components/FilterDropdown";
 import SidebarLayout from "~/components/SidebarLayout";
 import { Filter } from "~/design/icons/Filter";
 import { Search } from "~/design/icons/Search";
@@ -33,6 +34,7 @@ type IRaffle = {
 const RaffleList = () => {
   const [current, setCurrent] = useState(1);
   const router = useRouter();
+  const [filterMenuOpen, setFilterMenuOpen] = useState(false);
 
   const raffles = useQuery<IRaffle[]>(
     ["raffles"],
@@ -55,7 +57,7 @@ const RaffleList = () => {
       return "#2CBBDB";
     } else if (platform === "Alphabot") {
       return "#63FF1E";
-    } else if (platform === "Superfull") {
+    } else if (platform === "Superful") {
       return "#6767AB";
     } else if (platform === "FreeNFT") {
       return "#FFFFFF";
@@ -133,10 +135,7 @@ const RaffleList = () => {
                   className="h-full w-full border-none bg-element placeholder-subtext outline-none"
                 />
               </div>
-              <div className="flex h-12 w-max cursor-pointer items-center space-x-1 rounded-xl bg-element px-6 text-subtext transition-all hover:bg-opacity-60">
-                <Filter />
-                <p className="hidden md:block">Фильтры</p>
-              </div>
+              <FilterDropdown />
               <div className="col-span-2 flex h-12 w-max cursor-pointer items-center space-x-2 justify-self-center rounded-xl bg-element px-6 text-xs text-subtext transition-all hover:bg-opacity-60 md:text-base xl:col-span-1">
                 <YourLink />
                 <p>Загрузить свою ссылку</p>
@@ -162,7 +161,7 @@ const RaffleList = () => {
                     </div>
                   )}
                 </div>
-                <div className="mt-3 px-6 pb-6">
+                <div className="mt-3 grid px-6 pb-6">
                   <div
                     className={`justify ml-24`}
                     style={{ color: determineColor(r.platform) }}
@@ -188,7 +187,7 @@ const RaffleList = () => {
                   <div className="mt-2 text-sm font-semibold text-subtext">
                     Дедлайн - {r.deadline ? r.deadline : "Не указано"}
                   </div>
-                  <div className="mt-8 grid grid-cols-[max-content_max-content] grid-rows-[max-content_max-content] justify-start gap-6 sm:grid-cols-[repeat(4,_max-content)] md:grid-cols-[max-content_max-content] md:grid-rows-[max-content_max-content] 2xls:grid-cols-[max-content_max-content_max-content_auto] 2xls:grid-rows-1 2xls:justify-evenly">
+                  <div className="mt-8 grid grid-cols-[max-content_max-content] grid-rows-[max-content_max-content] justify-start gap-6 self-end sm:grid-cols-[repeat(4,_max-content)] md:grid-cols-[max-content_max-content] md:grid-rows-[max-content_max-content] 2xls:grid-cols-[max-content_max-content_max-content_auto] 2xls:grid-rows-1 2xls:justify-evenly">
                     <div className="">
                       <div className="text-lg font-bold text-almostwhite">
                         {r.hold ? r.hold : 0} ETH
@@ -215,23 +214,24 @@ const RaffleList = () => {
                         <p>Победителей</p>
                       </div>
                     </div>
-                    <div className="ml-10 grid grid-cols-[max-content_max-content] grid-rows-2 gap-1 2xls:ml-0">
-                      <div className="h-8 w-8">
-                        <img src="../../../../metamask.png" alt="" />
-                      </div>
-                      <div className="h-8 w-8">
-                        <img src="../../../../twitter.png" alt="" />
-                      </div>
-                      <div className="h-8 w-8">
-                        <img src="../../../../discord.png" alt="" />
-                      </div>
-                      <div className="h-8 w-8">
-                        <img
-                          src="../../../../nfticon.png"
-                          alt=""
-                          className="h-6 w-7"
-                        />
-                      </div>
+                    <div className="ml-10 grid grid-cols-2 grid-rows-2 gap-1 2xls:ml-0">
+                      {r.requirements.filter((rq) => rq.platform === "Twitter")
+                        .length > 0 ? (
+                        <div className="h-8 w-8">
+                          <img src="../../../../twitter.png" alt="" />
+                        </div>
+                      ) : null}
+                      {r.requirements.filter((rq) => rq.platform === "Discord")
+                        .length > 0 ? (
+                        <div className="h-8 w-8">
+                          <img src="../../../../discord.png" alt="" />
+                        </div>
+                      ) : null}
+                      {r.hold ? (
+                        <div className="h-8 w-8">
+                          <img src="../../../../metamask.png" alt="" />
+                        </div>
+                      ) : null}
                     </div>
                   </div>
                 </div>

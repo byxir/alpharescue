@@ -44,9 +44,9 @@ const navigation = [
     pathname: "/tools/rafflebot/platforms/Alphabot",
   },
   {
-    name: "Superfull",
+    name: "Superful",
     icon: "../../../../superful.png",
-    pathname: "/tools/rafflebot/platforms/Superfull",
+    pathname: "/tools/rafflebot/platforms/Superful",
   },
   {
     name: "FreeNFT",
@@ -71,7 +71,7 @@ export default function SidebarLayout({ children }: { children: ReactNode }) {
   const pathnames = [
     "/tools/rafflebot/platforms/Premint",
     "/tools/rafflebot/platforms/Alphabot",
-    "/tools/rafflebot/platforms/Superfull",
+    "/tools/rafflebot/platforms/Superful",
     "/tools/rafflebot/platforms/FreeNFT",
     "/tools/rafflebot/myraffles",
   ];

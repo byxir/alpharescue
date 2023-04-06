@@ -78,6 +78,18 @@ const Raffle = () => {
       setActiveConfiguration(newActiveConfiguration);
     }
   };
+  const determineColor = (platform: string) => {
+    if (platform === "Premint") {
+      return "#2CBBDB";
+    } else if (platform === "Alphabot") {
+      return "#63FF1E";
+    } else if (platform === "Superful") {
+      return "#6767AB";
+    } else if (platform === "FreeNFT") {
+      return "#FFFFFF";
+    }
+    return "";
+  };
   return (
     <SidebarLayout>
       <div className="grid w-full border-subline text-almostwhite 2xl:h-screen 2xl:grid-cols-[43%_57%]">
@@ -102,9 +114,10 @@ const Raffle = () => {
               </div>
               <div className="relative px-4 md:px-10">
                 <div
-                  className={`text-${String(
-                    raffle.data?.platform.toLowerCase()
-                  )} ml-28 mt-3 md:ml-32`}
+                  className={`ml-28 mt-3 md:ml-32`}
+                  style={{
+                    color: determineColor(String(raffle.data?.platform)),
+                  }}
                 >
                   {raffle.data?.platform}
                 </div>
