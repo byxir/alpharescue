@@ -6,9 +6,6 @@ import {
   StarIcon,
   UserCircleIcon,
 } from "@heroicons/react/24/outline";
-import { QueryClient, useQuery } from "@tanstack/react-query";
-import { type IRaffle } from "~/pages/rafflebot/raffles/[id]";
-import { useRouter } from "next/router";
 
 export default function FilterDropdown({
   sortingMethod,
@@ -72,25 +69,23 @@ export default function FilterDropdown({
               </div>
             </Menu.Item>
           </div>
-          <div className="hover:rounded-b-xl">
-            <Menu.Item>
-              <div
-                onClick={() => setSortingMethod("favorites")}
-                className={`${
-                  sortingMethod === "favorites"
-                    ? "rounded-b-xl bg-subline text-subtext"
-                    : "text-subtext"
-                }
-                    group flex cursor-pointer items-center px-4 py-2 text-sm`}
-              >
-                <StarIcon
-                  className="mr-3 h-5 w-5 text-subtext group-hover:text-subtext"
-                  aria-hidden="true"
-                />
-                Избранное
-              </div>
-            </Menu.Item>
-          </div>
+          <Menu.Item>
+            <div
+              onClick={() => setSortingMethod("favorites")}
+              className={`${
+                sortingMethod === "favorites"
+                  ? "rounded-b-xl bg-subline text-subtext"
+                  : "text-subtext"
+              }
+                    group flex cursor-pointer items-center px-4 pb-3 pt-2 text-sm`}
+            >
+              <StarIcon
+                className="mr-3 h-5 w-5 text-subtext group-hover:text-subtext"
+                aria-hidden="true"
+              />
+              Избранное
+            </div>
+          </Menu.Item>
         </Menu.Items>
       </Transition>
     </Menu>

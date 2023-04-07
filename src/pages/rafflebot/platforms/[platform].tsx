@@ -32,7 +32,6 @@ type IRaffle = {
 };
 
 const RaffleList = () => {
-  const [current, setCurrent] = useState(1);
   const router = useRouter();
   const [linkModalOpen, setLinkModalOpen] = useState(false);
   const [sortingMethod, setSortingMethod] = useState("");
@@ -96,7 +95,7 @@ const RaffleList = () => {
     if (!router.isReady) return;
     void raffles.refetch();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [router.isReady, router.query.platform]);
+  }, [router.isReady, router.query.platform, category]);
 
   return (
     <SidebarLayout>
