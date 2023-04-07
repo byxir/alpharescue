@@ -29,6 +29,7 @@
     "crypto-js": "^4.1.1",
     "framer-motion": "^10.6.0",
     "fs": "^0.0.1-security",
+    "lodash.debounce": "^4.0.8",
     "next": "^13.2.1",
     "next-auth": "^4.19.0",
     "react": "18.2.0",
@@ -42,6 +43,7 @@
   "devDependencies": {
     "@types/crypto-js": "^4.1.1",
     "@types/eslint": "^8.21.1",
+    "@types/lodash.debounce": "^4.0.7",
     "@types/node": "^18.14.0",
     "@types/prettier": "^2.7.2",
     "@types/react": "^18.0.28",

@@ -2,13 +2,14 @@
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect, useMemo, useState } from "react";
+import { type ChangeEvent, useEffect, useMemo, useState } from "react";
 import FilterDropdown from "~/components/FilterDropdown";
 import LinkModal from "~/components/LinkModal";
 import SidebarLayout from "~/components/SidebarLayout";
 import { Search } from "~/design/icons/Search";
 import { Star } from "~/design/icons/Star";
 import { YourLink } from "~/design/icons/YourLink";
+import debounce from "lodash.debounce";
 
 type IRaffle = {
   banner: string;
@@ -37,6 +38,7 @@ const RaffleList = () => {
   const [sortingMethod, setSortingMethod] = useState("");
   const [raffleState, setRaffleState] = useState<IRaffle[]>([]);
   const [category, setCategory] = useState("selection");
+  const [searchText, setSearchText] = useState("");
 
   const raffles = useQuery<IRaffle[]>(
     ["raffles"],
@@ -96,6 +98,13 @@ const RaffleList = () => {
     void raffles.refetch();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router.isReady, router.query.platform, category]);
+
+  const updateQuery = (e: ChangeEvent<HTMLInputElement>) => {
+    setSearchText(e.target.value);
+  };
+
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
+  const debouncedUpdate = debounce(updateQuery, 350);
 
   return (
     <SidebarLayout>
@@ -158,6 +167,8 @@ const RaffleList = () => {
                 <Search />
                 <input
                   placeholder="Поиск"
+                  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
+                  onChange={debouncedUpdate}
                   className="h-full w-full border-none bg-element placeholder-subtext outline-none"
                 />
               </div>
@@ -169,7 +180,7 @@ const RaffleList = () => {
               />
               <div
                 onClick={() => setLinkModalOpen(true)}
-                className="col-span-2 flex h-12 w-max cursor-pointer items-center space-x-2 justify-self-center rounded-xl bg-element px-6 text-xs text-subtext transition-all hover:bg-opacity-60 md:text-base xl:col-span-1"
+                className="col-span-2 flex h-12 w-max cursor-pointer items-center space-x-2 justify-self-center rounded-xl bg-element px-6 text-xs text-subtext shadow-md transition-all hover:bg-opacity-60 md:text-base xl:col-span-1"
               >
                 <YourLink />
                 <p>Загрузить свою ссылку</p>
@@ -181,100 +192,106 @@ const RaffleList = () => {
             </div>
           </div>
           <div className="grid grid-flow-row grid-cols-1 gap-7 md:grid-cols-2 xl:grid-cols-3">
-            {raffleState.map((r) => (
-              <Link
-                href={`/rafflebot/raffles/${r.id}`}
-                className="min-w-104 relative grid grid-rows-[112px_auto] rounded-xl bg-element shadow-md"
-                key={r.id}
-              >
-                <div className="relative h-28">
-                  <img
-                    src={r.banner ? r.banner : "../../../../herobg.png"}
-                    className="h-full w-full rounded-t-xl object-cover"
-                    alt=""
-                  />
-                  {!r.banner && (
-                    <div className="absolute right-8 top-1/3 flex space-x-3 font-benzin text-2xl text-bg 2xl:text-3xl">
-                      ALPHA RESCUE
-                    </div>
-                  )}
-                </div>
-                <div className="mt-3 grid px-6 pb-6">
-                  <div
-                    className={`justify ml-24`}
-                    style={{ color: determineColor(r.platform) }}
-                  >
-                    {r.platform}
-                  </div>
-                  <div className="grid grid-cols-[auto_48px] items-center justify-between">
-                    <div className="mt-3 h-max font-benzin text-2xl">
-                      {r.name}
-                      <div className="absolute top-18 grid h-20 w-20 items-center justify-items-center rounded-full bg-element">
-                        <img
-                          src={r.profilePicture}
-                          className="h-16 w-16 rounded-full"
-                          alt=""
-                        />
+            {raffleState
+              .filter((r) =>
+                r.name.toLowerCase().includes(searchText.toLowerCase())
+              )
+              .map((r) => (
+                <Link
+                  href={`/rafflebot/raffles/${r.id}`}
+                  className="min-w-104 relative grid grid-rows-[112px_auto] rounded-xl bg-element shadow-md"
+                  key={r.id}
+                >
+                  <div className="relative h-28">
+                    <img
+                      src={r.banner ? r.banner : "../../../../herobg.png"}
+                      className="h-full w-full rounded-t-xl object-cover"
+                      alt=""
+                    />
+                    {!r.banner && (
+                      <div className="absolute right-8 top-1/3 flex space-x-3 font-benzin text-2xl text-bg 2xl:text-3xl">
+                        ALPHA RESCUE
                       </div>
+                    )}
+                  </div>
+                  <div className="mt-3 grid px-6 pb-6">
+                    <div
+                      className={`justify ml-24`}
+                      style={{ color: determineColor(r.platform) }}
+                    >
+                      {r.platform}
                     </div>
+                    <div className="grid grid-cols-[auto_48px] items-center justify-between">
+                      <div className="mt-3 h-max font-benzin text-2xl">
+                        {r.name}
+                        <div className="absolute top-18 grid h-20 w-20 items-center justify-items-center rounded-full bg-element">
+                          <img
+                            src={r.profilePicture}
+                            className="h-16 w-16 rounded-full"
+                            alt=""
+                          />
+                        </div>
+                      </div>
 
-                    <div className="mt-7 grid h-max w-12 justify-items-center">
-                      <Star />
+                      <div className="mt-7 grid h-max w-12 justify-items-center">
+                        <Star />
+                      </div>
+                    </div>
+                    <div className="mt-2 text-sm font-semibold text-subtext">
+                      Дедлайн - {r.deadline ? r.deadline : "Не указано"}
+                    </div>
+                    <div className="mt-8 grid grid-cols-[max-content_max-content] grid-rows-[max-content_max-content] justify-start gap-6 self-end sm:grid-cols-[repeat(4,_max-content)] md:grid-cols-[max-content_max-content] md:grid-rows-[max-content_max-content] 2xls:grid-cols-[max-content_max-content_max-content_auto] 2xls:grid-rows-1 2xls:justify-evenly">
+                      <div className="">
+                        <div className="text-lg font-bold text-almostwhite">
+                          {r.hold ? r.hold : 0} ETH
+                        </div>
+                        <div className="text-xs font-semibold text-subtext">
+                          <p>Сумма холда</p>
+                        </div>
+                      </div>
+                      <div className="ml-8 2xls:ml-0">
+                        <div className="text-lg font-bold text-almostwhite">
+                          {r.subscribers ? r.subscribers : "Не указано"}
+                        </div>
+                        <div className="text-xs font-semibold text-subtext">
+                          <p>Подписчики</p>
+                          <p>в Twitter</p>
+                        </div>
+                      </div>
+                      <div className="">
+                        <div className="text-lg font-bold text-almostwhite">
+                          {r.NumberOfWinners ? r.NumberOfWinners : "Не указано"}
+                        </div>
+                        <div className="text-xs font-semibold text-subtext">
+                          <p>Количество</p>
+                          <p>Победителей</p>
+                        </div>
+                      </div>
+                      <div className="ml-7 grid grid-cols-2 grid-rows-2 gap-1 2xls:ml-0">
+                        {r.requirements.filter(
+                          (rq) => rq.platform === "Twitter"
+                        ).length > 0 ? (
+                          <div className="grid h-8 w-8 items-center justify-items-center">
+                            <img src="../../../../twitter.png" alt="" />
+                          </div>
+                        ) : null}
+                        {r.requirements.filter(
+                          (rq) => rq.platform === "Discord"
+                        ).length > 0 ? (
+                          <div className="grid h-8 w-8 items-center justify-items-center">
+                            <img src="../../../../discord.png" alt="" />
+                          </div>
+                        ) : null}
+                        {r.hold ? (
+                          <div className="grid h-8 w-8 items-center justify-items-center">
+                            <img src="../../../../metamask.png" alt="" />
+                          </div>
+                        ) : null}
+                      </div>
                     </div>
                   </div>
-                  <div className="mt-2 text-sm font-semibold text-subtext">
-                    Дедлайн - {r.deadline ? r.deadline : "Не указано"}
-                  </div>
-                  <div className="mt-8 grid grid-cols-[max-content_max-content] grid-rows-[max-content_max-content] justify-start gap-6 self-end sm:grid-cols-[repeat(4,_max-content)] md:grid-cols-[max-content_max-content] md:grid-rows-[max-content_max-content] 2xls:grid-cols-[max-content_max-content_max-content_auto] 2xls:grid-rows-1 2xls:justify-evenly">
-                    <div className="">
-                      <div className="text-lg font-bold text-almostwhite">
-                        {r.hold ? r.hold : 0} ETH
-                      </div>
-                      <div className="text-xs font-semibold text-subtext">
-                        <p>Сумма холда</p>
-                      </div>
-                    </div>
-                    <div className="ml-8 2xls:ml-0">
-                      <div className="text-lg font-bold text-almostwhite">
-                        {r.subscribers ? r.subscribers : "Не указано"}
-                      </div>
-                      <div className="text-xs font-semibold text-subtext">
-                        <p>Подписчики</p>
-                        <p>в Twitter</p>
-                      </div>
-                    </div>
-                    <div className="">
-                      <div className="text-lg font-bold text-almostwhite">
-                        {r.NumberOfWinners ? r.NumberOfWinners : "Не указано"}
-                      </div>
-                      <div className="text-xs font-semibold text-subtext">
-                        <p>Количество</p>
-                        <p>Победителей</p>
-                      </div>
-                    </div>
-                    <div className="ml-7 grid grid-cols-2 grid-rows-2 gap-1 2xls:ml-0">
-                      {r.requirements.filter((rq) => rq.platform === "Twitter")
-                        .length > 0 ? (
-                        <div className="grid h-8 w-8 items-center justify-items-center">
-                          <img src="../../../../twitter.png" alt="" />
-                        </div>
-                      ) : null}
-                      {r.requirements.filter((rq) => rq.platform === "Discord")
-                        .length > 0 ? (
-                        <div className="grid h-8 w-8 items-center justify-items-center">
-                          <img src="../../../../discord.png" alt="" />
-                        </div>
-                      ) : null}
-                      {r.hold ? (
-                        <div className="grid h-8 w-8 items-center justify-items-center">
-                          <img src="../../../../metamask.png" alt="" />
-                        </div>
-                      ) : null}
-                    </div>
-                  </div>
-                </div>
-              </Link>
-            ))}
+                </Link>
+              ))}
           </div>
         </div>
       </div>
