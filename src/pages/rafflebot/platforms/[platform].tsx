@@ -36,6 +36,7 @@ const RaffleList = () => {
   const router = useRouter();
   const [linkModalOpen, setLinkModalOpen] = useState(false);
   const [sortingMethod, setSortingMethod] = useState("");
+  const [raffleState, setRaffleState] = useState<IRaffle[]>([]);
 
   const raffles = useQuery<IRaffle[]>(
     ["raffles"],
@@ -66,27 +67,16 @@ const RaffleList = () => {
     return "";
   };
 
-  // const sortedItems = useMemo(() => {
-  //   const sorted = [...raffles.data];
-  //   sorted.sort((a, b) => {
-  //     if (sortingMethod === 'subscribers') {
-  //       a.subscribers < b.subscribers ? 1 : -1
-  //     } else {
-  //       return b.name.localeCompare(a.name);
-  //     }
-  //   });
-  //   return sorted;
-  // }, [items, sortOrder]);
   console.log("component rendered!");
 
   const sortedRaffles = useMemo(() => {
     if (raffles.data) {
-      const sorted: IRaffle[] = [...raffles.data];
-
       if (sortingMethod === "subscribers") {
-        return sorted.sort((a, b) => (a.subscribers < b.subscribers ? 1 : -1));
+        return raffles.data.sort((a, b) =>
+          a.subscribers < b.subscribers ? 1 : -1
+        );
       } else if (sortingMethod === "hold") {
-        return sorted.sort((a, b) =>
+        return raffles.data.sort((a, b) =>
           Number(a.hold) > Number(b.hold) ? 1 : -1
         );
       } else {
@@ -94,6 +84,12 @@ const RaffleList = () => {
       }
     }
   }, [raffles.data, sortingMethod]);
+
+  useEffect(() => {
+    if (sortedRaffles) {
+      setRaffleState(sortedRaffles);
+    }
+  }, [sortedRaffles]);
 
   useEffect(() => {
     if (!router.isReady) return;
@@ -185,7 +181,7 @@ const RaffleList = () => {
             </div>
           </div>
           <div className="grid grid-flow-row grid-cols-1 gap-7 md:grid-cols-2 xl:grid-cols-3">
-            {sortedRaffles?.map((r) => (
+            {raffleState.map((r) => (
               <Link
                 href={`/rafflebot/raffles/${r.id}`}
                 className="min-w-104 relative grid grid-rows-[112px_auto] rounded-xl bg-element shadow-md"
