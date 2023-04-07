@@ -40,6 +40,7 @@ const abibas = localFont({
 import { api } from "~/utils/api";
 
 import "~/styles/globals.css";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
@@ -52,6 +53,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
     >
       <SessionProvider session={session}>
         <Component {...pageProps} />
+        <ReactQueryDevtools initialIsOpen={false} position={"bottom-right"} />
       </SessionProvider>
     </main>
   );
