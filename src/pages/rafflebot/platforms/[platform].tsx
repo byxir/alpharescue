@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import { QueryClient, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useMemo, useState } from "react";
@@ -37,6 +37,7 @@ const RaffleList = () => {
   const [linkModalOpen, setLinkModalOpen] = useState(false);
   const [sortingMethod, setSortingMethod] = useState("");
   const [raffleState, setRaffleState] = useState<IRaffle[]>([]);
+  const [category, setCategory] = useState("selection");
 
   const raffles = useQuery<IRaffle[]>(
     ["raffles"],
@@ -44,7 +45,7 @@ const RaffleList = () => {
       const res = await fetch(
         `https://alpharescue.online/raffles?platform=${String(
           router.query.platform
-        )}`
+        )}&category=${category}`
       );
       // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       return res.json();
@@ -107,33 +108,33 @@ const RaffleList = () => {
             <h1 className="font-benzin text-3xl md:text-4xl">Список Раффлов</h1>
             <div className="mt-10 grid w-max grid-cols-2 grid-rows-2 gap-4 justify-self-center font-montserratBold md:grid-cols-4 md:grid-rows-1 2xl:mt-0">
               <div
-                onClick={() => setCurrent(1)}
+                onClick={() => setCategory("selection")}
                 className={`grid h-10 cursor-pointer items-center justify-items-center rounded-xl border-2 px-4 text-xs font-bold transition-colors md:text-base xl:px-6  ${
-                  current === 1 ? "border-accent" : "border-subline"
+                  category === "selection" ? "border-accent" : "border-subline"
                 }`}
               >
                 Подборка
               </div>
               <div
-                onClick={() => setCurrent(2)}
+                onClick={() => setCategory("topToday")}
                 className={`grid h-10 cursor-pointer items-center justify-items-center rounded-xl border-2 px-4 text-xs font-bold transition-colors md:text-base xl:px-6  ${
-                  current === 2 ? "border-accent" : "border-subline"
+                  category === "topToday" ? "border-accent" : "border-subline"
                 }`}
               >
                 Топ за день
               </div>
               <div
-                onClick={() => setCurrent(3)}
+                onClick={() => setCategory("topWeek")}
                 className={`grid h-10 cursor-pointer items-center justify-items-center rounded-xl border-2 px-4 text-xs font-bold transition-colors md:text-base xl:px-6  ${
-                  current === 3 ? "border-accent" : "border-subline"
+                  category === "topWeek" ? "border-accent" : "border-subline"
                 }`}
               >
                 Топ за неделю
               </div>
               <div
-                onClick={() => setCurrent(4)}
+                onClick={() => setCategory("new")}
                 className={`grid h-10 cursor-pointer items-center justify-items-center rounded-xl border-2 px-4 text-xs font-bold transition-colors md:text-base xl:px-6  ${
-                  current === 4 ? "border-accent" : "border-subline"
+                  category === "new" ? "border-accent" : "border-subline"
                 }`}
               >
                 Новые

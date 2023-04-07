@@ -85,6 +85,8 @@ export default function LinkModal({
                     <div className="h-6 w-full">
                       <input
                         type="text"
+                        value={userLink}
+                        onChange={(e) => setUserLink(e.target.value)}
                         className="h-6 w-full bg-transparent font-montserratRegular text-lg placeholder-subtext outline-none"
                         placeholder="Вставьте ссылку на раффл"
                       />
