@@ -115,40 +115,44 @@ const RaffleList = () => {
             className={`grid grid-cols-1 justify-between font-sans 2xl:grid-cols-[max-content_max-content]`}
           >
             <h1 className="font-benzin text-3xl md:text-4xl">Список Раффлов</h1>
-            <div className="mt-10 grid w-max grid-cols-2 grid-rows-2 gap-4 justify-self-center font-montserratBold md:grid-cols-4 md:grid-rows-1 2xl:mt-0">
-              <div
-                onClick={() => setCategory("selection")}
-                className={`grid h-10 cursor-pointer items-center justify-items-center rounded-xl border-2 px-4 text-xs font-bold transition-colors md:text-base xl:px-6  ${
-                  category === "selection" ? "border-accent" : "border-subline"
-                }`}
-              >
-                Подборка
+            {router.query.platform === "Premint" ? (
+              <div className="mt-10 grid w-full grid-cols-2 grid-rows-2 gap-4 justify-self-center font-montserratBold md:w-max md:grid-cols-4 md:grid-rows-1 2xl:mt-0">
+                <div
+                  onClick={() => setCategory("selection")}
+                  className={`grid h-10 cursor-pointer items-center justify-items-center rounded-xl border-2 px-4 text-sm font-bold transition-colors md:text-base xl:px-6  ${
+                    category === "selection"
+                      ? "border-accent"
+                      : "border-subline"
+                  }`}
+                >
+                  Подборка
+                </div>
+                <div
+                  onClick={() => setCategory("topToday")}
+                  className={`grid h-10 cursor-pointer items-center justify-items-center rounded-xl border-2 px-4 text-sm font-bold transition-colors md:text-base xl:px-6  ${
+                    category === "topToday" ? "border-accent" : "border-subline"
+                  }`}
+                >
+                  Топ за день
+                </div>
+                <div
+                  onClick={() => setCategory("topWeek")}
+                  className={`grid h-10 cursor-pointer items-center justify-items-center rounded-xl border-2 px-4 text-sm font-bold transition-colors md:text-base xl:px-6  ${
+                    category === "topWeek" ? "border-accent" : "border-subline"
+                  }`}
+                >
+                  Топ за неделю
+                </div>
+                <div
+                  onClick={() => setCategory("new")}
+                  className={`grid h-10 cursor-pointer items-center justify-items-center rounded-xl border-2 px-4 text-sm font-bold transition-colors md:text-base xl:px-6  ${
+                    category === "new" ? "border-accent" : "border-subline"
+                  }`}
+                >
+                  Новые
+                </div>
               </div>
-              <div
-                onClick={() => setCategory("topToday")}
-                className={`grid h-10 cursor-pointer items-center justify-items-center rounded-xl border-2 px-4 text-xs font-bold transition-colors md:text-base xl:px-6  ${
-                  category === "topToday" ? "border-accent" : "border-subline"
-                }`}
-              >
-                Топ за день
-              </div>
-              <div
-                onClick={() => setCategory("topWeek")}
-                className={`grid h-10 cursor-pointer items-center justify-items-center rounded-xl border-2 px-4 text-xs font-bold transition-colors md:text-base xl:px-6  ${
-                  category === "topWeek" ? "border-accent" : "border-subline"
-                }`}
-              >
-                Топ за неделю
-              </div>
-              <div
-                onClick={() => setCategory("new")}
-                className={`grid h-10 cursor-pointer items-center justify-items-center rounded-xl border-2 px-4 text-xs font-bold transition-colors md:text-base xl:px-6  ${
-                  category === "new" ? "border-accent" : "border-subline"
-                }`}
-              >
-                Новые
-              </div>
-            </div>
+            ) : null}
             <p
               className={`row-start-2 ml-3 mt-1 font-montserratBold font-bold`}
               style={
@@ -164,7 +168,7 @@ const RaffleList = () => {
           </div>
           <div className="mb-10 mt-10 grid justify-items-center">
             <div className="grid grid-cols-[repeat(2,_max-content)] justify-center gap-4 font-bold xl:grid-cols-[repeat(3,_max-content)]">
-              <div className="flex h-12 w-40 items-center space-x-1 rounded-xl bg-element pl-6 pr-2 text-sm text-subtext md:w-72 md:text-base">
+              <div className="flex h-12 w-40 items-center space-x-2 rounded-xl bg-element pl-3 pr-2 text-sm text-subtext md:w-72 md:pl-6 md:text-base">
                 <Search />
                 <input
                   placeholder="Поиск"

@@ -25,12 +25,22 @@ const Home: NextPage = () => {
       <main className="">
         <Header />
         <Hero />
-        <Features />
-        <SecondaryFeatures />
+        <div id="products">
+          <Features />
+        </div>
+        <div id="advantages">
+          <SecondaryFeatures />
+        </div>
         <CallToActionBar />
-        <EarnExamples />
-        <Subscriptions />
-        <FAQ />
+        <div id="earn-examples">
+          <EarnExamples />
+        </div>
+        <div id="subscriptions">
+          <Subscriptions />
+        </div>
+        <div id="faq">
+          <FAQ />
+        </div>
         <Footer />
       </main>
     </>

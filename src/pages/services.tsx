@@ -23,7 +23,10 @@ export default function Services() {
             Услуги RESCUE
           </h1>
           <div className="mb-24 grid grid-cols-1 grid-rows-2 justify-evenly justify-items-center gap-4 lg:grid-cols-2 xl:grid-cols-[auto_auto_auto] xl:grid-rows-[auto_256px_auto]">
-            <div className="grid max-w-xl rounded-xl border-2 border-subtext bg-element p-6 text-xl smx:p-10">
+            <div
+              id="farm"
+              className="grid max-w-xl rounded-xl border-2 border-subtext bg-element p-6 text-xl smx:p-10"
+            >
               <ServiceBox
                 title="Создание фермы"
                 description=" Делать ферму руками достаточно трудоёмкий процесс, тем более
@@ -35,7 +38,10 @@ export default function Services() {
                 <ServerStackIcon />
               </ServiceBox>
             </div>
-            <div className="grid max-w-xl rounded-xl border-2 border-subtext bg-element p-6 text-xl smx:p-10 xl:col-start-3">
+            <div
+              id="warmup"
+              className="grid max-w-xl rounded-xl border-2 border-subtext bg-element p-6 text-xl smx:p-10 xl:col-start-3"
+            >
               <ServiceBox
                 title="Прогрев и оформление аккаунтов"
                 description=" Делать ферму руками достаточно трудоёмкий процесс, тем более
@@ -69,7 +75,10 @@ export default function Services() {
                 </div>
               </div>
             </div>
-            <div className="grid max-w-xl rounded-xl border-2 border-subtext bg-element p-6 text-xl smx:p-10 xl:row-start-3">
+            <div
+              id="software"
+              className="grid max-w-xl rounded-xl border-2 border-subtext bg-element p-6 text-xl smx:p-10 xl:row-start-3"
+            >
               <ServiceBox
                 title="Софт под заказ"
                 description=" Делать ферму руками достаточно трудоёмкий процесс, тем более
@@ -81,7 +90,10 @@ export default function Services() {
                 <ComputerDesktopIcon />
               </ServiceBox>
             </div>
-            <div className="grid max-w-xl rounded-xl border-2 border-subtext bg-element p-6 text-xl smx:p-10 xl:col-start-3 xl:row-start-3">
+            <div
+              id="abuse"
+              className="grid max-w-xl rounded-xl border-2 border-subtext bg-element p-6 text-xl smx:p-10 xl:col-start-3 xl:row-start-3"
+            >
               <ServiceBox
                 title="Абуз событий для владельцев ферм"
                 description=" Делать ферму руками достаточно трудоёмкий процесс, тем более

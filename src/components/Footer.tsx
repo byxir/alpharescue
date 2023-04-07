@@ -1,21 +1,23 @@
+import Link from "next/link";
+
 const navigation = {
   solutions: [
-    { name: "Продукты", href: "#" },
-    { name: "Преимущества", href: "#" },
-    { name: "Примеры заработка", href: "#" },
-    { name: "Подписаться", href: "#" },
-    { name: "FAQ", href: "#" },
+    { name: "Продукты", href: "/#products" },
+    { name: "Преимущества", href: "/#advantages" },
+    { name: "Примеры заработка", href: "/#earn-examples" },
+    { name: "Подписаться", href: "/#subscriptions" },
+    { name: "FAQ", href: "/#faq" },
   ],
   support: [
-    { name: "Community pass", href: "#" },
-    { name: "Raffle bot", href: "#" },
-    { name: "Speed mint", href: "#" },
+    { name: "Community pass", href: "/tools/#community-pass" },
+    { name: "Raffle bot", href: "/tools/#raffleBot" },
+    { name: "Speed mint", href: "/tools/#speedMint" },
   ],
   company: [
-    { name: "Создание фермы", href: "#" },
-    { name: "Прогрев аккаунтов", href: "#" },
-    { name: "Софт под заказ", href: "#" },
-    { name: "Абуз под фермы", href: "#" },
+    { name: "Создание фермы", href: "/services#farm" },
+    { name: "Прогрев аккаунтов", href: "/services#warmup" },
+    { name: "Софт под заказ", href: "/services#software" },
+    { name: "Абуз под фермы", href: "/services#abuse" },
   ],
 };
 
@@ -36,12 +38,12 @@ export default function Footer() {
               <span className="text-almostwhite">ALPHA</span>{" "}
               <span className="text-bg">RESCUE</span>
             </div>
-            <a
+            <Link
               href="t.me"
               className="mt-20 w-max self-end rounded-md bg-bg bg-opacity-0 px-3 py-2 font-montserratBold text-base leading-6 text-element transition-all hover:bg-opacity-5 xl:mt-0"
             >
               Обратиться в тех. поддержку...
-            </a>
+            </Link>
           </div>
           <div className="mt-16 w-max gap-8 xl:mt-0">
             <div className="grid gap-6 md:grid md:grid-cols-3 md:gap-12">
@@ -52,12 +54,12 @@ export default function Footer() {
                 <ul role="list" className="mt-6 space-y-4">
                   {navigation.solutions.map((item) => (
                     <li key={item.name}>
-                      <a
+                      <Link
                         href={item.href}
                         className="text-sm leading-6 text-element hover:text-bg"
                       >
                         {item.name}
-                      </a>
+                      </Link>
                     </li>
                   ))}
                 </ul>
@@ -69,12 +71,12 @@ export default function Footer() {
                 <ul role="list" className="mt-6 space-y-4">
                   {navigation.support.map((item) => (
                     <li key={item.name}>
-                      <a
+                      <Link
                         href={item.href}
                         className="text-sm leading-6 text-element hover:text-bg"
                       >
                         {item.name}
-                      </a>
+                      </Link>
                     </li>
                   ))}
                 </ul>
@@ -86,12 +88,12 @@ export default function Footer() {
                 <ul role="list" className="mt-6 space-y-4">
                   {navigation.company.map((item) => (
                     <li key={item.name}>
-                      <a
+                      <Link
                         href={item.href}
                         className="text-sm leading-6 text-element hover:text-bg"
                       >
                         {item.name}
-                      </a>
+                      </Link>
                     </li>
                   ))}
                 </ul>

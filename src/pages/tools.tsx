@@ -13,9 +13,15 @@ export default function Tools() {
         <div className="mb-36 mt-20 text-center font-benzin text-3xl sm:text-4xl lg:text-5xl">
           Инструменты RESCUE
         </div>
-        <CommunityPass />
-        <RaffleBot />
-        <SpeedMint />
+        <div id="community-pass">
+          <CommunityPass />
+        </div>
+        <div id="raffleBot">
+          <RaffleBot />
+        </div>
+        <div id="speedMint">
+          <SpeedMint />
+        </div>
       </div>
       <Footer />
     </>

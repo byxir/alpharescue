@@ -17,7 +17,7 @@ export default function FilterDropdown({
   return (
     <Menu as="div" className="relative inline-block text-left">
       <div>
-        <Menu.Button className="inline-flex h-12 w-full items-center justify-center gap-x-1.5 rounded-xl bg-element px-5 py-3 font-montserratBold text-base font-semibold text-subtext shadow-md hover:bg-opacity-60">
+        <Menu.Button className="inline-flex h-12 w-full items-center justify-center gap-x-1.5 rounded-xl bg-element px-5 py-3 font-montserratBold text-base text-xs font-semibold text-subtext shadow-md hover:bg-opacity-60 md:text-base">
           <Filter />
           Сортировать
         </Menu.Button>

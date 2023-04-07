@@ -3,29 +3,29 @@ import { MinusSmallIcon, PlusSmallIcon } from "@heroicons/react/24/outline";
 
 const faqs = [
   {
-    question: "What's the best thing about Switzerland?",
+    question: "Сколько сделок в каналах убыточные?",
     answer:
-      "I don't know, but the flag is a big plus. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas cupiditate laboriosam fugiat.",
+      "Мы ведем подробную стастику по каждому каналу, следовательно включаем в неё как прибыльные, так и убыточные сделки. Стастику вы найдете по этой ссылке.",
   },
   {
-    question: "What's the best thing about Switzerland?",
+    question: "Как пользоваться софтом для абуза?",
     answer:
-      "I don't know, but the flag is a big plus. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas cupiditate laboriosam fugiat.",
+      "К каждому софту мы прикладываем инструкции в которых подробно рассказываем как запустить софт, обычно для запуска требуется заполнить несколько текстовых файлов. Если у вас останутся вопросы, мы поможем вам в чате.",
   },
   {
-    question: "What's the best thing about Switzerland?",
+    question: "Софт для абуза работает только на Windows?",
     answer:
-      "I don't know, but the flag is a big plus. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas cupiditate laboriosam fugiat.",
+      "Пока наш софт работает только на windows, но уже в скором времени мы сделаем систему, которая позволит вам запускать наш софт прямо с сайта, не скачивая файлы и не тратя мощности своего ПК.",
   },
   {
-    question: "What's the best thing about Switzerland?",
+    question: "Сколько людей в сообществе?",
     answer:
-      "I don't know, but the flag is a big plus. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas cupiditate laboriosam fugiat.",
+      "Число участников нашего дискорда и телеграмма постоянно растет, поэтому вы можете зайти туда и посмотреть сами.",
   },
   {
-    question: "What's the best thing about Switzerland?",
+    question: "Какой депозит нужен для сигналов?",
     answer:
-      "I don't know, but the flag is a big plus. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas cupiditate laboriosam fugiat.",
+      "Это зависит от ваших возможностей, чем больше депозит, тем больше сигналов и событий вы сможете охватить и следовательно больше заработать. Мы бы рекомендовали заходить с депозитом от 70$, но будет лучше, если в вашем распоряжении будет около 200$.",
   },
   // More questions...
 ];
@@ -33,7 +33,7 @@ const faqs = [
 export default function FAQ() {
   return (
     <div className="bg-sidebarBg font-montserratRegular">
-      <div className="mx-auto max-w-7xl px-6 py-24 sm:py-32 lg:py-40 lg:px-8">
+      <div className="mx-auto max-w-7xl px-6 py-24 sm:py-32 lg:px-8 lg:py-40">
         <div className="mx-auto max-w-5xl divide-y divide-white/10">
           <h2 className="font-benzin text-2xl font-bold leading-10  text-almostwhite sm:text-4xl">
             Часто задаваемые вопросы
