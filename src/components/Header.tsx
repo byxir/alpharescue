@@ -89,7 +89,7 @@ export default function Header() {
             </div>
           ) : (
             <div className="cursor-pointer items-center font-montserratBold text-sm">
-              <Link href="/tools/rafflebot/platforms/Premint">
+              <Link href="/rafflebot/platforms/Premint">
                 <button className="rounded-md bg-element px-3 py-2 shadow-md transition-all hover:bg-opacity-60">
                   Raffle Bot
                 </button>
@@ -152,9 +152,7 @@ export default function Header() {
                     // eslint-disable-next-line @typescript-eslint/no-misused-promises
                     <div onClick={handleDiscordSignIn}>Log in</div>
                   ) : (
-                    <Link href="/tools/rafflebot/platforms/Premint">
-                      Raffle Bot
-                    </Link>
+                    <Link href="/rafflebot/platforms/Premint">Raffle Bot</Link>
                   )}
                 </div>
               </div>

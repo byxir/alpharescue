@@ -1,11 +1,11 @@
 /* eslint-disable @next/next/no-img-element */
-import { useQuery } from "@tanstack/react-query";
+import { QueryClient, useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import FilterDropdown from "~/components/FilterDropdown";
+import LinkModal from "~/components/LinkModal";
 import SidebarLayout from "~/components/SidebarLayout";
-import { Filter } from "~/design/icons/Filter";
 import { Search } from "~/design/icons/Search";
 import { Star } from "~/design/icons/Star";
 import { YourLink } from "~/design/icons/YourLink";
@@ -34,7 +34,8 @@ type IRaffle = {
 const RaffleList = () => {
   const [current, setCurrent] = useState(1);
   const router = useRouter();
-  const [filterMenuOpen, setFilterMenuOpen] = useState(false);
+  const [linkModalOpen, setLinkModalOpen] = useState(false);
+  const [sortingMethod, setSortingMethod] = useState("");
 
   const raffles = useQuery<IRaffle[]>(
     ["raffles"],
@@ -64,6 +65,35 @@ const RaffleList = () => {
     }
     return "";
   };
+
+  // const sortedItems = useMemo(() => {
+  //   const sorted = [...raffles.data];
+  //   sorted.sort((a, b) => {
+  //     if (sortingMethod === 'subscribers') {
+  //       a.subscribers < b.subscribers ? 1 : -1
+  //     } else {
+  //       return b.name.localeCompare(a.name);
+  //     }
+  //   });
+  //   return sorted;
+  // }, [items, sortOrder]);
+  console.log("component rendered!");
+
+  const sortedRaffles = useMemo(() => {
+    if (raffles.data) {
+      const sorted: IRaffle[] = [...raffles.data];
+
+      if (sortingMethod === "subscribers") {
+        return sorted.sort((a, b) => (a.subscribers < b.subscribers ? 1 : -1));
+      } else if (sortingMethod === "hold") {
+        return sorted.sort((a, b) =>
+          Number(a.hold) > Number(b.hold) ? 1 : -1
+        );
+      } else {
+        return raffles.data;
+      }
+    }
+  }, [raffles.data, sortingMethod]);
 
   useEffect(() => {
     if (!router.isReady) return;
@@ -135,17 +165,29 @@ const RaffleList = () => {
                   className="h-full w-full border-none bg-element placeholder-subtext outline-none"
                 />
               </div>
-              <FilterDropdown />
-              <div className="col-span-2 flex h-12 w-max cursor-pointer items-center space-x-2 justify-self-center rounded-xl bg-element px-6 text-xs text-subtext transition-all hover:bg-opacity-60 md:text-base xl:col-span-1">
+              <FilterDropdown
+                sortingMethod={sortingMethod}
+                setSortingMethod={(newSortingMethod: string) =>
+                  setSortingMethod(newSortingMethod)
+                }
+              />
+              <div
+                onClick={() => setLinkModalOpen(true)}
+                className="col-span-2 flex h-12 w-max cursor-pointer items-center space-x-2 justify-self-center rounded-xl bg-element px-6 text-xs text-subtext transition-all hover:bg-opacity-60 md:text-base xl:col-span-1"
+              >
                 <YourLink />
                 <p>Загрузить свою ссылку</p>
               </div>
+              <LinkModal
+                open={linkModalOpen}
+                closeFunction={() => setLinkModalOpen(false)}
+              />
             </div>
           </div>
           <div className="grid grid-flow-row grid-cols-1 gap-7 md:grid-cols-2 xl:grid-cols-3">
-            {raffles.data?.map((r) => (
+            {sortedRaffles?.map((r) => (
               <Link
-                href={`/tools/rafflebot/raffles/${r.id}`}
+                href={`/rafflebot/raffles/${r.id}`}
                 className="min-w-104 relative grid grid-rows-[112px_auto] rounded-xl bg-element shadow-md"
                 key={r.id}
               >
@@ -214,21 +256,21 @@ const RaffleList = () => {
                         <p>Победителей</p>
                       </div>
                     </div>
-                    <div className="ml-10 grid grid-cols-2 grid-rows-2 gap-1 2xls:ml-0">
+                    <div className="ml-7 grid grid-cols-2 grid-rows-2 gap-1 2xls:ml-0">
                       {r.requirements.filter((rq) => rq.platform === "Twitter")
                         .length > 0 ? (
-                        <div className="h-8 w-8">
+                        <div className="grid h-8 w-8 items-center justify-items-center">
                           <img src="../../../../twitter.png" alt="" />
                         </div>
                       ) : null}
                       {r.requirements.filter((rq) => rq.platform === "Discord")
                         .length > 0 ? (
-                        <div className="h-8 w-8">
+                        <div className="grid h-8 w-8 items-center justify-items-center">
                           <img src="../../../../discord.png" alt="" />
                         </div>
                       ) : null}
                       {r.hold ? (
-                        <div className="h-8 w-8">
+                        <div className="grid h-8 w-8 items-center justify-items-center">
                           <img src="../../../../metamask.png" alt="" />
                         </div>
                       ) : null}

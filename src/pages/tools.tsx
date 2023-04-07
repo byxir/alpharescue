@@ -30,22 +30,22 @@ const CommunityPass = () => {
       </div>
       <div className="grid w-full grid-cols-1 items-center justify-items-center gap-6 lg:grid-cols-[6fr_5fr] lg:justify-items-start xl:gap-16">
         <div className="mb-8 grid grid-cols-2 grid-rows-2 gap-4 lg:mb-0 xl:gap-8">
-          <Link href="tools/utilities">
+          <Link href="utilities">
             <ToolFolder small={true} textSize="lg" mt="6">
               Утилиты
             </ToolFolder>
           </Link>
-          <Link href="tools/software">
+          <Link href="software">
             <ToolFolder small={true} textSize="lg" mt="6">
               Софт для абуза
             </ToolFolder>
           </Link>
-          <Link href="tools/discord">
+          <Link href="discord">
             <ToolFolder small={true} textSize="lg" mt="6">
               Доступ в Discord
             </ToolFolder>
           </Link>
-          <Link href="tools/giveaways">
+          <Link href="giveaways">
             <ToolFolder small={true} textSize="lg" mt="6">
               Розыгрыши WL
             </ToolFolder>
@@ -97,7 +97,7 @@ const RaffleBot = () => {
           </div>
         </div>
         <div className="row-start-1 mb-8 grid gap-8 justify-self-center sm:max-w-lg lg:col-start-2 lg:mb-0 lg:max-w-lg">
-          <Link href="/tools/rafflebot/platforms/Premint">
+          <Link href="/rafflebot/platforms/Premint">
             <ToolFolder small={false} mt="16" textSize="4xl">
               <div className="grid w-max grid-cols-[repeat(2,_max-content)] grid-rows-2">
                 <div className="row-span-2 self-center bg-gradient-to-r from-raffleBot to-almostwhite bg-clip-text text-transparent">

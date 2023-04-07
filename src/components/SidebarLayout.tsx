@@ -36,28 +36,28 @@ const navigation = [
   {
     name: "Premint",
     icon: "../../../../premint.png",
-    pathname: "/tools/rafflebot/platforms/Premint",
+    pathname: "/rafflebot/platforms/Premint",
   },
   {
     name: "Alphabot",
     icon: "../../../../alphabot.png",
-    pathname: "/tools/rafflebot/platforms/Alphabot",
+    pathname: "/rafflebot/platforms/Alphabot",
   },
   {
     name: "Superful",
     icon: "../../../../superful.png",
-    pathname: "/tools/rafflebot/platforms/Superful",
+    pathname: "/rafflebot/platforms/Superful",
   },
   {
     name: "FreeNFT",
     icon: "../../../../freenft.png",
-    pathname: "/tools/rafflebot/platforms/FreeNFT",
+    pathname: "/rafflebot/platforms/FreeNFT",
     noScale: true,
   },
   {
     name: "Мои раффлы",
     icon: "../../../../star.png",
-    pathname: "/tools/rafflebot/myraffles",
+    pathname: "/rafflebot/myraffles",
     margin: true,
   },
 ];
@@ -69,11 +69,11 @@ function classNames(...classes: string[]) {
 export default function SidebarLayout({ children }: { children: ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const pathnames = [
-    "/tools/rafflebot/platforms/Premint",
-    "/tools/rafflebot/platforms/Alphabot",
-    "/tools/rafflebot/platforms/Superful",
-    "/tools/rafflebot/platforms/FreeNFT",
-    "/tools/rafflebot/myraffles",
+    "/rafflebot/platforms/Premint",
+    "/rafflebot/platforms/Alphabot",
+    "/rafflebot/platforms/Superful",
+    "/rafflebot/platforms/FreeNFT",
+    "/rafflebot/myraffles",
   ];
   const [current, setCurrent] = useState("");
 
@@ -81,11 +81,9 @@ export default function SidebarLayout({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     pathnames.forEach((p) => {
-      if (
-        p === `/tools/rafflebot/platforms/${String(urlCurrent.query.platform)}`
-      ) {
+      if (p === `/rafflebot/platforms/${String(urlCurrent.query.platform)}`) {
         setCurrent(p);
-      } else if (urlCurrent.pathname === "/tools/rafflebot/myraffles") {
+      } else if (urlCurrent.pathname === "/rafflebot/myraffles") {
         setCurrent(p);
       }
     });
@@ -171,8 +169,7 @@ export default function SidebarLayout({ children }: { children: ReactNode }) {
                           key={item.name}
                           className={classNames(
                             item.margin ? "mt-5" : "",
-                            `/tools/rafflebot/platforms/${current}` ===
-                              item.pathname
+                            `/rafflebot/platforms/${current}` === item.pathname
                               ? "bg-bg text-white"
                               : "text-almostwhite hover:bg-bg hover:bg-opacity-75",
                             "group flex h-max items-center rounded-xl px-3 py-3 text-lg font-bold transition-colors"
@@ -193,7 +190,7 @@ export default function SidebarLayout({ children }: { children: ReactNode }) {
                     </nav>
                   </div>
                   <Link
-                    href="/tools/rafflebot/settings"
+                    href="/rafflebot/settings"
                     onClick={() => setSidebarOpen(false)}
                     className="grid cursor-pointer grid-cols-[repeat(2,_max-content)] justify-center space-x-2 border-t border-subline p-4 font-montserratBold transition-colors hover:bg-bg"
                   >
@@ -255,7 +252,7 @@ export default function SidebarLayout({ children }: { children: ReactNode }) {
               </nav>
             </div>
             <Link
-              href="/tools/rafflebot/settings"
+              href="/rafflebot/settings"
               className="grid cursor-pointer grid-cols-[repeat(2,_max-content)] justify-center space-x-2 border-t border-subline p-4 transition-colors hover:bg-bg"
             >
               <Settings />

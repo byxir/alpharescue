@@ -10,7 +10,7 @@ import { useRouter } from "next/router";
 import { useQuery, type UseQueryResult } from "@tanstack/react-query";
 import axios from "axios";
 
-type IRaffle = {
+export type IRaffle = {
   banner: string;
   captcha: string;
   category: string;

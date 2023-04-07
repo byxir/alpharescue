@@ -1,18 +1,22 @@
 import { Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react";
-import {
-  ArchiveBoxIcon,
-  DocumentDuplicateIcon,
-  PencilSquareIcon,
-} from "@heroicons/react/20/solid";
 import { Filter } from "~/design/icons/Filter";
-import { TwitterIcon } from "~/design/icons/TwitterIcon";
+import {
+  CircleStackIcon,
+  StarIcon,
+  UserCircleIcon,
+} from "@heroicons/react/24/outline";
+import { QueryClient, useQuery } from "@tanstack/react-query";
+import { type IRaffle } from "~/pages/rafflebot/raffles/[id]";
+import { useRouter } from "next/router";
 
-function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(" ");
-}
-
-export default function FilterDropdown() {
+export default function FilterDropdown({
+  sortingMethod,
+  setSortingMethod,
+}: {
+  sortingMethod: string;
+  setSortingMethod: (newSortingMethod: string) => void;
+}) {
   return (
     <Menu as="div" className="relative inline-block text-left">
       <div>
@@ -31,76 +35,60 @@ export default function FilterDropdown() {
         leaveFrom="transform opacity-100 scale-100"
         leaveTo="transform opacity-0 scale-95"
       >
-        <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right divide-y divide-subtext rounded-xl bg-subline shadow-lg focus:outline-none">
-          <div className="py-1">
+        <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-xl bg-element shadow-lg focus:outline-none">
+          <div className="">
             <Menu.Item>
-              {({ active }) => (
-                <a
-                  href="#"
-                  className={classNames(
-                    active ? "bg-bg text-subtext" : "text-subtext",
-                    "group flex items-center px-4 py-2 text-sm"
-                  )}
-                >
-                  <div className="text-subtext">
-                    <TwitterIcon />
-                  </div>
-                  По подписчикам
-                </a>
-              )}
+              <div
+                onClick={() => setSortingMethod("hold")}
+                className={`${
+                  sortingMethod === "hold"
+                    ? "rounded-t-xl bg-subline text-subtext"
+                    : "text-subtext"
+                }
+                    group flex cursor-pointer items-center px-4 py-2 text-sm`}
+              >
+                <CircleStackIcon
+                  className="mr-3 h-5 w-5 text-subtext group-hover:text-subtext"
+                  aria-hidden="true"
+                />
+                По холду
+              </div>
             </Menu.Item>
             <Menu.Item>
-              {({ active }) => (
-                <a
-                  href="#"
-                  className={classNames(
-                    active ? "bg-bg text-subtext" : "text-subtext",
-                    "group flex items-center px-4 py-2 text-sm"
-                  )}
-                >
-                  <DocumentDuplicateIcon
-                    className="mr-3 h-5 w-5 text-subtext group-hover:text-subtext"
-                    aria-hidden="true"
-                  />
-                  Duplicate
-                </a>
-              )}
-            </Menu.Item>
-            <Menu.Item>
-              {({ active }) => (
-                <a
-                  href="#"
-                  className={classNames(
-                    active ? "bg-gray-100 text-subtext" : "text-subtext",
-                    "group flex items-center px-4 py-2 text-sm"
-                  )}
-                >
-                  <DocumentDuplicateIcon
-                    className="mr-3 h-5 w-5 text-subtext group-hover:text-subtext"
-                    aria-hidden="true"
-                  />
-                  Duplicate
-                </a>
-              )}
+              <div
+                onClick={() => setSortingMethod("subscribers")}
+                className={`${
+                  sortingMethod === "subscribers"
+                    ? "bg-subline text-subtext"
+                    : "text-subtext"
+                }
+                    group flex cursor-pointer items-center px-4 py-2 text-sm`}
+              >
+                <UserCircleIcon
+                  className="mr-3 h-5 w-5 text-subtext group-hover:text-subtext"
+                  aria-hidden="true"
+                />
+                По подписчикам
+              </div>
             </Menu.Item>
           </div>
-          <div className="py-1">
+          <div className="hover:rounded-b-xl">
             <Menu.Item>
-              {({ active }) => (
-                <a
-                  href="#"
-                  className={classNames(
-                    active ? "bg-gray-100 text-subtext" : "text-subtext",
-                    "group flex items-center px-4 py-2 text-sm"
-                  )}
-                >
-                  <ArchiveBoxIcon
-                    className="mr-3 h-5 w-5 text-subtext group-hover:text-subtext"
-                    aria-hidden="true"
-                  />
-                  Archive
-                </a>
-              )}
+              <div
+                onClick={() => setSortingMethod("favorites")}
+                className={`${
+                  sortingMethod === "favorites"
+                    ? "rounded-b-xl bg-subline text-subtext"
+                    : "text-subtext"
+                }
+                    group flex cursor-pointer items-center px-4 py-2 text-sm`}
+              >
+                <StarIcon
+                  className="mr-3 h-5 w-5 text-subtext group-hover:text-subtext"
+                  aria-hidden="true"
+                />
+                Избранное
+              </div>
             </Menu.Item>
           </div>
         </Menu.Items>
