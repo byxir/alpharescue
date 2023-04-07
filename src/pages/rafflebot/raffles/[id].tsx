@@ -93,7 +93,7 @@ const Raffle = () => {
   return (
     <SidebarLayout>
       <div className="grid w-full border-subline text-almostwhite 2xl:h-screen 2xl:grid-cols-[43%_57%]">
-        {raffle ? (
+        {raffle.data ? (
           <div className="border-subline 2xl:border-r-2">
             <div className="grid border-b-2 border-subline pb-12">
               <div className="relative h-32 w-full md:h-44">
@@ -149,7 +149,7 @@ const Raffle = () => {
                       Сумма холда
                     </div>
                   </div>
-                  <div className="grid h-20 grid-rows-[repeat(2,_max-content)]">
+                  <div className="ml-10 grid h-20 grid-rows-[repeat(2,_max-content)] 2xls:ml-0">
                     <div className="text-2xl">
                       {raffle.data?.subscribers
                         ? raffle.data?.subscribers
@@ -170,7 +170,7 @@ const Raffle = () => {
                       Количество NFT
                     </div>
                   </div>
-                  <div className="grid h-20 grid-rows-[repeat(2,_max-content)]">
+                  <div className="ml-10 grid h-20 grid-rows-[repeat(2,_max-content)] 2xls:ml-0">
                     <div className="h-max text-2xl">
                       {raffle.data?.NumberOfWinners
                         ? raffle.data?.NumberOfWinners
@@ -306,12 +306,13 @@ const Raffle = () => {
           </div>
           <div className="mt-12">
             <div className="grid grid-cols-[auto_40px] gap-2">
-              <div className="mb-6 grid grid-cols-[6%_20%_20%_27%_27%] rounded-xl border-2 border-subtext bg-element px-4 py-4 text-xs text-subtext sm:text-base">
+              <div className="mb-6 grid grid-cols-[5%_17%_18%_20%_20%_20%] overflow-x-auto rounded-xl border-2 border-subtext bg-element px-4 py-4 text-xs text-subtext sm:text-base">
                 <span>#</span>
                 <span>Twitter</span>
                 <span>Discord</span>
                 <span>Metamask</span>
-                <span className="">Proxy</span>
+                <span>Прокси</span>
+                <span>Почты</span>
               </div>
               <div className="mb-6 h-10 self-center rounded-lg p-1">
                 <svg

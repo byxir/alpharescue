@@ -1,4 +1,5 @@
 /* eslint-disable jsx-a11y/alt-text */
+import { AtSymbolIcon, ServerStackIcon } from "@heroicons/react/24/outline";
 import { signIn, useSession } from "next-auth/react";
 import SidebarLayout from "~/components/SidebarLayout";
 import { Forbidden } from "~/design/icons/Forbidden";
@@ -233,19 +234,40 @@ const RaffleList = () => {
               </div>
             </button>
             <button
-              disabled={
-                !(data?.user.raffleBotUser && status === "authenticated")
-              }
-              className={`col-span-2 grid h-max justify-items-center rounded-xl border-2 border-dashed border-subline p-4 transition-colors ${
+              className={`grid h-52 justify-items-center rounded-xl border-2 border-dashed border-subline p-4 transition-colors ${
                 data?.user.raffleBotUser && status === "authenticated"
                   ? "cursor-pointer hover:bg-neutral-900"
                   : "cursor-not-allowed"
               }`}
+              disabled={
+                !(data?.user.raffleBotUser && status === "authenticated")
+              }
             >
               <div className="mb-2 grid h-16 w-16 items-center">
-                <ServerIcon />
+                <ServerStackIcon />
               </div>
-              <p className="">Загрузить прокси</p>
+              <p className="">Загрузить</p>
+              <p className="">прокси</p>
+              <div className="mt-4 flex items-center space-x-1 text-subline">
+                <Forbidden />
+                <div className="text-xs">Файл не выбран</div>
+              </div>
+            </button>
+            <button
+              className={`grid h-52 justify-items-center rounded-xl border-2 border-dashed border-subline p-4 transition-colors ${
+                data?.user.raffleBotUser && status === "authenticated"
+                  ? "cursor-pointer hover:bg-neutral-900"
+                  : "cursor-not-allowed"
+              }`}
+              disabled={
+                !(data?.user.raffleBotUser && status === "authenticated")
+              }
+            >
+              <div className="mb-2 grid h-16 w-16 items-center">
+                <AtSymbolIcon />
+              </div>
+              <p className="">Загрузить</p>
+              <p className="">почты</p>
               <div className="mt-4 flex items-center space-x-1 text-subline">
                 <Forbidden />
                 <div className="text-xs">Файл не выбран</div>

@@ -66,6 +66,9 @@ const config = {
       fontSize: {
         "10xl": "180px",
       },
+      minWidth: {
+        lg: "512px",
+      },
     },
   },
   plugins: [require("@tailwindcss/line-clamp")],
