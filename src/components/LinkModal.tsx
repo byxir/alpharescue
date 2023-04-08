@@ -12,6 +12,31 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { Star } from "~/design/icons/Star";
 
+type IRaffleLinkResponse = {
+  error: boolean;
+  message: string | null;
+  raffle: {
+    banner: string;
+    captcha: string;
+    category: string;
+    deadline: string;
+    hold?: string;
+    id: string;
+    name: string;
+    platform: string;
+    platformLink: string;
+    profilePicture: string;
+    requirements: {
+      action: string;
+      clarification: string;
+      platform: string;
+    }[];
+    subscribers: number;
+    TotalSupply: string;
+    NumberOfWinners: string;
+  } | null;
+};
+
 const benzin = localFont({
   src: [
     {
@@ -46,18 +71,18 @@ export default function LinkModal({
 }) {
   const [userLink, setUserLink] = useState("");
 
-  const raffle: UseQueryResult<IRaffle> = useQuery<IRaffle>(
-    ["raffleLinkResponse"],
-    async () => {
-      const res = await axios.get(
-        `https://alpharescue.online/rafflelink?raffleLink=${String(userLink)}`
-      );
-      console.log("raffle link response -> ", res.data);
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-      return res.data;
-    },
-    { enabled: false }
-  );
+  const raffle: UseQueryResult<IRaffleLinkResponse> =
+    useQuery<IRaffleLinkResponse>(
+      ["raffleLinkResponse"],
+      async () => {
+        const res = await axios.get(
+          `https://alpharescue.online/rafflelink?raffleLink=${String(userLink)}`
+        );
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+        return res.data;
+      },
+      { enabled: false }
+    );
 
   const router = useRouter();
 
@@ -133,25 +158,27 @@ export default function LinkModal({
                       <div className="h-8"></div>
                       <Spinner />
                     </>
-                  ) : raffle.data ? (
+                  ) : !raffle.data?.error && raffle.data ? (
                     <>
                       <div className="h-12"></div>
                       <Link
-                        href={`/rafflebot/raffles/${raffle.data?.id}`}
+                        href={`/rafflebot/raffles/${String(
+                          raffle.data?.raffle?.id
+                        )}`}
                         className="min-w-104 relative grid grid-rows-[112px_auto] rounded-xl bg-element shadow-md"
-                        key={raffle.data?.id}
+                        key={raffle.data?.raffle?.id}
                       >
                         <div className="relative h-28">
                           <img
                             src={
-                              raffle.data?.banner
-                                ? raffle.data?.banner
+                              raffle.data?.raffle?.banner
+                                ? raffle.data?.raffle?.banner
                                 : "../../../../herobg.png"
                             }
                             className="h-full w-full rounded-t-xl object-cover"
                             alt=""
                           />
-                          {!raffle.data?.banner && (
+                          {!raffle.data?.raffle?.banner && (
                             <div className="absolute right-8 top-1/3 flex space-x-3 font-benzin text-2xl text-bg 2xl:text-3xl">
                               ALPHA RESCUE
                             </div>
@@ -161,17 +188,19 @@ export default function LinkModal({
                           <div
                             className={`justify ml-24`}
                             style={{
-                              color: determineColor(raffle.data?.platform),
+                              color: determineColor(
+                                raffle.data?.raffle?.platform
+                              ),
                             }}
                           >
-                            {raffle.data?.platform}
+                            {raffle.data?.raffle?.platform}
                           </div>
                           <div className="grid grid-cols-[auto_48px] items-center justify-between">
                             <div className="mt-3 h-max font-benzin text-2xl">
-                              {raffle.data?.name}
+                              {raffle.data?.raffle?.name}
                               <div className="absolute top-18 grid h-20 w-20 items-center justify-items-center rounded-full bg-element">
                                 <img
-                                  src={raffle.data?.profilePicture}
+                                  src={raffle.data?.raffle?.profilePicture}
                                   className="h-16 w-16 rounded-full"
                                   alt=""
                                 />
@@ -184,14 +213,17 @@ export default function LinkModal({
                           </div>
                           <div className="mt-2 text-sm font-semibold text-subtext">
                             Дедлайн -{" "}
-                            {raffle.data?.deadline
-                              ? raffle.data?.deadline
+                            {raffle.data?.raffle?.deadline
+                              ? raffle.data?.raffle?.deadline
                               : "Не указано"}
                           </div>
                           <div className="mt-8 grid grid-cols-[max-content_max-content] grid-rows-[max-content_max-content] justify-start gap-6 self-end sm:grid-cols-[repeat(4,_max-content)] md:grid-cols-[max-content_max-content] md:grid-rows-[max-content_max-content] 2xls:grid-cols-[max-content_max-content_max-content_auto] 2xls:grid-rows-1 2xls:justify-evenly">
                             <div className="">
                               <div className=" text-lg text-almostwhite">
-                                {raffle.data?.hold ? raffle.data?.hold : 0} ETH
+                                {raffle.data?.raffle?.hold
+                                  ? raffle.data?.raffle?.hold
+                                  : 0}{" "}
+                                ETH
                               </div>
                               <div className="text-xs font-semibold text-subtext">
                                 <p>Сумма холда</p>
@@ -199,8 +231,8 @@ export default function LinkModal({
                             </div>
                             <div className="ml-8 2xls:ml-0">
                               <div className="text-lg font-bold text-almostwhite">
-                                {raffle.data?.subscribers
-                                  ? raffle.data?.subscribers
+                                {raffle.data?.raffle?.subscribers
+                                  ? raffle.data?.raffle?.subscribers
                                   : "Не указано"}
                               </div>
                               <div className="text-xs font-semibold text-subtext">
@@ -210,8 +242,8 @@ export default function LinkModal({
                             </div>
                             <div className="">
                               <div className="text-lg font-bold text-almostwhite">
-                                {raffle.data?.NumberOfWinners
-                                  ? raffle.data?.NumberOfWinners
+                                {raffle.data?.raffle?.NumberOfWinners
+                                  ? raffle.data?.raffle?.NumberOfWinners
                                   : "Не указано"}
                               </div>
                               <div className="text-xs font-semibold text-subtext">
@@ -220,24 +252,26 @@ export default function LinkModal({
                               </div>
                             </div>
                             <div className="ml-7 grid grid-cols-2 grid-rows-2 gap-1 2xls:ml-0">
-                              {raffle.data?.requirements.filter(
-                                (rq) => rq.platform === "Twitter"
-                              ).length > 0 ? (
-                                <div className="grid h-8 w-8 items-center justify-items-center">
-                                  <img
-                                    src="../../../../twitteraffle.data?.png"
-                                    alt=""
-                                  />
-                                </div>
-                              ) : null}
-                              {raffle.data?.requirements.filter(
-                                (rq) => rq.platform === "Discord"
-                              ).length > 0 ? (
-                                <div className="grid h-8 w-8 items-center justify-items-center">
-                                  <img src="../../../../discord.png" alt="" />
-                                </div>
-                              ) : null}
-                              {raffle.data?.hold ? (
+                              {raffle.data?.raffle?.requirements ? (
+                                raffle.data?.raffle?.requirements.filter(
+                                  (rq) => rq.platform === "Twitter"
+                                ).length > 0 ? (
+                                  <div className="grid h-8 w-8 items-center justify-items-center">
+                                    <img
+                                      src="../../../../twitteraffle.data?.raffle?.png"
+                                      alt=""
+                                    />
+                                  </div>
+                                ) : null
+                              ) : raffle.data?.raffle?.requirements ? (
+                                raffle.data?.raffle?.requirements.filter(
+                                  (rq) => rq.platform === "Discord"
+                                ).length > 0 ? (
+                                  <div className="grid h-8 w-8 items-center justify-items-center">
+                                    <img src="../../../../discord.png" alt="" />
+                                  </div>
+                                ) : null
+                              ) : raffle.data?.raffle?.hold ? (
                                 <div className="grid h-8 w-8 items-center justify-items-center">
                                   <img src="../../../../metamask.png" alt="" />
                                 </div>
@@ -247,7 +281,11 @@ export default function LinkModal({
                         </div>
                       </Link>
                     </>
-                  ) : null}
+                  ) : (
+                    <h1 className="mt-6 font-montserratBold text-red-500">
+                      {raffle.data?.message}
+                    </h1>
+                  )}
                 </div>
               </Dialog.Panel>
             </Transition.Child>

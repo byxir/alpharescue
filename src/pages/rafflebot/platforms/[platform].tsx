@@ -47,7 +47,9 @@ const RaffleList = () => {
       const res = await fetch(
         `https://alpharescue.online/raffles?platform=${String(
           router.query.platform
-        )}&category=${category}`
+        )}&category=${
+          router.query.platform === "Premint" ? category : "selection"
+        }`
       );
       // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       return res.json();
@@ -92,6 +94,8 @@ const RaffleList = () => {
     if (sortedRaffles) {
       setRaffleState(sortedRaffles);
     }
+
+    return () => setRaffleState([]);
   }, [sortedRaffles]);
 
   useEffect(() => {

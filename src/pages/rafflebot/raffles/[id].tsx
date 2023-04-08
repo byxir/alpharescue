@@ -9,6 +9,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useQuery, type UseQueryResult } from "@tanstack/react-query";
 import axios from "axios";
+import Spinner from "~/components/spinner/Spinner";
 
 export type IRaffle = {
   banner: string;
@@ -33,6 +34,7 @@ export type IRaffle = {
 
 const Raffle = () => {
   const router = useRouter();
+  const [currentRaffle, setCurrentRaffle] = useState<IRaffle | null>(null);
 
   const raffle: UseQueryResult<IRaffle> = useQuery<IRaffle>(
     ["raffle"],
@@ -42,15 +44,16 @@ const Raffle = () => {
       );
       // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       return res.data;
-    },
-    { enabled: false }
+    }
   );
 
-  useEffect(() => {
-    if (!router.isReady) return;
-    void raffle.refetch();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [router.isReady, router.query.id]);
+  // useEffect(() => {
+  //   if (raffle.data) {
+  //     setCurrentRaffle(raffle.data);
+  //   }
+
+  //   return () => setCurrentRaffle(null);
+  // }, [raffle]);
 
   const [rangeValue, setRangeValue] = useState<number[]>([0, 1000]);
   const handleChangeRange = (e: Event, newValue: number | number[]) => {
@@ -92,8 +95,12 @@ const Raffle = () => {
   };
   return (
     <SidebarLayout>
-      <div className="grid w-full border-subline text-almostwhite 2xl:h-screen 2xl:grid-cols-[43%_57%]">
-        {raffle.data ? (
+      {raffle.isFetching ? (
+        <div className="grid h-screen w-full items-center justify-items-center">
+          <Spinner />
+        </div>
+      ) : (
+        <div className="grid w-full border-subline text-almostwhite 2xl:h-screen 2xl:grid-cols-[43%_57%]">
           <div className="border-subline 2xl:border-r-2">
             <div className="grid border-b-2 border-subline pb-12">
               <div className="relative h-32 w-full md:h-44">
@@ -204,7 +211,14 @@ const Raffle = () => {
                     <div className="grid items-center text-lg">{rq.action}</div>
                     <div className="grid items-center text-sm">
                       {rq.clarification.split("|")[1] ? (
-                        <div className="">{rq.clarification.split("|")[0]}</div>
+                        <a
+                          href={`https://twitter.com/${String(
+                            rq.clarification.split("|")[0]
+                          )}`}
+                          className="text-blue-400 underline"
+                        >
+                          {rq.clarification.split("|")[0]}
+                        </a>
                       ) : (
                         <a
                           href={
@@ -214,7 +228,11 @@ const Raffle = () => {
                           }
                           className="text-blue-400 underline"
                         >
-                          {rq.platform === "Twitter" ? "Tweet" : "Link"}
+                          {rq.platform === "Twitter"
+                            ? "Tweet"
+                            : rq.action === "Connect"
+                            ? null
+                            : "Link"}
                         </a>
                       )}
                     </div>
@@ -223,153 +241,153 @@ const Raffle = () => {
               </div>
             </div>
           </div>
-        ) : null}
-        <div className="border-t-2 border-subline px-4 pt-14 md:px-10 2xl:border-none 2xl:pt-11">
-          <div className="grid items-center justify-items-center sm:grid-cols-[max-content_max-content] sm:justify-between">
-            <div className="mb-14 grid justify-items-center sm:mb-3 sm:justify-items-start md:mb-4">
-              <div className="mb-6 text-center text-xl sm:w-48 sm:text-start md:w-auto lg:w-64 lg:text-2xl xl:w-auto 2xl:w-64 2xls:w-auto">
-                Выбрать готовую конфигурацию
+          <div className="border-t-2 border-subline px-4 pt-14 md:px-10 2xl:border-none 2xl:pt-11">
+            <div className="grid items-center justify-items-center sm:grid-cols-[max-content_max-content] sm:justify-between">
+              <div className="mb-14 grid justify-items-center sm:mb-3 sm:justify-items-start md:mb-4">
+                <div className="mb-6 text-center text-xl sm:w-48 sm:text-start md:w-auto lg:w-64 lg:text-2xl xl:w-auto 2xl:w-64 2xls:w-auto">
+                  Выбрать готовую конфигурацию
+                </div>
+                <div className="grid grid-cols-[repeat(4,_max-content)] gap-2">
+                  <div
+                    onClick={() => handleChangeConfiguration(1)}
+                    className={`grid h-12 w-12 cursor-pointer items-center justify-items-center rounded-lg bg-element text-2xl shadow-md transition-all hover:bg-opacity-60 ${
+                      activeConfiguration === 1
+                        ? "border-2 border-almostwhite"
+                        : ""
+                    }`}
+                  >
+                    1
+                  </div>
+                  <div
+                    onClick={() => handleChangeConfiguration(2)}
+                    className={`grid h-12 w-12 cursor-pointer items-center justify-items-center rounded-lg bg-element text-2xl shadow-md transition-all hover:bg-opacity-60 ${
+                      activeConfiguration === 2
+                        ? "border-2 border-almostwhite"
+                        : ""
+                    }`}
+                  >
+                    2
+                  </div>
+                  <div
+                    onClick={() => handleChangeConfiguration(3)}
+                    className={`grid h-12 w-12 cursor-pointer items-center justify-items-center rounded-lg bg-element text-2xl shadow-md transition-all hover:bg-opacity-60 ${
+                      activeConfiguration === 3
+                        ? "border-2 border-almostwhite"
+                        : ""
+                    }`}
+                  >
+                    3
+                  </div>
+                  <div
+                    onClick={() => handleChangeConfiguration(4)}
+                    className={`grid h-12 w-12 cursor-pointer items-center justify-items-center rounded-lg bg-element text-2xl shadow-md transition-all hover:bg-opacity-60 ${
+                      activeConfiguration === 4
+                        ? "border-2 border-almostwhite"
+                        : ""
+                    }`}
+                  >
+                    4
+                  </div>
+                </div>
               </div>
-              <div className="grid grid-cols-[repeat(4,_max-content)] gap-2">
-                <div
-                  onClick={() => handleChangeConfiguration(1)}
-                  className={`grid h-12 w-12 cursor-pointer items-center justify-items-center rounded-lg bg-element text-2xl shadow-md transition-all hover:bg-opacity-60 ${
-                    activeConfiguration === 1
-                      ? "border-2 border-almostwhite"
-                      : ""
-                  }`}
-                >
-                  1
+              <LaunchButton
+                authorized={
+                  data?.user.raffleBotUser && status === "authenticated"
+                }
+              >
+                <p className="text-2xl">Запустить</p>
+                <p className="text-2xl">абуз</p>
+              </LaunchButton>
+            </div>
+            <div className="mt-16 grid justify-items-center text-center">
+              <div className="grid w-5/6 grid-cols-1 items-center justify-center md:w-full md:grid-cols-[max-content_300px] md:justify-between">
+                <div className="mb-16 w-full text-xl md:mb-0 lg:text-2xl">
+                  Настроить конфигурацию
                 </div>
-                <div
-                  onClick={() => handleChangeConfiguration(2)}
-                  className={`grid h-12 w-12 cursor-pointer items-center justify-items-center rounded-lg bg-element text-2xl shadow-md transition-all hover:bg-opacity-60 ${
-                    activeConfiguration === 2
-                      ? "border-2 border-almostwhite"
-                      : ""
-                  }`}
-                >
-                  2
-                </div>
-                <div
-                  onClick={() => handleChangeConfiguration(3)}
-                  className={`grid h-12 w-12 cursor-pointer items-center justify-items-center rounded-lg bg-element text-2xl shadow-md transition-all hover:bg-opacity-60 ${
-                    activeConfiguration === 3
-                      ? "border-2 border-almostwhite"
-                      : ""
-                  }`}
-                >
-                  3
-                </div>
-                <div
-                  onClick={() => handleChangeConfiguration(4)}
-                  className={`grid h-12 w-12 cursor-pointer items-center justify-items-center rounded-lg bg-element text-2xl shadow-md transition-all hover:bg-opacity-60 ${
-                    activeConfiguration === 4
-                      ? "border-2 border-almostwhite"
-                      : ""
-                  }`}
-                >
-                  4
-                </div>
+                {data?.user.raffleBotUser && status === "authenticated" ? (
+                  <div className="mr-5 grid w-full grid-cols-[max-content_auto_max-content] items-center">
+                    <div className="mr-5">0</div>
+                    <RangeSlider
+                      getAriaLabel={() => "Account range"}
+                      value={rangeValue}
+                      onChange={handleChangeRange}
+                      valueLabelDisplay="auto"
+                      min={0}
+                      max={1000}
+                      step={5}
+                    />
+                    <div className="ml-5">All</div>
+                  </div>
+                ) : null}
               </div>
             </div>
-            <LaunchButton
-              authorized={
-                data?.user.raffleBotUser && status === "authenticated"
-              }
-            >
-              <p className="text-2xl">Запустить</p>
-              <p className="text-2xl">абуз</p>
-            </LaunchButton>
-          </div>
-          <div className="mt-16 grid justify-items-center text-center">
-            <div className="grid w-5/6 grid-cols-1 items-center justify-center md:w-full md:grid-cols-[max-content_300px] md:justify-between">
-              <div className="mb-16 w-full text-xl md:mb-0 lg:text-2xl">
-                Настроить конфигурацию
+            <div className="mt-12">
+              <div className="grid grid-cols-[auto_40px] gap-2">
+                <div className="mb-6 grid grid-cols-[5%_17%_18%_20%_20%_20%] overflow-x-auto rounded-xl border-2 border-subtext bg-element px-4 py-4 text-xs text-subtext sm:text-base">
+                  <span>#</span>
+                  <span>Twitter</span>
+                  <span>Discord</span>
+                  <span>Metamask</span>
+                  <span>Прокси</span>
+                  <span>Почты</span>
+                </div>
+                <div className="mb-6 h-10 self-center rounded-lg p-1">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    className="h-full w-full text-subtext"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M4.5 12.75l6 6 9-13.5"
+                    />
+                  </svg>
+                </div>
               </div>
               {data?.user.raffleBotUser && status === "authenticated" ? (
-                <div className="mr-5 grid w-full grid-cols-[max-content_auto_max-content] items-center">
-                  <div className="mr-5">0</div>
-                  <RangeSlider
-                    getAriaLabel={() => "Account range"}
-                    value={rangeValue}
-                    onChange={handleChangeRange}
-                    valueLabelDisplay="auto"
-                    min={0}
-                    max={1000}
-                    step={5}
-                  />
-                  <div className="ml-5">All</div>
-                </div>
-              ) : null}
-            </div>
-          </div>
-          <div className="mt-12">
-            <div className="grid grid-cols-[auto_40px] gap-2">
-              <div className="mb-6 grid grid-cols-[5%_17%_18%_20%_20%_20%] overflow-x-auto rounded-xl border-2 border-subtext bg-element px-4 py-4 text-xs text-subtext sm:text-base">
-                <span>#</span>
-                <span>Twitter</span>
-                <span>Discord</span>
-                <span>Metamask</span>
-                <span>Прокси</span>
-                <span>Почты</span>
-              </div>
-              <div className="mb-6 h-10 self-center rounded-lg p-1">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke-width="1.5"
-                  stroke="currentColor"
-                  className="h-full w-full text-subtext"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M4.5 12.75l6 6 9-13.5"
-                  />
-                </svg>
-              </div>
-            </div>
-            {data?.user.raffleBotUser && status === "authenticated" ? (
-              <div className="h-[calc(100vh-440px)] 2xl:overflow-auto">
-                {accounts.map((a, index) => (
-                  <div
-                    className="grid grid-cols-[auto_40px] gap-2"
-                    key={a.Twitter}
-                  >
-                    <div className="mb-4 h-14 w-full rounded-xl border border-subline"></div>
+                <div className="h-[calc(100vh-440px)] 2xl:overflow-auto">
+                  {accounts.map((a, index) => (
                     <div
-                      onClick={() => handleActive(a.id)}
-                      className="mb-4 h-10 cursor-pointer self-center rounded-lg border border-subline p-2.5"
+                      className="grid grid-cols-[auto_40px] gap-2"
+                      key={a.Twitter}
                     >
-                      {activeAccounts.includes(a.id) ? (
-                        <div className="h-full w-full rounded-md bg-accent"></div>
-                      ) : null}
+                      <div className="mb-4 h-14 w-full rounded-xl border border-subline"></div>
+                      <div
+                        onClick={() => handleActive(a.id)}
+                        className="mb-4 h-10 cursor-pointer self-center rounded-lg border border-subline p-2.5"
+                      >
+                        {activeAccounts.includes(a.id) ? (
+                          <div className="h-full w-full rounded-md bg-accent"></div>
+                        ) : null}
+                      </div>
                     </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="mt-6 h-full w-full items-center justify-items-center font-montserratRegular text-subtext">
-                <p>
-                  Вы не можете добавлять аккаунты и запускать абуз без подписки
-                  на RaffleBot.
-                </p>
-                <br></br>
-                <div className="flex space-x-1 pb-10">
-                  <p>Приобрести подписку можно </p>
-                  <span>
-                    <Link href="/tools" className="underline">
-                      здесь.
-                    </Link>
-                  </span>
+                  ))}
                 </div>
-              </div>
-            )}
+              ) : (
+                <div className="mt-6 h-full w-full items-center justify-items-center font-montserratRegular text-subtext">
+                  <p>
+                    Вы не можете добавлять аккаунты и запускать абуз без
+                    подписки на RaffleBot.
+                  </p>
+                  <br></br>
+                  <div className="flex space-x-1 pb-10">
+                    <p>Приобрести подписку можно </p>
+                    <span>
+                      <Link href="/tools" className="underline">
+                        здесь.
+                      </Link>
+                    </span>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </SidebarLayout>
   );
 };
