@@ -97,9 +97,11 @@ const RaffleBot = () => {
             <button className="w-max rounded-xl bg-raffleBot px-6 py-4 font-montserratBold text-xl text-bg shadow-md">
               Купить подписку
             </button>
-            <button className="mt-5 h-max w-max rounded-xl bg-element px-10 py-3 font-montserratBold text-base text-subtext shadow-md sm:mt-0">
-              Как работает бот?
-            </button>
+            <Link href="/rafflebot">
+              <button className="mt-5 h-max w-max rounded-xl bg-element px-10 py-3 font-montserratBold text-base text-subtext shadow-md transition-all hover:bg-opacity-60 sm:mt-0">
+                Как работает бот?
+              </button>
+            </Link>
           </div>
         </div>
         <div className="row-start-1 mb-8 grid gap-8 justify-self-center sm:max-w-lg lg:col-start-2 lg:mb-0 lg:max-w-lg">

@@ -48,26 +48,52 @@ model Session {
 }
 
 model User {
-    id            String    @id @default(cuid())
-    name          String?
-    email         String?   @unique
-    emailVerified DateTime?
-    image         String?
-    accounts      Account[]
-    sessions      Session[]
-    role          Role      @default(USER)
+    id             String          @id @default(cuid())
+    name           String?
+    email          String?         @unique
+    emailVerified  DateTime?
+    image          String?
+    accounts       Account[]
+    sessions       Session[]
+    role           Role            @default(USER)
+    configurations Configuration[]
 
-    communityMember  Boolean @default(false)
-    raffleBotUser    Boolean @default(false)
-    speedMintBotUser Boolean @default(false)
+    CommunitySubscription CommunitySubscription?
+    RaffleBotSubscription RaffleBotSubscription?
 }
 
 model VerificationToken {
     identifier String
     token      String   @unique
-    expires    DateTime
+    expires    DateTime @default(now())
 
     @@unique([identifier, token])
+}
+
+model CommunitySubscription {
+    id      String   @id @default(cuid())
+    expires DateTime
+    user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId  String   @unique
+}
+
+model RaffleBotSubscription {
+    id             String   @id @default(cuid())
+    expires        DateTime
+    rafflesLeft    Int      @default(5)
+    rafflesPerDay  Int      @default(5)
+    maxNumAccounts Int      @default(150)
+    user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId         String   @unique
+}
+
+model Configuration {
+    id           String @id @default(cuid())
+    firstAccount Int?
+    lastAccount  Int?
+    exceptions   String
+    user         User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId       String @unique
 }
 
 enum Role {

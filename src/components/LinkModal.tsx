@@ -105,7 +105,7 @@ export default function LinkModal({
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
               <Dialog.Panel className="relative overflow-hidden rounded-xl bg-sidebarBg px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-2xl sm:p-6">
-                <div className="flex w-full space-x-4">
+                <div className="flex w-full space-x-4 font-montserratBold">
                   <div className="flex w-full items-center space-x-4 rounded-xl bg-element py-4 pl-6 pr-2 text-subtext shadow-md">
                     <div className="h-6 w-6">
                       <MagnifyingGlassIcon />
@@ -127,7 +127,7 @@ export default function LinkModal({
                     Найти
                   </button>
                 </div>
-                <div className=" grid items-center justify-items-center">
+                <div className=" grid items-center justify-items-center font-montserratBold">
                   {raffle.isFetching ? (
                     <>
                       <div className="h-8"></div>
@@ -190,7 +190,7 @@ export default function LinkModal({
                           </div>
                           <div className="mt-8 grid grid-cols-[max-content_max-content] grid-rows-[max-content_max-content] justify-start gap-6 self-end sm:grid-cols-[repeat(4,_max-content)] md:grid-cols-[max-content_max-content] md:grid-rows-[max-content_max-content] 2xls:grid-cols-[max-content_max-content_max-content_auto] 2xls:grid-rows-1 2xls:justify-evenly">
                             <div className="">
-                              <div className="text-lg font-bold text-almostwhite">
+                              <div className=" text-lg text-almostwhite">
                                 {raffle.data?.hold ? raffle.data?.hold : 0} ETH
                               </div>
                               <div className="text-xs font-semibold text-subtext">

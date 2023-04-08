@@ -33,13 +33,13 @@ export default function Services() {
                   если ферма большая. Наша команда сэкономит ваше время и силы.
                   Мы сделаем вам ферму под ваши задачи, поможем с выбором
                   аккаунтов и быстро создадим ферму"
-                link="/software"
+                link="/services/farm"
               >
                 <ServerStackIcon />
               </ServiceBox>
             </div>
             <div
-              id="warmup"
+              id="accounts"
               className="grid max-w-xl rounded-xl border-2 border-subtext bg-element p-6 text-xl smx:p-10 xl:col-start-3"
             >
               <ServiceBox
@@ -48,7 +48,7 @@ export default function Services() {
                   если ферма большая. Наша команда сэкономит ваше время и силы.
                   Мы сделаем вам ферму под ваши задачи, поможем с выбором
                   аккаунтов и быстро создадим ферму"
-                link="/software"
+                link="/services/warmup"
               >
                 <UserCircleIcon />
               </ServiceBox>
@@ -85,7 +85,7 @@ export default function Services() {
                   если ферма большая. Наша команда сэкономит ваше время и силы.
                   Мы сделаем вам ферму под ваши задачи, поможем с выбором
                   аккаунтов и быстро создадим ферму"
-                link="/software"
+                link="/services/customSoftware"
               >
                 <ComputerDesktopIcon />
               </ServiceBox>
@@ -100,7 +100,7 @@ export default function Services() {
                   если ферма большая. Наша команда сэкономит ваше время и силы.
                   Мы сделаем вам ферму под ваши задачи, поможем с выбором
                   аккаунтов и быстро создадим ферму"
-                link="/events"
+                link="/services/eventAbuse"
               >
                 <CalendarDaysIcon />
               </ServiceBox>
