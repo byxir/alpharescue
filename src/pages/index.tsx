@@ -13,8 +13,6 @@ import FAQ from "~/components/landing/FAQ";
 import Footer from "~/components/Footer";
 
 const Home: NextPage = () => {
-  const hello = api.example.hello.useQuery({ text: "from tRPC" });
-
   return (
     <>
       <Head>

@@ -34,7 +34,6 @@ export type IRaffle = {
 
 const Raffle = () => {
   const router = useRouter();
-  const [currentRaffle, setCurrentRaffle] = useState<IRaffle | null>(null);
 
   const raffle: UseQueryResult<IRaffle> = useQuery<IRaffle>(
     ["raffle"],
@@ -44,16 +43,17 @@ const Raffle = () => {
       );
       // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       return res.data;
+    },
+    {
+      enabled: false,
     }
   );
 
-  // useEffect(() => {
-  //   if (raffle.data) {
-  //     setCurrentRaffle(raffle.data);
-  //   }
-
-  //   return () => setCurrentRaffle(null);
-  // }, [raffle]);
+  useEffect(() => {
+    if (router.isReady) {
+      void raffle.refetch();
+    }
+  }, [router.isReady, router.query.id]);
 
   const [rangeValue, setRangeValue] = useState<number[]>([0, 1000]);
   const handleChangeRange = (e: Event, newValue: number | number[]) => {
@@ -95,7 +95,7 @@ const Raffle = () => {
   };
   return (
     <SidebarLayout>
-      {raffle.isFetching ? (
+      {!raffle.data ? (
         <div className="grid h-screen w-full items-center justify-items-center">
           <Spinner />
         </div>

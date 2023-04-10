@@ -58,6 +58,9 @@ model User {
     role           Role            @default(USER)
     configurations Configuration[]
 
+    communityMember Boolean @default(false)
+    raffleBotUser   Boolean @default(false)
+
     CommunitySubscription CommunitySubscription?
     RaffleBotSubscription RaffleBotSubscription?
 }
@@ -88,12 +91,14 @@ model RaffleBotSubscription {
 }
 
 model Configuration {
-    id           String @id @default(cuid())
+    id           String  @id @default(cuid())
     firstAccount Int?
     lastAccount  Int?
-    exceptions   String
-    user         User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-    userId       String @unique
+    exceptions   String?
+    user         User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId       String
+
+    @@index([userId])
 }
 
 enum Role {
