@@ -2,7 +2,6 @@
 import {
   AtSymbolIcon,
   NoSymbolIcon,
-  PlusCircleIcon,
   ServerStackIcon,
 } from "@heroicons/react/24/outline";
 import { signIn, useSession } from "next-auth/react";

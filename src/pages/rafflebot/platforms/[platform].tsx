@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { type ChangeEvent, useEffect, useMemo, useState } from "react";
@@ -11,6 +11,9 @@ import { Star } from "~/design/icons/Star";
 import { YourLink } from "~/design/icons/YourLink";
 import debounce from "lodash.debounce";
 import Spinner from "~/components/spinner/Spinner";
+import axios from "axios";
+import { useSession } from "next-auth/react";
+import { api } from "~/utils/api";
 
 type IRaffle = {
   banner: string;
@@ -33,18 +36,34 @@ type IRaffle = {
   NumberOfWinners: string;
 };
 
+const addFavorites = async (requestData: {
+  raffle_id: string;
+  sessionToken: string;
+  userId: string;
+  discordId: string;
+}) => {
+  const res = await axios.post(
+    "https://alpharescue.online/add_favourites",
+    requestData
+  );
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+  return res.data;
+};
+
 const RaffleList = () => {
   const router = useRouter();
+  const { data, status } = useSession();
   const [linkModalOpen, setLinkModalOpen] = useState(false);
   const [sortingMethod, setSortingMethod] = useState("");
   const [raffleState, setRaffleState] = useState<IRaffle[]>([]);
   const [category, setCategory] = useState("selection");
   const [searchText, setSearchText] = useState("");
+  const [raffleFetchMode, setRaffleFetchMode] = useState("all");
 
   const raffles = useQuery<IRaffle[]>(
     ["raffles"],
     async () => {
-      const res = await fetch(
+      const res = await axios.get(
         `https://alpharescue.online/raffles?platform=${String(
           router.query.platform
         )}&category=${
@@ -52,12 +71,49 @@ const RaffleList = () => {
         }`
       );
       // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-      return res.json();
+      return res.data;
     },
     {
       enabled: false,
     }
   );
+
+  const me = api.user.getMe.useQuery({ userId: data?.user.id });
+
+  const mutation = useMutation(addFavorites, {
+    onSuccess: () => {
+      console.log("raffle added to favorites!");
+    },
+  });
+
+  const handleAddFavorites = async (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    raffle_id: string
+  ) => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    e.preventDefault();
+
+    const requestData = {
+      raffle_id: raffle_id,
+      sessionToken: String(me?.data?.sessions[0]?.sessionToken),
+      userId: String(me.data?.id),
+      discordId: String(me.data?.accounts[0]?.providerAccountId),
+    };
+
+    if (
+      requestData.raffle_id &&
+      requestData.sessionToken &&
+      requestData.userId &&
+      requestData.discordId
+    ) {
+      try {
+        await mutation.mutateAsync(requestData);
+        console.log("raffle added to favorites successfully");
+      } catch (err) {
+        console.error(err);
+      }
+    }
+  };
 
   const determineColor = (platform = String(router.query.platform)) => {
     if (platform === "Premint") {
@@ -100,9 +156,10 @@ const RaffleList = () => {
 
   useEffect(() => {
     if (!router.isReady) return;
-    void raffles.refetch();
+    if (raffleFetchMode === "all") void raffles.refetch();
+    // if (raffleFetchMode === "favorites") void raffles.refetch();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [router.isReady, router.query.platform, category]);
+  }, [router.isReady, router.query.platform, category, raffleFetchMode]);
 
   const updateQuery = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value);
@@ -200,7 +257,7 @@ const RaffleList = () => {
               />
             </div>
           </div>
-          {raffles.isFetching ? (
+          {raffles.isFetching || raffles.isLoading ? (
             <div className="mt-24 grid justify-items-center">
               <Spinner />
             </div>
@@ -247,9 +304,13 @@ const RaffleList = () => {
                           </div>
                         </div>
 
-                        <div className="mt-7 grid h-max w-12 justify-items-center">
+                        <button
+                          // eslint-disable-next-line @typescript-eslint/no-misused-promises
+                          onClick={(e) => handleAddFavorites(e, r.id)}
+                          className="z-10 mt-3 grid h-max w-12 cursor-pointer justify-items-center rounded-xl py-2 transition-colors hover:bg-sidebarBg"
+                        >
                           <Star />
-                        </div>
+                        </button>
                       </div>
                       <div className="mt-2 text-sm font-semibold text-subtext">
                         Дедлайн - {r.deadline ? r.deadline : "Не указано"}
@@ -298,7 +359,7 @@ const RaffleList = () => {
                               <img src="../../../../discord.png" alt="" />
                             </div>
                           ) : null}
-                          {r.hold ? (
+                          {r.hold && r.hold != "0" ? (
                             <div className="grid h-8 w-8 items-center justify-items-center">
                               <img src="../../../../metamask.png" alt="" />
                             </div>

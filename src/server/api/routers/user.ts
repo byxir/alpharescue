@@ -19,6 +19,8 @@ export const userRouter = createTRPCRouter({
             configurations: true,
             RaffleBotSubscription: true,
             CommunitySubscription: true,
+            accounts: true,
+            sessions: true,
           },
         });
       }
