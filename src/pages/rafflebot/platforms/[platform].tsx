@@ -58,7 +58,7 @@ const RaffleList = () => {
   const [raffleState, setRaffleState] = useState<IRaffle[]>([]);
   const [category, setCategory] = useState("selection");
   const [searchText, setSearchText] = useState("");
-  const [raffleFetchMode, setRaffleFetchMode] = useState("all");
+  const [rafflesFetchMode, setRafflesFetchMode] = useState("all");
 
   const raffles = useQuery<IRaffle[]>(
     ["raffles"],
@@ -78,7 +78,30 @@ const RaffleList = () => {
     }
   );
 
+  const favorites = useQuery<IRaffle[]>(
+    ["favorites"],
+    async () => {
+      const res = await axios.get(
+        `https://alpharescue.online/favouriteRaffles?platform=${String(
+          router.query.platform
+        )}&discordId=${String(
+          me.data?.accounts[0]?.providerAccountId
+        )}&userId=${String(me.data?.id)}&sessionToken=${String(
+          me?.data?.sessions[0]?.sessionToken
+        )}`
+      );
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+      return res.data;
+    },
+    {
+      enabled: false,
+    }
+  );
+
   const me = api.user.getMe.useQuery({ userId: data?.user.id });
+  console.log(raffleState);
+  console.log(sortingMethod);
+  console.log(rafflesFetchMode);
 
   const mutation = useMutation(addFavorites, {
     onSuccess: () => {
@@ -104,7 +127,9 @@ const RaffleList = () => {
       requestData.raffle_id &&
       requestData.sessionToken &&
       requestData.userId &&
-      requestData.discordId
+      requestData.discordId &&
+      data?.user.raffleBotUser &&
+      status === "authenticated"
     ) {
       try {
         await mutation.mutateAsync(requestData);
@@ -112,6 +137,8 @@ const RaffleList = () => {
       } catch (err) {
         console.error(err);
       }
+    } else {
+      alert("Error loading favorite raffles, try again later");
     }
   };
 
@@ -128,23 +155,24 @@ const RaffleList = () => {
     return "";
   };
 
-  console.log("component rendered!");
-
   const sortedRaffles = useMemo(() => {
-    if (raffles.data) {
+    if (rafflesFetchMode === "favorites") {
+      console.log("made it to favorites if!");
+      return favorites.data;
+    } else if (rafflesFetchMode === "all") {
       if (sortingMethod === "subscribers") {
-        return raffles.data.sort((a, b) =>
+        return raffles.data?.sort((a, b) =>
           a.subscribers < b.subscribers ? 1 : -1
         );
       } else if (sortingMethod === "hold") {
-        return raffles.data.sort((a, b) =>
+        return raffles.data?.sort((a, b) =>
           Number(a.hold) > Number(b.hold) ? 1 : -1
         );
       } else {
         return raffles.data;
       }
     }
-  }, [raffles.data, sortingMethod]);
+  }, [raffles.data, sortingMethod, favorites.data]);
 
   useEffect(() => {
     if (sortedRaffles) {
@@ -156,10 +184,12 @@ const RaffleList = () => {
 
   useEffect(() => {
     if (!router.isReady) return;
-    if (raffleFetchMode === "all") void raffles.refetch();
-    // if (raffleFetchMode === "favorites") void raffles.refetch();
+    void raffles.refetch();
+    if (data?.user.raffleBotUser && status === "authenticated") {
+      void favorites.refetch();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [router.isReady, router.query.platform, category, raffleFetchMode]);
+  }, [router.isReady, router.query.platform, category]);
 
   const updateQuery = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value);
@@ -243,6 +273,12 @@ const RaffleList = () => {
                 setSortingMethod={(newSortingMethod: string) =>
                   setSortingMethod(newSortingMethod)
                 }
+                setRafflesFetchMode={(mode: string) =>
+                  setRafflesFetchMode(mode)
+                }
+                fetchFavorites={() => void favorites.refetch()}
+                currentFavorites={favorites.data ? favorites.data : undefined}
+                fetchMode={rafflesFetchMode}
               />
               <div
                 onClick={() => setLinkModalOpen(true)}
@@ -257,7 +293,7 @@ const RaffleList = () => {
               />
             </div>
           </div>
-          {raffles.isFetching || raffles.isLoading ? (
+          {raffles.isFetching ? (
             <div className="mt-24 grid justify-items-center">
               <Spinner />
             </div>

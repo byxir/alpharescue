@@ -7,13 +7,43 @@ import {
   UserCircleIcon,
 } from "@heroicons/react/24/outline";
 
+type IRaffle = {
+  banner: string;
+  captcha: string;
+  category: string;
+  deadline: string;
+  hold?: string;
+  id: string;
+  name: string;
+  platform: string;
+  platformLink: string;
+  profilePicture: string;
+  requirements: {
+    action: string;
+    clarification: string;
+    platform: string;
+  }[];
+  subscribers: string;
+  TotalSupply: string;
+  NumberOfWinners: string;
+};
+
 export default function FilterDropdown({
   sortingMethod,
   setSortingMethod,
+  setRafflesFetchMode,
+  fetchFavorites,
+  currentFavorites,
+  fetchMode,
 }: {
   sortingMethod: string;
   setSortingMethod: (newSortingMethod: string) => void;
+  setRafflesFetchMode: (mode: string) => void;
+  fetchFavorites: () => void;
+  currentFavorites: IRaffle[] | undefined;
+  fetchMode: string;
 }) {
+  console.log("fetchMode ", fetchMode, "sortingMethod ", sortingMethod);
   return (
     <Menu as="div" className="relative inline-block text-left">
       <div>
@@ -36,9 +66,12 @@ export default function FilterDropdown({
           <div className="">
             <Menu.Item>
               <div
-                onClick={() => setSortingMethod("hold")}
+                onClick={() => {
+                  setRafflesFetchMode("all");
+                  setSortingMethod("hold");
+                }}
                 className={`${
-                  sortingMethod === "hold"
+                  sortingMethod === "hold" && fetchMode === "all"
                     ? "rounded-t-xl bg-subline text-subtext"
                     : "text-subtext"
                 }
@@ -53,9 +86,12 @@ export default function FilterDropdown({
             </Menu.Item>
             <Menu.Item>
               <div
-                onClick={() => setSortingMethod("subscribers")}
+                onClick={() => {
+                  setRafflesFetchMode("all");
+                  setSortingMethod("subscribers");
+                }}
                 className={`${
-                  sortingMethod === "subscribers"
+                  sortingMethod === "subscribers" && fetchMode === "all"
                     ? "bg-subline text-subtext"
                     : "text-subtext"
                 }
@@ -71,9 +107,15 @@ export default function FilterDropdown({
           </div>
           <Menu.Item>
             <div
-              onClick={() => setSortingMethod("favorites")}
+              onClick={() => {
+                setRafflesFetchMode("favorites");
+                setSortingMethod("");
+                if (!currentFavorites) {
+                  fetchFavorites();
+                }
+              }}
               className={`${
-                sortingMethod === "favorites"
+                fetchMode === "favorites"
                   ? "rounded-b-xl bg-subline text-subtext"
                   : "text-subtext"
               }
