@@ -47,7 +47,10 @@ const RaffleList = () => {
   const [favoriteRafflesCopy, setFavoriteRafflesCopy] = useState<string[]>([]);
   const [deletedRafflesCopy, setDeletedRafflesCopy] = useState<string[]>([]);
 
-  const me = api.user.getMe.useQuery({ userId: data?.user.id });
+  const me = api.user.getMe.useQuery(
+    { userId: data?.user.id },
+    { enabled: false }
+  );
 
   const raffles = useQuery<IRaffle[]>(
     ["raffles"],
@@ -142,8 +145,15 @@ const RaffleList = () => {
   }, [sortedRaffles]);
 
   useEffect(() => {
+    if (data?.user.id) {
+      void me.refetch();
+    }
+  }, [data?.user]);
+
+  useEffect(() => {
     if (!router.isReady) return;
     void raffles.refetch();
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router.isReady, router.query.platform, category]);
 
@@ -326,7 +336,7 @@ const RaffleList = () => {
                             ).length > 0) ||
                             favoriteRafflesCopy.includes(r.id)) &&
                           !deletedRafflesCopy.includes(r.id) ? (
-                            <div className="h-6 w-6">
+                            <div className="grid h-6 w-6 items-center justify-items-center">
                               <img
                                 src="../../../starYellow.svg"
                                 alt="star icon"
