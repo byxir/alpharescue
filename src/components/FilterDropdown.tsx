@@ -31,19 +31,10 @@ type IRaffle = {
 export default function FilterDropdown({
   sortingMethod,
   setSortingMethod,
-  setRafflesFetchMode,
-  fetchFavorites,
-  currentFavorites,
-  fetchMode,
 }: {
   sortingMethod: string;
   setSortingMethod: (newSortingMethod: string) => void;
-  setRafflesFetchMode: (mode: string) => void;
-  fetchFavorites: () => void;
-  currentFavorites: IRaffle[] | undefined;
-  fetchMode: string;
 }) {
-  console.log("fetchMode ", fetchMode, "sortingMethod ", sortingMethod);
   return (
     <Menu as="div" className="relative inline-block text-left">
       <div>
@@ -67,11 +58,10 @@ export default function FilterDropdown({
             <Menu.Item>
               <div
                 onClick={() => {
-                  setRafflesFetchMode("all");
                   setSortingMethod("hold");
                 }}
                 className={`${
-                  sortingMethod === "hold" && fetchMode === "all"
+                  sortingMethod === "hold"
                     ? "rounded-t-xl bg-subline text-subtext"
                     : "text-subtext"
                 }
@@ -87,11 +77,10 @@ export default function FilterDropdown({
             <Menu.Item>
               <div
                 onClick={() => {
-                  setRafflesFetchMode("all");
                   setSortingMethod("subscribers");
                 }}
                 className={`${
-                  sortingMethod === "subscribers" && fetchMode === "all"
+                  sortingMethod === "subscribers"
                     ? "bg-subline text-subtext"
                     : "text-subtext"
                 }
@@ -108,14 +97,10 @@ export default function FilterDropdown({
           <Menu.Item>
             <div
               onClick={() => {
-                setRafflesFetchMode("favorites");
-                setSortingMethod("");
-                if (!currentFavorites) {
-                  fetchFavorites();
-                }
+                setSortingMethod("favorites");
               }}
               className={`${
-                fetchMode === "favorites"
+                sortingMethod === "favorites"
                   ? "rounded-b-xl bg-subline text-subtext"
                   : "text-subtext"
               }

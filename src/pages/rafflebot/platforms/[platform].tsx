@@ -36,29 +36,18 @@ type IRaffle = {
   NumberOfWinners: string;
 };
 
-const addFavorites = async (requestData: {
-  raffle_id: string;
-  sessionToken: string;
-  userId: string;
-  discordId: string;
-}) => {
-  const res = await axios.post(
-    "https://alpharescue.online/add_favourites",
-    requestData
-  );
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-  return res.data;
-};
-
 const RaffleList = () => {
   const router = useRouter();
-  const { data, status } = useSession();
+  const { data } = useSession();
   const [linkModalOpen, setLinkModalOpen] = useState(false);
   const [sortingMethod, setSortingMethod] = useState("");
   const [raffleState, setRaffleState] = useState<IRaffle[]>([]);
   const [category, setCategory] = useState("selection");
   const [searchText, setSearchText] = useState("");
-  const [rafflesFetchMode, setRafflesFetchMode] = useState("all");
+  const [favoriteRafflesCopy, setFavoriteRafflesCopy] = useState<string[]>([]);
+  const [deletedRafflesCopy, setDeletedRafflesCopy] = useState<string[]>([]);
+
+  const me = api.user.getMe.useQuery({ userId: data?.user.id });
 
   const raffles = useQuery<IRaffle[]>(
     ["raffles"],
@@ -78,69 +67,92 @@ const RaffleList = () => {
     }
   );
 
-  const favorites = useQuery<IRaffle[]>(
-    ["favorites"],
-    async () => {
-      const res = await axios.get(
-        `https://alpharescue.online/favouriteRaffles?platform=${String(
-          router.query.platform
-        )}&discordId=${String(
-          me.data?.accounts[0]?.providerAccountId
-        )}&userId=${String(me.data?.id)}&sessionToken=${String(
-          me?.data?.sessions[0]?.sessionToken
-        )}`
-      );
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-      return res.data;
-    },
-    {
-      enabled: false,
-    }
-  );
+  const addFavoritesMutation = api.user.addFavorite.useMutation();
+  const deleteFavoritesMutation = api.user.deleteFavorite.useMutation();
 
-  const me = api.user.getMe.useQuery({ userId: data?.user.id });
-  console.log(raffleState);
-  console.log(sortingMethod);
-  console.log(rafflesFetchMode);
-
-  const mutation = useMutation(addFavorites, {
-    onSuccess: () => {
-      console.log("raffle added to favorites!");
-    },
-  });
-
-  const handleAddFavorites = async (
+  const handleAddFavorites = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    raffle_id: string
+    raffleId: string
   ) => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     e.preventDefault();
-
-    const requestData = {
-      raffle_id: raffle_id,
-      sessionToken: String(me?.data?.sessions[0]?.sessionToken),
-      userId: String(me.data?.id),
-      discordId: String(me.data?.accounts[0]?.providerAccountId),
-    };
-
-    if (
-      requestData.raffle_id &&
-      requestData.sessionToken &&
-      requestData.userId &&
-      requestData.discordId &&
-      data?.user.raffleBotUser &&
-      status === "authenticated"
-    ) {
-      try {
-        await mutation.mutateAsync(requestData);
-        console.log("raffle added to favorites successfully");
-      } catch (err) {
-        console.error(err);
+    //check if favoriteRaffles query already has the current raffle inside, if so then trigger delete mutation, if not then trigger add mutation
+    try {
+      if (
+        (me.data &&
+          me.data.favoriteRaffles.filter((r) => r.trueRaffleId === raffleId)
+            .length > 0) ||
+        favoriteRafflesCopy.includes(raffleId)
+      ) {
+        setDeletedRafflesCopy((prev) => [...prev, raffleId]);
+        deleteFavoritesMutation.mutate({ raffleId: raffleId });
+        setFavoriteRafflesCopy(
+          favoriteRafflesCopy.filter((r) => r != raffleId)
+        );
+      } else {
+        setFavoriteRafflesCopy((prev) => [...prev, raffleId]);
+        addFavoritesMutation.mutate({ raffleId: raffleId });
+        setDeletedRafflesCopy(deletedRafflesCopy.filter((r) => r != raffleId));
       }
-    } else {
-      alert("Error loading favorite raffles, try again later");
+    } catch (err) {
+      console.error(err);
     }
   };
+
+  console.log("favoriteRafflesCopy -> ", favoriteRafflesCopy);
+  console.log("deletedRafflesCopy -> ", deletedRafflesCopy);
+
+  const sortedRaffles = useMemo(() => {
+    if (sortingMethod === "subscribers") {
+      return raffles.data?.sort((a, b) =>
+        a.subscribers < b.subscribers ? 1 : -1
+      );
+    } else if (sortingMethod === "hold") {
+      return raffles.data?.sort((a, b) =>
+        Number(a.hold) > Number(b.hold) ? 1 : -1
+      );
+    } else if (sortingMethod === "favorites") {
+      return raffles.data?.filter((r) => {
+        if (
+          ((me.data &&
+            me.data.favoriteRaffles.filter((rr) => r.id === rr.trueRaffleId)
+              .length > 0) ||
+            favoriteRafflesCopy.includes(r.id)) &&
+          !deletedRafflesCopy.includes(r.id)
+        ) {
+          return r;
+        }
+      });
+    } else {
+      return raffles.data;
+    }
+  }, [
+    sortingMethod,
+    raffles.data,
+    me.data?.favoriteRaffles,
+    deletedRafflesCopy,
+  ]);
+
+  useEffect(() => {
+    if (sortedRaffles) {
+      setRaffleState(sortedRaffles);
+    }
+
+    return () => setRaffleState([]);
+  }, [sortedRaffles]);
+
+  useEffect(() => {
+    if (!router.isReady) return;
+    void raffles.refetch();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [router.isReady, router.query.platform, category]);
+
+  const updateQuery = (e: ChangeEvent<HTMLInputElement>) => {
+    setSearchText(e.target.value);
+  };
+
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
+  const debouncedUpdate = debounce(updateQuery, 350);
 
   const determineColor = (platform = String(router.query.platform)) => {
     if (platform === "Premint") {
@@ -155,49 +167,6 @@ const RaffleList = () => {
     return "";
   };
 
-  const sortedRaffles = useMemo(() => {
-    if (rafflesFetchMode === "favorites") {
-      console.log("made it to favorites if!");
-      return favorites.data;
-    } else if (rafflesFetchMode === "all") {
-      if (sortingMethod === "subscribers") {
-        return raffles.data?.sort((a, b) =>
-          a.subscribers < b.subscribers ? 1 : -1
-        );
-      } else if (sortingMethod === "hold") {
-        return raffles.data?.sort((a, b) =>
-          Number(a.hold) > Number(b.hold) ? 1 : -1
-        );
-      } else {
-        return raffles.data;
-      }
-    }
-  }, [raffles.data, sortingMethod, favorites.data]);
-
-  useEffect(() => {
-    if (sortedRaffles) {
-      setRaffleState(sortedRaffles);
-    }
-
-    return () => setRaffleState([]);
-  }, [sortedRaffles]);
-
-  useEffect(() => {
-    if (!router.isReady) return;
-    void raffles.refetch();
-    if (data?.user.raffleBotUser && status === "authenticated") {
-      void favorites.refetch();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [router.isReady, router.query.platform, category]);
-
-  const updateQuery = (e: ChangeEvent<HTMLInputElement>) => {
-    setSearchText(e.target.value);
-  };
-
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
-  const debouncedUpdate = debounce(updateQuery, 350);
-
   return (
     <SidebarLayout>
       <div className="py-6">
@@ -209,7 +178,10 @@ const RaffleList = () => {
             {router.query.platform === "Premint" ? (
               <div className="mt-10 grid w-full grid-cols-2 grid-rows-2 gap-4 justify-self-center font-montserratBold md:w-max md:grid-cols-4 md:grid-rows-1 2xl:mt-0">
                 <div
-                  onClick={() => setCategory("selection")}
+                  onClick={() => {
+                    setSortingMethod("");
+                    setCategory("selection");
+                  }}
                   className={`grid h-10 cursor-pointer items-center justify-items-center rounded-xl border-2 px-4 text-sm font-bold transition-colors md:text-base xl:px-6  ${
                     category === "selection"
                       ? "border-accent"
@@ -219,7 +191,10 @@ const RaffleList = () => {
                   Подборка
                 </div>
                 <div
-                  onClick={() => setCategory("topToday")}
+                  onClick={() => {
+                    setSortingMethod("");
+                    setCategory("topToday");
+                  }}
                   className={`grid h-10 cursor-pointer items-center justify-items-center rounded-xl border-2 px-4 text-sm font-bold transition-colors md:text-base xl:px-6  ${
                     category === "topToday" ? "border-accent" : "border-subline"
                   }`}
@@ -227,7 +202,10 @@ const RaffleList = () => {
                   Топ за день
                 </div>
                 <div
-                  onClick={() => setCategory("topWeek")}
+                  onClick={() => {
+                    setSortingMethod("");
+                    setCategory("topWeek");
+                  }}
                   className={`grid h-10 cursor-pointer items-center justify-items-center rounded-xl border-2 px-4 text-sm font-bold transition-colors md:text-base xl:px-6  ${
                     category === "topWeek" ? "border-accent" : "border-subline"
                   }`}
@@ -235,7 +213,10 @@ const RaffleList = () => {
                   Топ за неделю
                 </div>
                 <div
-                  onClick={() => setCategory("new")}
+                  onClick={() => {
+                    setSortingMethod("");
+                    setCategory("new");
+                  }}
                   className={`grid h-10 cursor-pointer items-center justify-items-center rounded-xl border-2 px-4 text-sm font-bold transition-colors md:text-base xl:px-6  ${
                     category === "new" ? "border-accent" : "border-subline"
                   }`}
@@ -273,12 +254,6 @@ const RaffleList = () => {
                 setSortingMethod={(newSortingMethod: string) =>
                   setSortingMethod(newSortingMethod)
                 }
-                setRafflesFetchMode={(mode: string) =>
-                  setRafflesFetchMode(mode)
-                }
-                fetchFavorites={() => void favorites.refetch()}
-                currentFavorites={favorites.data ? favorites.data : undefined}
-                fetchMode={rafflesFetchMode}
               />
               <div
                 onClick={() => setLinkModalOpen(true)}
@@ -345,7 +320,22 @@ const RaffleList = () => {
                           onClick={(e) => handleAddFavorites(e, r.id)}
                           className="z-10 mt-3 grid h-max w-12 cursor-pointer justify-items-center rounded-xl py-2 transition-colors hover:bg-sidebarBg"
                         >
-                          <Star />
+                          {((me.data &&
+                            me.data.favoriteRaffles.filter(
+                              (rr) => r.id === rr.trueRaffleId
+                            ).length > 0) ||
+                            favoriteRafflesCopy.includes(r.id)) &&
+                          !deletedRafflesCopy.includes(r.id) ? (
+                            <div className="h-6 w-6">
+                              <img
+                                src="../../../starYellow.svg"
+                                alt="star icon"
+                                className="h-5 w-5"
+                              />
+                            </div>
+                          ) : (
+                            <Star />
+                          )}
                         </button>
                       </div>
                       <div className="mt-2 text-sm font-semibold text-subtext">

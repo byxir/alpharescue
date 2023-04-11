@@ -21,9 +21,42 @@ export const userRouter = createTRPCRouter({
             CommunitySubscription: true,
             accounts: true,
             sessions: true,
+            favoriteRaffles: true,
           },
         });
       }
+    }),
+
+  addFavorite: protectedProcedure
+    .input(z.object({ raffleId: z.string() }))
+    .mutation(({ input, ctx }) => {
+      const newFavoriteRaffle = ctx.prisma.favoriteRaffle.create({
+        data: {
+          trueRaffleId: input.raffleId,
+          user: {
+            connect: { id: ctx.session?.user.id },
+          },
+        },
+      });
+      return newFavoriteRaffle;
+    }),
+
+  deleteFavorite: protectedProcedure
+    .input(z.object({ raffleId: z.string() }))
+    .mutation(({ input, ctx }) => {
+      const newFavoriteRaffle = ctx.prisma.user.update({
+        where: {
+          id: ctx.session.user.id,
+        },
+        data: {
+          favoriteRaffles: {
+            deleteMany: {
+              trueRaffleId: input.raffleId,
+            },
+          },
+        },
+      });
+      return newFavoriteRaffle;
     }),
 
   getSecretMessage: protectedProcedure.query(() => {
