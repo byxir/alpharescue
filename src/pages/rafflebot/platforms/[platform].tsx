@@ -127,12 +127,7 @@ const RaffleList = () => {
     } else {
       return raffles.data;
     }
-  }, [
-    sortingMethod,
-    raffles.data,
-    me.data?.favoriteRaffles,
-    deletedRafflesCopy,
-  ]);
+  }, [sortingMethod, raffles.data, deletedRafflesCopy]);
 
   useEffect(() => {
     if (sortedRaffles) {
