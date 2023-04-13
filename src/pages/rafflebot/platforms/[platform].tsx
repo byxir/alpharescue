@@ -20,7 +20,7 @@ type IRaffle = {
   captcha: string;
   category: string;
   deadline: string;
-  hold?: number;
+  hold: number;
   id: string;
   name: string;
   platform: string;
@@ -110,9 +110,7 @@ const RaffleList = () => {
       );
     } else if (sortingMethod === "hold") {
       console.log("sorting by hold");
-      return raffles.data?.sort((a, b) =>
-        Number(a.hold) > Number(b.hold) ? 1 : -1
-      );
+      return raffles.data?.sort((a, b) => (a.hold > b.hold ? 1 : -1));
     } else if (sortingMethod === "favorites") {
       console.log("sorting by favorites");
       return raffles.data?.filter((r) => {

@@ -16,7 +16,7 @@ export type IRaffle = {
   captcha: string;
   category: string;
   deadline: string;
-  hold?: string;
+  hold?: number;
   id: string;
   name: string;
   platform: string;
