@@ -102,9 +102,6 @@ const RaffleList = () => {
     }
   };
 
-  console.log("favoriteRafflesCopy -> ", favoriteRafflesCopy);
-  console.log("deletedRafflesCopy -> ", deletedRafflesCopy);
-
   const sortedRaffles = useMemo(() => {
     if (sortingMethod === "subscribers") {
       return raffles.data?.sort((a, b) =>
@@ -149,7 +146,7 @@ const RaffleList = () => {
     if (data?.user.id) {
       void me.refetch();
     }
-  }, [data?.user]);
+  }, [data?.user.id]);
 
   useEffect(() => {
     if (!router.isReady) return;
