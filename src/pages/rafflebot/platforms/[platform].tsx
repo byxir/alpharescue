@@ -393,7 +393,7 @@ const RaffleList = () => {
                               <img src="../../../../discord.png" alt="" />
                             </div>
                           ) : null}
-                          {r.hold && r.hold != "0" ? (
+                          {r.hold && r.hold != 0 ? (
                             <div className="grid h-8 w-8 items-center justify-items-center">
                               <img src="../../../../metamask.png" alt="" />
                             </div>
