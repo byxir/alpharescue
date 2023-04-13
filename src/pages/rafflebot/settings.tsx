@@ -5,9 +5,10 @@ import {
   ServerStackIcon,
 } from "@heroicons/react/24/outline";
 import { signIn, useSession } from "next-auth/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ConfigurationSlideover from "~/components/ConfigurationSlideover";
 import SidebarLayout from "~/components/SidebarLayout";
+import Spinner from "~/components/spinner/Spinner";
 import { Forbidden } from "~/design/icons/Forbidden";
 import { Plus } from "~/design/icons/Plus";
 import { api } from "~/utils/api";
@@ -16,6 +17,10 @@ import { api } from "~/utils/api";
 const RaffleList = () => {
   const { data, status } = useSession();
   const [slideoverOpen, setSlideoverOpen] = useState(false);
+
+  const allMyData = api.user.getAllMyData.useQuery(undefined, {
+    enabled: false,
+  });
 
   const handleDiscordSignIn = async () => {
     await signIn("discord", {
@@ -33,7 +38,11 @@ const RaffleList = () => {
     }
   };
 
-  const user = api.user.getMe.useQuery({ userId: data?.user.id });
+  useEffect(() => {
+    if (data) {
+      void allMyData.refetch();
+    }
+  }, [data]);
 
   return (
     <SidebarLayout>
@@ -48,48 +57,60 @@ const RaffleList = () => {
                 </div>
                 {data?.user.raffleBotUser && status === "authenticated" ? (
                   <div className="grid items-center gap-4 text-xs lg:text-base">
-                    <div className="grid grid-cols-[auto_max-content]">
-                      <div className="grid w-full grid-cols-[repeat(2,_max-content)] items-center justify-between text-subtext xl:gap-10">
-                        <p>Подписка истекает:</p>
-                        <div className="flex items-center space-x-4">
-                          <p className="text-base text-almostwhite xl:text-xl">
-                            20/12/2023
-                          </p>
-                          <button className="h-9 w-28 rounded-xl border-2 border-green-400 bg-bg px-4 py-2 text-xs transition-all hover:bg-opacity-60 lg:w-28">
-                            Продлить
-                          </button>
+                    {allMyData.data ? (
+                      <>
+                        <div className="grid grid-cols-[auto_max-content]">
+                          <div className="grid w-full grid-cols-[repeat(2,_max-content)] items-center justify-between text-subtext xl:gap-10">
+                            <p>Подписка истекает:</p>
+                            <div className="flex items-center space-x-4">
+                              <p className="text-base text-almostwhite xl:text-xl">
+                                20/12/2023
+                              </p>
+                              <button className="h-9 w-28 rounded-xl border-2 border-green-400 bg-bg px-4 py-2 text-xs transition-all hover:bg-opacity-60 lg:w-28">
+                                Продлить
+                              </button>
+                            </div>
+                          </div>
                         </div>
+                        <div className="grid w-full grid-cols-[repeat(2,_max-content)] items-center justify-between text-subtext xl:gap-10">
+                          <p>Раффлов осталось сегодня:</p>
+                          <div className="flex items-center space-x-4">
+                            <p className="text-lg text-almostwhite xl:text-xl">
+                              3
+                            </p>
+                            <button className="h-9 w-28 rounded-xl bg-element px-4 py-2 text-xs shadow-md transition-all hover:bg-opacity-60 lg:w-28">
+                              Докупить
+                            </button>
+                          </div>
+                        </div>
+                        <div className="grid w-full grid-cols-[repeat(2,_max-content)] items-center justify-between text-subtext xl:gap-10">
+                          <p>Всего раффлов в сутки:</p>
+                          <div className="flex items-center space-x-4">
+                            <p className="text-lg text-almostwhite xl:text-xl">
+                              5
+                            </p>
+                            <button className="h-9 w-28 rounded-xl bg-element px-4 py-2 text-xs shadow-md transition-all hover:bg-opacity-60 lg:w-28">
+                              Добавить
+                            </button>
+                          </div>
+                        </div>
+                        <div className="grid w-full grid-cols-[repeat(2,_max-content)] items-center justify-between text-subtext xl:gap-10">
+                          <p>Макс. кол-во аккаунтов:</p>
+                          <div className="flex items-center space-x-4">
+                            <p className="text-lg text-almostwhite xl:text-xl">
+                              250
+                            </p>
+                            <button className="h-9 w-28 rounded-xl bg-element px-4 py-2 text-xs shadow-md transition-all hover:bg-opacity-60 lg:w-28">
+                              Добавить
+                            </button>
+                          </div>
+                        </div>
+                      </>
+                    ) : (
+                      <div className="grid h-full items-center justify-items-center">
+                        <Spinner />
                       </div>
-                    </div>
-                    <div className="grid w-full grid-cols-[repeat(2,_max-content)] items-center justify-between text-subtext xl:gap-10">
-                      <p>Раффлов осталось сегодня:</p>
-                      <div className="flex items-center space-x-4">
-                        <p className="text-lg text-almostwhite xl:text-xl">3</p>
-                        <button className="h-9 w-28 rounded-xl bg-element px-4 py-2 text-xs shadow-md transition-all hover:bg-opacity-60 lg:w-28">
-                          Докупить
-                        </button>
-                      </div>
-                    </div>
-                    <div className="grid w-full grid-cols-[repeat(2,_max-content)] items-center justify-between text-subtext xl:gap-10">
-                      <p>Всего раффлов в сутки:</p>
-                      <div className="flex items-center space-x-4">
-                        <p className="text-lg text-almostwhite xl:text-xl">5</p>
-                        <button className="h-9 w-28 rounded-xl bg-element px-4 py-2 text-xs shadow-md transition-all hover:bg-opacity-60 lg:w-28">
-                          Добавить
-                        </button>
-                      </div>
-                    </div>
-                    <div className="grid w-full grid-cols-[repeat(2,_max-content)] items-center justify-between text-subtext xl:gap-10">
-                      <p>Макс. кол-во аккаунтов:</p>
-                      <div className="flex items-center space-x-4">
-                        <p className="text-lg text-almostwhite xl:text-xl">
-                          250
-                        </p>
-                        <button className="h-9 w-28 rounded-xl bg-element px-4 py-2 text-xs shadow-md transition-all hover:bg-opacity-60 lg:w-28">
-                          Добавить
-                        </button>
-                      </div>
-                    </div>
+                    )}
                   </div>
                 ) : status === "authenticated" ? (
                   <button
@@ -289,158 +310,164 @@ const RaffleList = () => {
                   : "cursor-not-allowed"
               }`}
             >
-              Изменить аккаунты
+              Посмотреть базу аккаунтов
             </div>
           </div>
           <div className="grid h-full w-full grid-rows-[max-content_max-content] content-between justify-self-center">
             <div className="h-max rounded-xl border-2 border-subline px-8 pb-8 pt-8">
               <p className="mb-10 text-xl">Конфигурации</p>
-              <div className="grid grid-cols-2 grid-rows-[repeat(2,_max-content)] gap-4">
-                <div className="h-52 rounded-xl bg-element p-3 sm:p-4">
-                  {user.data?.configurations[0] ? (
-                    <>
-                      <p className="mt-4 w-full text-center text-5xl">1</p>
-                      <div className="mt-6 grid grid-cols-[100px_auto] items-center justify-between text-xs sm:gap-x-2 sm:gap-y-2">
-                        <p className="w-max text-subtext">Начальный: </p>
-                        <p className="text-end text-base text-almostwhite">
-                          {user.data?.configurations[0]?.firstAccount}
-                        </p>
-                        <p className="w-max text-subtext">Последний: </p>
-                        <p className="text-end text-base text-almostwhite">
-                          {user.data?.configurations[0]?.lastAccount}
-                        </p>
-                        <p className="w-max text-subtext">Исключения: </p>
-                        <p className="text-end text-base text-almostwhite">
-                          {
-                            user.data?.configurations[0]?.exceptions?.split(",")
-                              .length
-                          }
-                        </p>
-                      </div>
-                    </>
-                  ) : (
-                    <div
-                      onClick={() => setSlideoverOpen(true)}
-                      className="grid h-full w-full items-center justify-items-center"
-                    >
-                      <div className="grid h-max justify-items-center gap-3 text-center text-subtext">
-                        <div className="h-12 w-12">
-                          <NoSymbolIcon />
+              {allMyData.data?.configurations ? (
+                <div className="grid grid-cols-2 grid-rows-[repeat(2,_max-content)] gap-4">
+                  <div className="h-52 rounded-xl bg-element p-3 sm:p-4">
+                    {allMyData.data?.configurations[0] ? (
+                      <>
+                        <p className="mt-4 w-full text-center text-5xl">1</p>
+                        <div className="mt-6 grid grid-cols-[100px_auto] items-center justify-between text-xs sm:gap-x-2 sm:gap-y-2">
+                          <p className="w-max text-subtext">Начальный: </p>
+                          <p className="text-end text-base text-almostwhite">
+                            {allMyData.data?.configurations[0]?.firstAccount}
+                          </p>
+                          <p className="w-max text-subtext">Последний: </p>
+                          <p className="text-end text-base text-almostwhite">
+                            {allMyData.data?.configurations[0]?.lastAccount}
+                          </p>
+                          <p className="w-max text-subtext">Исключения: </p>
+                          <p className="text-end text-base text-almostwhite">
+                            {
+                              allMyData.data?.configurations[0]?.exceptions?.split(
+                                ","
+                              ).length
+                            }
+                          </p>
                         </div>
-                        <div className="text-sm">Add configuration</div>
-                      </div>
-                    </div>
-                  )}
-                </div>
-                <div className="h-52 rounded-xl bg-element p-3 sm:p-4">
-                  {user.data?.configurations[1] ? (
-                    <>
-                      <p className="mt-4 w-full text-center text-5xl">2</p>
-                      <div className="mt-6 grid grid-cols-[100px_auto] items-center justify-between text-xs sm:gap-x-2 sm:gap-y-2">
-                        <p className="w-max text-subtext">Начальный: </p>
-                        <p className="text-end text-base text-almostwhite">
-                          {user.data?.configurations[1]?.firstAccount}
-                        </p>
-                        <p className="w-max text-subtext">Последний: </p>
-                        <p className="text-end text-base text-almostwhite">
-                          {user.data?.configurations[1]?.lastAccount}
-                        </p>
-                        <p className="w-max text-subtext">Исключения: </p>
-                        <p className="text-end text-base text-almostwhite">
-                          {
-                            user.data?.configurations[1]?.exceptions?.split(",")
-                              .length
-                          }
-                        </p>
-                      </div>
-                    </>
-                  ) : (
-                    <div
-                      onClick={() => setSlideoverOpen(true)}
-                      className="grid h-full w-full items-center justify-items-center"
-                    >
-                      <div className="grid h-max justify-items-center gap-3 text-center text-subtext">
-                        <div className="h-12 w-12">
-                          <NoSymbolIcon />
+                      </>
+                    ) : (
+                      <div
+                        onClick={() => setSlideoverOpen(true)}
+                        className="grid h-full w-full items-center justify-items-center"
+                      >
+                        <div className="grid h-max justify-items-center gap-3 text-center text-subtext">
+                          <div className="h-12 w-12">
+                            <NoSymbolIcon />
+                          </div>
+                          <div className="text-sm">Add configuration</div>
                         </div>
-                        <div className="text-sm">Add configuration</div>
                       </div>
-                    </div>
-                  )}
-                </div>
-                <div className="grid h-52 cursor-pointer rounded-xl bg-element p-3 transition-colors hover:bg-opacity-60 sm:p-4">
-                  {user.data?.configurations[2] ? (
-                    <>
-                      <p className="mt-4 w-full text-center text-5xl">3</p>
-                      <div className="mt-6 grid grid-cols-[100px_auto] items-center justify-between text-xs sm:gap-x-2 sm:gap-y-2">
-                        <p className="w-max text-subtext">Начальный: </p>
-                        <p className="text-end text-base text-almostwhite">
-                          {user.data?.configurations[2]?.firstAccount}
-                        </p>
-                        <p className="w-max text-subtext">Последний: </p>
-                        <p className="text-end text-base text-almostwhite">
-                          {user.data?.configurations[2]?.lastAccount}
-                        </p>
-                        <p className="w-max text-subtext">Исключения: </p>
-                        <p className="text-end text-base text-almostwhite">
-                          {
-                            user.data?.configurations[2]?.exceptions?.split(",")
-                              .length
-                          }
-                        </p>
-                      </div>
-                    </>
-                  ) : (
-                    <div
-                      onClick={() => setSlideoverOpen(true)}
-                      className="grid h-full w-full items-center justify-items-center"
-                    >
-                      <div className="grid h-max justify-items-center gap-3 text-center text-subtext">
-                        <div className="h-12 w-12">
-                          <NoSymbolIcon />
+                    )}
+                  </div>
+                  <div className="h-52 rounded-xl bg-element p-3 sm:p-4">
+                    {allMyData.data?.configurations[1] ? (
+                      <>
+                        <p className="mt-4 w-full text-center text-5xl">2</p>
+                        <div className="mt-6 grid grid-cols-[100px_auto] items-center justify-between text-xs sm:gap-x-2 sm:gap-y-2">
+                          <p className="w-max text-subtext">Начальный: </p>
+                          <p className="text-end text-base text-almostwhite">
+                            {allMyData.data?.configurations[1]?.firstAccount}
+                          </p>
+                          <p className="w-max text-subtext">Последний: </p>
+                          <p className="text-end text-base text-almostwhite">
+                            {allMyData.data?.configurations[1]?.lastAccount}
+                          </p>
+                          <p className="w-max text-subtext">Исключения: </p>
+                          <p className="text-end text-base text-almostwhite">
+                            {
+                              allMyData.data?.configurations[1]?.exceptions?.split(
+                                ","
+                              ).length
+                            }
+                          </p>
                         </div>
-                        <div className="text-sm">Add configuration</div>
-                      </div>
-                    </div>
-                  )}
-                </div>
-                <div className="grid h-52 cursor-pointer rounded-xl bg-element p-3 transition-colors hover:bg-opacity-60 sm:p-4">
-                  {user.data?.configurations[3] ? (
-                    <>
-                      <p className="mt-4 w-full text-center text-5xl">4</p>
-                      <div className="mt-6 grid grid-cols-[100px_auto] items-center justify-between text-xs sm:gap-x-2 sm:gap-y-2">
-                        <p className="w-max text-subtext">Начальный: </p>
-                        <p className="text-end text-base text-almostwhite">
-                          {user.data?.configurations[3]?.firstAccount}
-                        </p>
-                        <p className="w-max text-subtext">Последний: </p>
-                        <p className="text-end text-base text-almostwhite">
-                          {user.data?.configurations[3]?.lastAccount}
-                        </p>
-                        <p className="w-max text-subtext">Исключения: </p>
-                        <p className="text-end text-base text-almostwhite">
-                          {
-                            user.data?.configurations[3]?.exceptions?.split(",")
-                              .length
-                          }
-                        </p>
-                      </div>
-                    </>
-                  ) : (
-                    <div
-                      onClick={() => setSlideoverOpen(true)}
-                      className="grid h-full w-full items-center justify-items-center"
-                    >
-                      <div className="grid h-max justify-items-center gap-3 text-center text-subtext">
-                        <div className="w-12">
-                          <NoSymbolIcon />
+                      </>
+                    ) : (
+                      <div
+                        onClick={() => setSlideoverOpen(true)}
+                        className="grid h-full w-full items-center justify-items-center"
+                      >
+                        <div className="grid h-max justify-items-center gap-3 text-center text-subtext">
+                          <div className="h-12 w-12">
+                            <NoSymbolIcon />
+                          </div>
+                          <div className="text-sm">Add configuration</div>
                         </div>
-                        <div className="text-sm">Нет конфигурации</div>
                       </div>
-                    </div>
-                  )}
+                    )}
+                  </div>
+                  <div className="grid h-52 cursor-pointer rounded-xl bg-element p-3 transition-colors hover:bg-opacity-60 sm:p-4">
+                    {allMyData.data?.configurations[2] ? (
+                      <>
+                        <p className="mt-4 w-full text-center text-5xl">3</p>
+                        <div className="mt-6 grid grid-cols-[100px_auto] items-center justify-between text-xs sm:gap-x-2 sm:gap-y-2">
+                          <p className="w-max text-subtext">Начальный: </p>
+                          <p className="text-end text-base text-almostwhite">
+                            {allMyData.data?.configurations[2]?.firstAccount}
+                          </p>
+                          <p className="w-max text-subtext">Последний: </p>
+                          <p className="text-end text-base text-almostwhite">
+                            {allMyData.data?.configurations[2]?.lastAccount}
+                          </p>
+                          <p className="w-max text-subtext">Исключения: </p>
+                          <p className="text-end text-base text-almostwhite">
+                            {
+                              allMyData.data?.configurations[2]?.exceptions?.split(
+                                ","
+                              ).length
+                            }
+                          </p>
+                        </div>
+                      </>
+                    ) : (
+                      <div
+                        onClick={() => setSlideoverOpen(true)}
+                        className="grid h-full w-full items-center justify-items-center"
+                      >
+                        <div className="grid h-max justify-items-center gap-3 text-center text-subtext">
+                          <div className="h-12 w-12">
+                            <NoSymbolIcon />
+                          </div>
+                          <div className="text-sm">Add configuration</div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                  <div className="grid h-52 cursor-pointer rounded-xl bg-element p-3 transition-colors hover:bg-opacity-60 sm:p-4">
+                    {allMyData.data?.configurations[3] ? (
+                      <>
+                        <p className="mt-4 w-full text-center text-5xl">4</p>
+                        <div className="mt-6 grid grid-cols-[100px_auto] items-center justify-between text-xs sm:gap-x-2 sm:gap-y-2">
+                          <p className="w-max text-subtext">Начальный: </p>
+                          <p className="text-end text-base text-almostwhite">
+                            {allMyData.data?.configurations[3]?.firstAccount}
+                          </p>
+                          <p className="w-max text-subtext">Последний: </p>
+                          <p className="text-end text-base text-almostwhite">
+                            {allMyData.data?.configurations[3]?.lastAccount}
+                          </p>
+                          <p className="w-max text-subtext">Исключения: </p>
+                          <p className="text-end text-base text-almostwhite">
+                            {
+                              allMyData.data?.configurations[3]?.exceptions?.split(
+                                ","
+                              ).length
+                            }
+                          </p>
+                        </div>
+                      </>
+                    ) : (
+                      <div
+                        onClick={() => setSlideoverOpen(true)}
+                        className="grid h-full w-full items-center justify-items-center"
+                      >
+                        <div className="grid h-max justify-items-center gap-3 text-center text-subtext">
+                          <div className="w-12">
+                            <NoSymbolIcon />
+                          </div>
+                          <div className="text-sm">Нет конфигурации</div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
+              ) : null}
               <button
                 onClick={() => setSlideoverOpen(true)}
                 className="mt-10 grid w-full cursor-pointer justify-items-center rounded-xl bg-accent p-3 text-lg text-bg shadow-md transition-all hover:bg-opacity-60"
@@ -463,6 +490,7 @@ const RaffleList = () => {
       <ConfigurationSlideover
         open={slideoverOpen}
         closeFunction={() => setSlideoverOpen(false)}
+        configurations={allMyData.data?.configurations}
       />
     </SidebarLayout>
   );

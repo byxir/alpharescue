@@ -7,44 +7,77 @@ import {
 } from "~/server/api/trpc";
 
 export const userRouter = createTRPCRouter({
-  getMe: publicProcedure
-    .input(z.object({ userId: z.string().nullish() }))
-    .query(({ input, ctx }) => {
-      if (input.userId) {
-        return ctx.prisma.user.findUnique({
-          where: {
-            id: input.userId,
-          },
-          include: {
-            configurations: true,
-            RaffleBotSubscription: true,
-            CommunitySubscription: true,
-            accounts: true,
-            sessions: true,
-            favoriteRaffles: true,
+  getAllMyData: publicProcedure.query(async ({ ctx }) => {
+    const response = await ctx.prisma.user.findUnique({
+      where: {
+        id: ctx.session?.user.id,
+      },
+      include: {
+        configurations: true,
+        RaffleBotSubscription: true,
+        accounts: true,
+        sessions: true,
+      },
+    });
+
+    return {
+      discordId: response?.accounts.at(1)?.providerAccountId,
+      sessionToken: response?.sessions.at(1)?.sessionToken,
+      configurations: response?.configurations,
+      RaffleBotSubscription: response?.RaffleBotSubscription,
+    };
+  }),
+
+  getMyProtectionData: protectedProcedure.query(async ({ ctx }) => {
+    const response = await ctx.prisma.user.findUnique({
+      where: {
+        id: ctx.session?.user.id,
+      },
+      include: {
+        accounts: true,
+        sessions: true,
+      },
+    });
+    return {
+      discordId: response?.accounts.at(1)?.providerAccountId,
+      sessionToken: response?.sessions.at(1)?.sessionToken,
+    };
+  }),
+
+  getMeWithFavoriteRaffles: protectedProcedure.query(async ({ ctx }) => {
+    const response = await ctx.prisma.user.findUnique({
+      where: {
+        id: ctx.session?.user.id,
+      },
+      include: {
+        favoriteRaffles: true,
+      },
+    });
+
+    return {
+      favoriteRaffles: response?.favoriteRaffles,
+    };
+  }),
+
+  addFavorite: protectedProcedure
+    .input(z.object({ raffleId: z.string() }))
+    .mutation(({ input, ctx }) => {
+      if (ctx.session.user.raffleBotUser) {
+        return ctx.prisma.favoriteRaffle.create({
+          data: {
+            trueRaffleId: input.raffleId,
+            user: {
+              connect: { id: ctx.session?.user.id },
+            },
           },
         });
       }
     }),
 
-  addFavorite: protectedProcedure
-    .input(z.object({ raffleId: z.string() }))
-    .mutation(({ input, ctx }) => {
-      const newFavoriteRaffle = ctx.prisma.favoriteRaffle.create({
-        data: {
-          trueRaffleId: input.raffleId,
-          user: {
-            connect: { id: ctx.session?.user.id },
-          },
-        },
-      });
-      return newFavoriteRaffle;
-    }),
-
   deleteFavorite: protectedProcedure
     .input(z.object({ raffleId: z.string() }))
     .mutation(({ input, ctx }) => {
-      const newFavoriteRaffle = ctx.prisma.user.update({
+      return ctx.prisma.user.update({
         where: {
           id: ctx.session.user.id,
         },
@@ -56,7 +89,6 @@ export const userRouter = createTRPCRouter({
           },
         },
       });
-      return newFavoriteRaffle;
     }),
 
   getSecretMessage: protectedProcedure.query(() => {

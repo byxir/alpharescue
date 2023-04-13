@@ -47,10 +47,9 @@ const RaffleList = () => {
   const [favoriteRafflesCopy, setFavoriteRafflesCopy] = useState<string[]>([]);
   const [deletedRafflesCopy, setDeletedRafflesCopy] = useState<string[]>([]);
 
-  const me = api.user.getMe.useQuery(
-    { userId: data?.user.id },
-    { enabled: false }
-  );
+  const me = api.user.getMeWithFavoriteRaffles.useQuery(undefined, {
+    enabled: false,
+  });
 
   const raffles = useQuery<IRaffle[]>(
     ["raffles"],
@@ -83,6 +82,7 @@ const RaffleList = () => {
     try {
       if (
         (me.data &&
+          me.data.favoriteRaffles &&
           me.data.favoriteRaffles.filter((r) => r.trueRaffleId === raffleId)
             .length > 0) ||
         favoriteRafflesCopy.includes(raffleId)
@@ -118,6 +118,7 @@ const RaffleList = () => {
       return raffles.data?.filter((r) => {
         if (
           ((me.data &&
+            me.data.favoriteRaffles &&
             me.data.favoriteRaffles.filter((rr) => r.id === rr.trueRaffleId)
               .length > 0) ||
             favoriteRafflesCopy.includes(r.id)) &&
@@ -153,6 +154,7 @@ const RaffleList = () => {
   useEffect(() => {
     if (!router.isReady) return;
     void raffles.refetch();
+    setSortingMethod("");
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router.isReady, router.query.platform, category]);
@@ -331,6 +333,7 @@ const RaffleList = () => {
                           className="z-10 mt-3 grid h-max w-12 cursor-pointer justify-items-center rounded-xl py-2 transition-colors hover:bg-sidebarBg"
                         >
                           {((me.data &&
+                            me.data.favoriteRaffles &&
                             me.data.favoriteRaffles.filter(
                               (rr) => r.id === rr.trueRaffleId
                             ).length > 0) ||

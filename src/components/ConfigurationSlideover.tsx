@@ -11,6 +11,7 @@ import { accounts } from "~/utils/tempaccounts";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { api } from "~/utils/api";
+import { type Configuration } from "@prisma/client";
 
 const montserrat = localFont({
   src: [
@@ -32,9 +33,11 @@ const montserratRegular = localFont({
 export default function ConfigurationSlideover({
   open,
   closeFunction,
+  configurations,
 }: {
   open: boolean;
   closeFunction: () => void;
+  configurations: Configuration[] | undefined;
 }) {
   const { data, status } = useSession();
 
@@ -60,8 +63,6 @@ export default function ConfigurationSlideover({
       setActiveAccounts((prevAccounts) => [...prevAccounts, account]);
     }
   };
-
-  const user = api.user.getMe.useQuery({ userId: data?.user.id });
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -90,66 +91,68 @@ export default function ConfigurationSlideover({
                       {/* Header */}
                       <div className="border-b-2 border-subline bg-sidebarBg px-4 py-6 sm:px-6">
                         <div className="flex items-start justify-between space-x-3">
-                          <div className="flex items-center space-x-4 font-montserratBold">
-                            {user.data?.configurations[0] ? (
-                              <div
-                                onClick={() => setChosenConfiguration(1)}
-                                className={`grid h-20 w-20 cursor-pointer items-center justify-items-center rounded-xl bg-element text-xl shadow-md transition-all hover:bg-opacity-60 ${
-                                  chosenConfiguration === 1
-                                    ? "border-2 border-almostwhite"
-                                    : ""
-                                }`}
-                              >
-                                1
-                              </div>
-                            ) : null}
-                            {user.data?.configurations[1] ? (
-                              <div
-                                onClick={() => setChosenConfiguration(2)}
-                                className={`grid h-20 w-20 cursor-pointer items-center justify-items-center rounded-xl bg-element text-xl shadow-md transition-all hover:bg-opacity-60 ${
-                                  chosenConfiguration === 2
-                                    ? "border-2 border-almostwhite"
-                                    : ""
-                                }`}
-                              >
-                                2
-                              </div>
-                            ) : null}
-                            {user.data?.configurations[2] ? (
-                              <div
-                                onClick={() => setChosenConfiguration(3)}
-                                className={`grid h-20 w-20 cursor-pointer items-center justify-items-center rounded-xl bg-element text-xl shadow-md transition-all hover:bg-opacity-60 ${
-                                  chosenConfiguration === 3
-                                    ? "border-2 border-almostwhite"
-                                    : ""
-                                }`}
-                              >
-                                3
-                              </div>
-                            ) : null}
-                            {user.data?.configurations[3] ? (
-                              <div
-                                onClick={() => setChosenConfiguration(4)}
-                                className={`grid h-20 w-20 cursor-pointer items-center justify-items-center rounded-xl bg-element text-xl shadow-md transition-all hover:bg-opacity-60 ${
-                                  chosenConfiguration === 4
-                                    ? "border-2 border-almostwhite"
-                                    : ""
-                                }`}
-                              >
-                                4
-                              </div>
-                            ) : null}
-                            {user.data?.configurations.length &&
-                            user.data?.configurations.length < 4 ? (
-                              <div
-                                className={`txt-center grid h-20 w-20 cursor-pointer items-center justify-items-center rounded-xl bg-element text-xs text-subtext shadow-md transition-all hover:bg-opacity-60`}
-                              >
-                                <div className="w-12">
-                                  <PlusIcon />
+                          {configurations ? (
+                            <div className="flex items-center space-x-4 font-montserratBold">
+                              {configurations[0] ? (
+                                <div
+                                  onClick={() => setChosenConfiguration(1)}
+                                  className={`grid h-20 w-20 cursor-pointer items-center justify-items-center rounded-xl bg-element text-xl shadow-md transition-all hover:bg-opacity-60 ${
+                                    chosenConfiguration === 1
+                                      ? "border-2 border-almostwhite"
+                                      : ""
+                                  }`}
+                                >
+                                  1
                                 </div>
-                              </div>
-                            ) : null}
-                          </div>
+                              ) : null}
+                              {configurations[1] ? (
+                                <div
+                                  onClick={() => setChosenConfiguration(2)}
+                                  className={`grid h-20 w-20 cursor-pointer items-center justify-items-center rounded-xl bg-element text-xl shadow-md transition-all hover:bg-opacity-60 ${
+                                    chosenConfiguration === 2
+                                      ? "border-2 border-almostwhite"
+                                      : ""
+                                  }`}
+                                >
+                                  2
+                                </div>
+                              ) : null}
+                              {configurations[2] ? (
+                                <div
+                                  onClick={() => setChosenConfiguration(3)}
+                                  className={`grid h-20 w-20 cursor-pointer items-center justify-items-center rounded-xl bg-element text-xl shadow-md transition-all hover:bg-opacity-60 ${
+                                    chosenConfiguration === 3
+                                      ? "border-2 border-almostwhite"
+                                      : ""
+                                  }`}
+                                >
+                                  3
+                                </div>
+                              ) : null}
+                              {configurations[3] ? (
+                                <div
+                                  onClick={() => setChosenConfiguration(4)}
+                                  className={`grid h-20 w-20 cursor-pointer items-center justify-items-center rounded-xl bg-element text-xl shadow-md transition-all hover:bg-opacity-60 ${
+                                    chosenConfiguration === 4
+                                      ? "border-2 border-almostwhite"
+                                      : ""
+                                  }`}
+                                >
+                                  4
+                                </div>
+                              ) : null}
+                              {configurations.length &&
+                              configurations.length < 4 ? (
+                                <div
+                                  className={`txt-center grid h-20 w-20 cursor-pointer items-center justify-items-center rounded-xl bg-element text-xs text-subtext shadow-md transition-all hover:bg-opacity-60`}
+                                >
+                                  <div className="w-12">
+                                    <PlusIcon />
+                                  </div>
+                                </div>
+                              ) : null}
+                            </div>
+                          ) : null}
                           <div className="flex h-7 items-center">
                             <button
                               type="button"
