@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { type ChangeEvent, useEffect, useMemo, useState } from "react";
@@ -106,11 +106,11 @@ const RaffleList = () => {
     if (sortingMethod === "subscribers") {
       console.log("sorting by subscribers");
       return raffles.data?.sort((a, b) =>
-        a.subscribers < b.subscribers ? 1 : -1
+        a.subscribers <= b.subscribers ? 1 : -1
       );
     } else if (sortingMethod === "hold") {
       console.log("sorting by hold");
-      return raffles.data?.sort((a, b) => (a.hold > b.hold ? 1 : -1));
+      return raffles.data?.filter((r) => r.hold === 0);
     } else if (sortingMethod === "favorites") {
       console.log("sorting by favorites");
       return raffles.data?.filter((r) => {

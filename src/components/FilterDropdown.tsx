@@ -7,27 +7,6 @@ import {
   UserCircleIcon,
 } from "@heroicons/react/24/outline";
 
-type IRaffle = {
-  banner: string;
-  captcha: string;
-  category: string;
-  deadline: string;
-  hold?: string;
-  id: string;
-  name: string;
-  platform: string;
-  platformLink: string;
-  profilePicture: string;
-  requirements: {
-    action: string;
-    clarification: string;
-    platform: string;
-  }[];
-  subscribers: string;
-  TotalSupply: string;
-  NumberOfWinners: string;
-};
-
 export default function FilterDropdown({
   sortingMethod,
   setSortingMethod,
@@ -71,7 +50,7 @@ export default function FilterDropdown({
                   className="mr-3 h-5 w-5 text-subtext group-hover:text-subtext"
                   aria-hidden="true"
                 />
-                По холду
+                Без холда
               </div>
             </Menu.Item>
             <Menu.Item>
