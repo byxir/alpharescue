@@ -20,7 +20,7 @@ type IRaffle = {
   captcha: string;
   category: string;
   deadline: string;
-  hold?: string;
+  hold?: number;
   id: string;
   name: string;
   platform: string;
@@ -31,7 +31,7 @@ type IRaffle = {
     clarification: string;
     platform: string;
   }[];
-  subscribers: string;
+  subscribers: number;
   TotalSupply: string;
   NumberOfWinners: string;
 };
