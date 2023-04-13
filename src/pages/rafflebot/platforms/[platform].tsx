@@ -104,14 +104,17 @@ const RaffleList = () => {
 
   const sortedRaffles = useMemo(() => {
     if (sortingMethod === "subscribers") {
+      console.log("sorting by subscribers");
       return raffles.data?.sort((a, b) =>
         a.subscribers < b.subscribers ? 1 : -1
       );
     } else if (sortingMethod === "hold") {
+      console.log("sorting by hold");
       return raffles.data?.sort((a, b) =>
         Number(a.hold) > Number(b.hold) ? 1 : -1
       );
     } else if (sortingMethod === "favorites") {
+      console.log("sorting by favorites");
       return raffles.data?.filter((r) => {
         if (
           ((me.data &&
@@ -127,7 +130,7 @@ const RaffleList = () => {
     } else {
       return raffles.data;
     }
-  }, [sortingMethod, raffles.data, deletedRafflesCopy]);
+  }, [sortingMethod, raffles.data]);
 
   useEffect(() => {
     if (sortedRaffles) {
