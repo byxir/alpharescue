@@ -47,6 +47,9 @@ const RaffleList = () => {
   const [favoriteRafflesCopy, setFavoriteRafflesCopy] = useState<string[]>([]);
   const [deletedRafflesCopy, setDeletedRafflesCopy] = useState<string[]>([]);
 
+  console.log("favorite copy -> ", favoriteRafflesCopy);
+  console.log("deleted copy -> ", deletedRafflesCopy);
+
   const me = api.user.getMeWithFavoriteRaffles.useQuery(undefined, {
     enabled: false,
   });
@@ -71,6 +74,7 @@ const RaffleList = () => {
 
   const addFavoritesMutation = api.user.addFavorite.useMutation();
   const deleteFavoritesMutation = api.user.deleteFavorite.useMutation();
+  console.log("page rerendered!!!");
 
   const handleAddFavorites = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
@@ -79,10 +83,9 @@ const RaffleList = () => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     e.preventDefault();
     //check if favoriteRaffles query already has the current raffle inside, if so then trigger delete mutation, if not then trigger add mutation
-    try {
+    if (me.data) {
       if (
-        (me.data &&
-          me.data.favoriteRaffles &&
+        (me.data.favoriteRaffles &&
           me.data.favoriteRaffles.filter((r) => r.trueRaffleId === raffleId)
             .length > 0) ||
         favoriteRafflesCopy.includes(raffleId)
@@ -97,8 +100,6 @@ const RaffleList = () => {
         addFavoritesMutation.mutate({ raffleId: raffleId });
         setDeletedRafflesCopy(deletedRafflesCopy.filter((r) => r != raffleId));
       }
-    } catch (err) {
-      console.error(err);
     }
   };
 
@@ -334,9 +335,9 @@ const RaffleList = () => {
                           !deletedRafflesCopy.includes(r.id) ? (
                             <div className="grid h-6 w-6 items-center justify-items-center">
                               <img
-                                src="../../../starYellow.svg"
+                                src="../../../starYellow.png"
                                 alt="star icon"
-                                className="h-5 w-5"
+                                className="h-6 w-6"
                               />
                             </div>
                           ) : (

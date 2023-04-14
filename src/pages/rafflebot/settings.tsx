@@ -64,7 +64,15 @@ const RaffleList = () => {
                             <p>Подписка истекает:</p>
                             <div className="flex items-center space-x-4">
                               <p className="text-base text-almostwhite xl:text-xl">
-                                20/12/2023
+                                {`${Number(
+                                  allMyData.data.RaffleBotSubscription?.expires.getDate()
+                                )}/${
+                                  Number(
+                                    allMyData.data.RaffleBotSubscription?.expires.getMonth()
+                                  ) + 1
+                                }/${Number(
+                                  allMyData.data.RaffleBotSubscription?.expires.getFullYear()
+                                )}`}
                               </p>
                               <button className="h-9 w-28 rounded-xl border-2 border-green-400 bg-bg px-4 py-2 text-xs transition-all hover:bg-opacity-60 lg:w-28">
                                 Продлить
@@ -76,7 +84,10 @@ const RaffleList = () => {
                           <p>Раффлов осталось сегодня:</p>
                           <div className="flex items-center space-x-4">
                             <p className="text-lg text-almostwhite xl:text-xl">
-                              3
+                              {
+                                allMyData.data.RaffleBotSubscription
+                                  ?.rafflesLeft
+                              }
                             </p>
                             <button className="h-9 w-28 rounded-xl bg-element px-4 py-2 text-xs shadow-md transition-all hover:bg-opacity-60 lg:w-28">
                               Докупить
@@ -87,7 +98,10 @@ const RaffleList = () => {
                           <p>Всего раффлов в сутки:</p>
                           <div className="flex items-center space-x-4">
                             <p className="text-lg text-almostwhite xl:text-xl">
-                              5
+                              {
+                                allMyData.data.RaffleBotSubscription
+                                  ?.rafflesPerDay
+                              }
                             </p>
                             <button className="h-9 w-28 rounded-xl bg-element px-4 py-2 text-xs shadow-md transition-all hover:bg-opacity-60 lg:w-28">
                               Добавить
@@ -98,7 +112,10 @@ const RaffleList = () => {
                           <p>Макс. кол-во аккаунтов:</p>
                           <div className="flex items-center space-x-4">
                             <p className="text-lg text-almostwhite xl:text-xl">
-                              250
+                              {
+                                allMyData.data.RaffleBotSubscription
+                                  ?.maxNumAccounts
+                              }
                             </p>
                             <button className="h-9 w-28 rounded-xl bg-element px-4 py-2 text-xs shadow-md transition-all hover:bg-opacity-60 lg:w-28">
                               Добавить
