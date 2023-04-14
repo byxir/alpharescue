@@ -2,7 +2,7 @@
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { type ChangeEvent, useEffect, useMemo, useState } from "react";
+import { type ChangeEvent, useEffect, useMemo, useState, memo } from "react";
 import FilterDropdown from "~/components/FilterDropdown";
 import LinkModal from "~/components/LinkModal";
 import SidebarLayout from "~/components/SidebarLayout";
@@ -175,7 +175,7 @@ const RaffleList = () => {
 
   return (
     <SidebarLayout>
-      <div className="py-6">
+      <div className="h-screen overflow-auto py-6">
         <div className="px-4 md:p-6 2xl:p-14">
           <div
             className={`grid grid-cols-1 justify-between font-sans 2xl:grid-cols-[max-content_max-content]`}

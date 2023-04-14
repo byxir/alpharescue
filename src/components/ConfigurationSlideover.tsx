@@ -1,16 +1,11 @@
 import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import {
-  PlusCircleIcon,
-  PlusIcon,
-  XMarkIcon,
-} from "@heroicons/react/24/outline";
+import { PlusIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import localFont from "next/font/local";
 import { RangeSlider } from "./RangeSlider";
 import { accounts } from "~/utils/tempaccounts";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { api } from "~/utils/api";
 import { type Configuration } from "@prisma/client";
 
 const montserrat = localFont({
@@ -170,7 +165,7 @@ export default function ConfigurationSlideover({
                       </div>
 
                       {/* Divider container */}
-                      <div className="sm:divide-b h-full px-8 pt-8 sm:divide-subline">
+                      <div className="sm:divide-b h-[calc(100vh-208px)] overflow-auto px-8 pt-8 sm:divide-subline">
                         <div className="mx-10 grid grid-cols-[max-content_auto_max-content] items-center">
                           <div className="mr-5">0</div>
                           <RangeSlider
@@ -213,7 +208,7 @@ export default function ConfigurationSlideover({
                           </div>
                           {data?.user.raffleBotUser &&
                           status === "authenticated" ? (
-                            <div className="h-[calc(100vh-400px)] font-montserratRegular 2xl:overflow-auto">
+                            <div className="h-auto font-montserratRegular 2xl:overflow-auto">
                               {accounts.map((a, index) => (
                                 <div
                                   className="grid grid-cols-[auto_40px] gap-2"

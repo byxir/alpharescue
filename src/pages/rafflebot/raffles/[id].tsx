@@ -241,7 +241,7 @@ const Raffle = () => {
               </div>
             </div>
           </div>
-          <div className="border-t-2 border-subline px-4 pt-14 md:px-10 2xl:border-none 2xl:pt-11">
+          <div className="h-100vh overflow-auto border-t-2 border-subline px-4 pt-14 md:px-10 2xl:border-none 2xl:pt-11">
             <div className="grid items-center justify-items-center sm:grid-cols-[max-content_max-content] sm:justify-between">
               <div className="mb-14 grid justify-items-center sm:mb-3 sm:justify-items-start md:mb-4">
                 <div className="mb-6 text-center text-xl sm:w-48 sm:text-start md:w-auto lg:w-64 lg:text-2xl xl:w-auto 2xl:w-64 2xls:w-auto">
@@ -349,7 +349,7 @@ const Raffle = () => {
                 </div>
               </div>
               {data?.user.raffleBotUser && status === "authenticated" ? (
-                <div className="h-[calc(100vh-440px)] 2xl:overflow-auto">
+                <div className="h-auto">
                   {accounts.map((a, index) => (
                     <div
                       className="grid grid-cols-[auto_40px] gap-2"
