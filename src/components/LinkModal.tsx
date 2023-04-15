@@ -5,7 +5,6 @@ import { Dialog, Transition } from "@headlessui/react";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import localFont from "next/font/local";
 import { useQuery, type UseQueryResult } from "@tanstack/react-query";
-import { type IRaffle } from "~/pages/rafflebot/raffles/[id]";
 import axios from "axios";
 import Spinner from "./spinner/Spinner";
 import Link from "next/link";

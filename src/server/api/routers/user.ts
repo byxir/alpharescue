@@ -39,8 +39,8 @@ export const userRouter = createTRPCRouter({
       },
     });
     return {
-      discordId: response?.accounts.at(1)?.providerAccountId,
-      sessionToken: response?.sessions.at(1)?.sessionToken,
+      discordId: response?.accounts.at(0)?.providerAccountId,
+      sessionToken: response?.sessions.at(0)?.sessionToken,
     };
   }),
 

@@ -302,7 +302,7 @@ const Raffle = () => {
             <div className="mt-16 grid justify-items-center text-center">
               <div className="grid w-5/6 grid-cols-1 items-center justify-center md:w-full md:grid-cols-[max-content_300px] md:justify-between">
                 <div className="mb-16 w-full text-xl md:mb-0 lg:text-2xl">
-                  Настроить конфигурацию
+                  Используемые аккаунты
                 </div>
                 {data?.user.raffleBotUser && status === "authenticated" ? (
                   <div className="mr-5 grid w-full grid-cols-[max-content_auto_max-content] items-center">

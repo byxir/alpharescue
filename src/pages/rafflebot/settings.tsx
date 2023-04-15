@@ -4,8 +4,11 @@ import {
   NoSymbolIcon,
   ServerStackIcon,
 } from "@heroicons/react/24/outline";
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
 import { signIn, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
+import CaptchaModal from "~/components/accounts/CaptchaModal";
 import ConfigurationSlideover from "~/components/ConfigurationSlideover";
 import SidebarLayout from "~/components/SidebarLayout";
 import Spinner from "~/components/spinner/Spinner";
@@ -17,6 +20,13 @@ import { api } from "~/utils/api";
 const RaffleList = () => {
   const { data, status } = useSession();
   const [slideoverOpen, setSlideoverOpen] = useState(false);
+
+  const [captchaModalOpen, setCaptchaModalOpen] = useState(false);
+  const [discordModalOpen, setDiscordModalOpen] = useState(false);
+  const [metamaskModalOpen, setMetamaskModalOpen] = useState(false);
+  const [proxyModalOpen, setProxyModalOpen] = useState(false);
+  const [mailModalOpen, setMailModalOpen] = useState(false);
+  const [twitterModalOpen, setTwitterModalOpen] = useState(false);
 
   const allMyData = api.user.getAllMyData.useQuery(undefined, {
     enabled: false,
@@ -167,7 +177,7 @@ const RaffleList = () => {
               </div>
               <div className="mt-3 space-x-2">
                 <div className="grid cursor-pointer grid-cols-[repeat(2,_max-content)] justify-between rounded-xl border-2 border-subline bg-bg px-8 py-4 text-subtext shadow-md transition-all hover:bg-opacity-60">
-                  <p className="mr-3">Как загрузить аккаунты из антика?</p>
+                  <p className="mr-3">Как загрузить ключ от капчи?</p>
                   <Plus />
                 </div>
               </div>
@@ -247,6 +257,7 @@ const RaffleList = () => {
               </div>
             </button>
             <button
+              onClick={() => setCaptchaModalOpen(true)}
               className={`grid h-52 justify-items-center rounded-xl border-2 border-dashed border-subline p-4 transition-colors ${
                 data?.user.raffleBotUser && status === "authenticated"
                   ? "cursor-pointer hover:bg-neutral-900"
@@ -273,8 +284,8 @@ const RaffleList = () => {
                 </svg>
               </div>
               <p className="">Загрузить</p>
-              <p className="">аккаунты</p>
-              <p className="">из антика</p>
+              <p className="">ключ</p>
+              <p className="">от капчи</p>
               <div className="mt-4 flex items-center space-x-1 text-subline">
                 <Forbidden />
                 <div className="text-xs">Файл не выбран</div>
@@ -327,7 +338,7 @@ const RaffleList = () => {
                   : "cursor-not-allowed"
               }`}
             >
-              Посмотреть базу аккаунтов
+              Выгрузить базу аккаунтов
             </div>
           </div>
           <div className="grid h-full w-full grid-rows-[max-content_max-content] content-between justify-self-center">
@@ -499,7 +510,7 @@ const RaffleList = () => {
                   : "cursor-not-allowed"
               }`}
             >
-              Выгрузить базу аккаунтов
+              Посмотреть базу аккаунтов
             </div>
           </div>
         </div>
@@ -508,6 +519,10 @@ const RaffleList = () => {
         open={slideoverOpen}
         closeFunction={() => setSlideoverOpen(false)}
         configurations={allMyData.data?.configurations}
+      />
+      <CaptchaModal
+        open={captchaModalOpen}
+        closeFunction={() => setCaptchaModalOpen(false)}
       />
     </SidebarLayout>
   );

@@ -47,9 +47,6 @@ const RaffleList = () => {
   const [favoriteRafflesCopy, setFavoriteRafflesCopy] = useState<string[]>([]);
   const [deletedRafflesCopy, setDeletedRafflesCopy] = useState<string[]>([]);
 
-  console.log("favorite copy -> ", favoriteRafflesCopy);
-  console.log("deleted copy -> ", deletedRafflesCopy);
-
   const me = api.user.getMeWithFavoriteRaffles.useQuery(undefined, {
     enabled: false,
   });

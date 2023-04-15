@@ -85,7 +85,7 @@ export default function ConfigurationSlideover({
                     <div className="flex-1">
                       {/* Header */}
                       <div className="border-b-2 border-subline bg-sidebarBg px-4 py-6 sm:px-6">
-                        <div className="flex items-start justify-between space-x-3">
+                        <div className="flex h-20 items-start justify-between space-x-3">
                           {configurations ? (
                             <div className="flex items-center space-x-4 font-montserratBold">
                               {configurations[0] ? (
