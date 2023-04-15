@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/alt-text */
 import {
   AtSymbolIcon,
+  KeyIcon,
   NoSymbolIcon,
   ServerStackIcon,
 } from "@heroicons/react/24/outline";
@@ -10,6 +11,8 @@ import { signIn, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import CaptchaModal from "~/components/accounts/CaptchaModal";
 import ConfigurationSlideover from "~/components/ConfigurationSlideover";
+import DiscordReader from "~/components/FileReaders/DiscordReader";
+import EmailReader from "~/components/FileReaders/EmailReader";
 import SidebarLayout from "~/components/SidebarLayout";
 import Spinner from "~/components/spinner/Spinner";
 import { Forbidden } from "~/design/icons/Forbidden";
@@ -164,31 +167,31 @@ const RaffleList = () => {
             <div className="mt-16 text-sm xl:text-base">
               <div className="text-xl">Инструкции</div>
               <div className="mt-8">
-                <div className="grid cursor-pointer grid-cols-[repeat(2,_max-content)] justify-between rounded-xl border-2 border-subline bg-bg px-8 py-4 text-subtext shadow-md transition-all hover:bg-opacity-60">
+                <div className="grid cursor-pointer grid-cols-[repeat(2,_max-content)] justify-between rounded-xl border-2 border-subline bg-bg px-8 py-4 text-subtext shadow-md transition-all hover:bg-neutral-900">
                   <p className="mr-3">Как использовать бота?</p>
                   <Plus />
                 </div>
               </div>
               <div className="mt-3 space-x-2">
-                <div className="grid cursor-pointer grid-cols-[repeat(2,_max-content)] justify-between rounded-xl border-2 border-subline bg-bg px-8 py-4 text-subtext shadow-md transition-all hover:bg-opacity-60">
+                <div className="grid cursor-pointer grid-cols-[repeat(2,_max-content)] justify-between rounded-xl border-2 border-subline bg-bg px-8 py-4 text-subtext shadow-md transition-all hover:bg-neutral-900">
                   <p className="mr-3">Как загрузить аккаунты?</p>
                   <Plus />
                 </div>
               </div>
               <div className="mt-3 space-x-2">
-                <div className="grid cursor-pointer grid-cols-[repeat(2,_max-content)] justify-between rounded-xl border-2 border-subline bg-bg px-8 py-4 text-subtext shadow-md transition-all hover:bg-opacity-60">
+                <div className="grid cursor-pointer grid-cols-[repeat(2,_max-content)] justify-between rounded-xl border-2 border-subline bg-bg px-8 py-4 text-subtext shadow-md transition-all hover:bg-neutral-900">
                   <p className="mr-3">Как загрузить ключ от капчи?</p>
                   <Plus />
                 </div>
               </div>
               <div className="mt-3 space-x-2">
-                <div className="grid cursor-pointer grid-cols-[repeat(2,_max-content)] justify-between rounded-xl border-2 border-subline bg-bg px-8 py-4 text-subtext shadow-md transition-all hover:bg-opacity-60">
+                <div className="grid cursor-pointer grid-cols-[repeat(2,_max-content)] justify-between rounded-xl border-2 border-subline bg-bg px-8 py-4 text-subtext shadow-md transition-all hover:bg-neutral-900">
                   <p className="mr-3">Где купить аккаунты?</p>
                   <Plus />
                 </div>
               </div>
               <div className="mt-3 space-x-2">
-                <div className="grid cursor-pointer grid-cols-[repeat(2,_max-content)] justify-between rounded-xl border-2 border-subline bg-bg px-8 py-4 text-subtext shadow-md transition-all hover:bg-opacity-60">
+                <div className="grid cursor-pointer grid-cols-[repeat(2,_max-content)] justify-between rounded-xl border-2 border-subline bg-bg px-8 py-4 text-subtext shadow-md transition-all hover:bg-neutral-900">
                   <p className="mr-3">Как настраивать конфигурации?</p>
                   <Plus />
                 </div>
@@ -216,26 +219,11 @@ const RaffleList = () => {
                 <div className="text-xs">Файл не выбран</div>
               </div>
             </button>
-            <button
-              className={`grid h-52 justify-items-center rounded-xl border-2 border-dashed border-subline p-4 transition-colors ${
-                data?.user.raffleBotUser && status === "authenticated"
-                  ? "cursor-pointer hover:bg-neutral-900"
-                  : "cursor-not-allowed"
-              }`}
-              disabled={
-                !(data?.user.raffleBotUser && status === "authenticated")
+            <DiscordReader
+              raffleBotUser={
+                data?.user.raffleBotUser ? data?.user.raffleBotUser : false
               }
-            >
-              <div className="mb-2 grid h-16 w-16 items-center">
-                <img src="../../../discord.png" alt="" className="w-16" />
-              </div>
-              <p className="">Загрузить</p>
-              <p className="">дискорд</p>
-              <div className="mt-4 flex items-center space-x-1 text-subline">
-                <Forbidden />
-                <div className="text-xs">Файл не выбран</div>
-              </div>
-            </button>
+            />
             <button
               className={`grid h-52 justify-items-center rounded-xl border-2 border-dashed border-subline p-4 transition-colors ${
                 data?.user.raffleBotUser && status === "authenticated"
@@ -287,8 +275,10 @@ const RaffleList = () => {
               <p className="">ключ</p>
               <p className="">от капчи</p>
               <div className="mt-4 flex items-center space-x-1 text-subline">
-                <Forbidden />
-                <div className="text-xs">Файл не выбран</div>
+                <div className="h-6 w-6">
+                  <KeyIcon />
+                </div>
+                <div className="text-xs">строка</div>
               </div>
             </button>
             <button
@@ -311,30 +301,15 @@ const RaffleList = () => {
                 <div className="text-xs">Файл не выбран</div>
               </div>
             </button>
-            <button
-              className={`grid h-52 justify-items-center rounded-xl border-2 border-dashed border-subline p-4 transition-colors ${
-                data?.user.raffleBotUser && status === "authenticated"
-                  ? "cursor-pointer hover:bg-neutral-900"
-                  : "cursor-not-allowed"
-              }`}
-              disabled={
-                !(data?.user.raffleBotUser && status === "authenticated")
+            <EmailReader
+              raffleBotUser={
+                data?.user.raffleBotUser ? data?.user.raffleBotUser : false
               }
-            >
-              <div className="mb-2 grid h-16 w-16 items-center">
-                <AtSymbolIcon />
-              </div>
-              <p className="">Загрузить</p>
-              <p className="">почты</p>
-              <div className="mt-4 flex items-center space-x-1 text-subline">
-                <Forbidden />
-                <div className="text-xs">Файл не выбран</div>
-              </div>
-            </button>
+            />
             <div
               className={`col-span-2 grid h-32 items-center justify-items-center rounded-xl bg-element p-4 text-2xl text-almostwhite transition-colors ${
                 data?.user.raffleBotUser && status === "authenticated"
-                  ? "cursor-pointer hover:bg-neutral-900"
+                  ? "cursor-pointer hover:bg-opacity-60"
                   : "cursor-not-allowed"
               }`}
             >
@@ -420,7 +395,7 @@ const RaffleList = () => {
                       </div>
                     )}
                   </div>
-                  <div className="grid h-52 cursor-pointer rounded-xl bg-element p-3 transition-colors hover:bg-opacity-60 sm:p-4">
+                  <div className="grid h-52 rounded-xl bg-element p-3 sm:p-4">
                     {allMyData.data?.configurations[2] ? (
                       <>
                         <p className="mt-4 w-full text-center text-5xl">3</p>
@@ -457,7 +432,7 @@ const RaffleList = () => {
                       </div>
                     )}
                   </div>
-                  <div className="grid h-52 cursor-pointer rounded-xl bg-element p-3 transition-colors hover:bg-opacity-60 sm:p-4">
+                  <div className="grid h-52 rounded-xl bg-element p-3 transition-colors sm:p-4">
                     {allMyData.data?.configurations[3] ? (
                       <>
                         <p className="mt-4 w-full text-center text-5xl">4</p>
@@ -481,10 +456,7 @@ const RaffleList = () => {
                         </div>
                       </>
                     ) : (
-                      <div
-                        onClick={() => setSlideoverOpen(true)}
-                        className="grid h-full w-full items-center justify-items-center"
-                      >
+                      <div className="grid h-full w-full items-center justify-items-center">
                         <div className="grid h-max justify-items-center gap-3 text-center text-subtext">
                           <div className="w-12">
                             <NoSymbolIcon />
@@ -502,15 +474,6 @@ const RaffleList = () => {
               >
                 Настроить
               </button>
-            </div>
-            <div
-              className={`mt-8 grid h-32 items-center justify-items-center rounded-xl bg-element p-4 text-2xl text-almostwhite transition-colors ${
-                data?.user.raffleBotUser && status === "authenticated"
-                  ? "cursor-pointer hover:bg-neutral-900"
-                  : "cursor-not-allowed"
-              }`}
-            >
-              Посмотреть базу аккаунтов
             </div>
           </div>
         </div>

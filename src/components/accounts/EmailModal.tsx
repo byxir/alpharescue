@@ -26,7 +26,7 @@ const montserratRegular = localFont({
   variable: "--font-montserratRegular",
 });
 
-export default function EmailModal({
+export default function CaptchaModal({
   open,
   closeFunction,
 }: {

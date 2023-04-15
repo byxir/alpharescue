@@ -38,6 +38,7 @@
     "next-auth": "^4.19.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-dropzone": "^14.2.3",
     "react-range-slider-input": "^3.0.7",
     "rsuite": "^5.28.1",
     "superjson": "1.9.1",

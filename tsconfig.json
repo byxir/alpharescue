@@ -28,7 +28,8 @@
     "**/*.tsx",
     "**/*.cjs",
     "**/*.mjs",
-    "src/utils/crypto.module.mjs"
+    "src/utils/crypto.module.mjs",
+    "src/components/FileReaders/EmailReader.jsx"
   ],
   "exclude": ["node_modules"]
 }
