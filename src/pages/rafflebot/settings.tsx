@@ -11,13 +11,15 @@ import { signIn, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import CaptchaModal from "~/components/accounts/CaptchaModal";
 import ConfigurationSlideover from "~/components/ConfigurationSlideover";
-import DiscordReader from "~/components/FileReaders/DiscordReader";
-import EmailReader from "~/components/FileReaders/EmailReader";
+import DiscordReader from "~/components/accounts/FileReaders/DiscordReader";
+import EmailReader from "~/components/accounts/FileReaders/EmailReader";
 import SidebarLayout from "~/components/SidebarLayout";
 import Spinner from "~/components/spinner/Spinner";
 import { Forbidden } from "~/design/icons/Forbidden";
 import { Plus } from "~/design/icons/Plus";
 import { api } from "~/utils/api";
+import ProxyModal from "~/components/accounts/ProxyModal";
+import TwitterReader from "~/components/accounts/FileReaders/TwitterReader";
 
 /* eslint-disable @next/next/no-img-element */
 const RaffleList = () => {
@@ -25,11 +27,7 @@ const RaffleList = () => {
   const [slideoverOpen, setSlideoverOpen] = useState(false);
 
   const [captchaModalOpen, setCaptchaModalOpen] = useState(false);
-  const [discordModalOpen, setDiscordModalOpen] = useState(false);
-  const [metamaskModalOpen, setMetamaskModalOpen] = useState(false);
   const [proxyModalOpen, setProxyModalOpen] = useState(false);
-  const [mailModalOpen, setMailModalOpen] = useState(false);
-  const [twitterModalOpen, setTwitterModalOpen] = useState(false);
 
   const allMyData = api.user.getAllMyData.useQuery(undefined, {
     enabled: false,
@@ -199,26 +197,11 @@ const RaffleList = () => {
             </div>
           </div>
           <div className="grid grid-cols-2 grid-rows-[repeat(4,_max-content)] gap-6 text-center text-sm text-subtext">
-            <button
-              className={`grid h-52 justify-items-center rounded-xl border-2 border-dashed border-subline p-4 transition-colors ${
-                data?.user.raffleBotUser && status === "authenticated"
-                  ? "cursor-pointer hover:bg-neutral-900"
-                  : "cursor-not-allowed"
-              }`}
-              disabled={
-                !(data?.user.raffleBotUser && status === "authenticated")
+            <TwitterReader
+              raffleBotUser={
+                data?.user.raffleBotUser ? data?.user.raffleBotUser : false
               }
-            >
-              <div className="mb-2 grid h-16 w-16 items-center">
-                <img src="../../../twitter.png" alt="" className="w-16" />
-              </div>
-              <p className="">Загрузить</p>
-              <p className="">твиттер</p>
-              <div className="mt-4 flex items-center space-x-1 text-subline">
-                <Forbidden />
-                <div className="text-xs">Файл не выбран</div>
-              </div>
-            </button>
+            />
             <DiscordReader
               raffleBotUser={
                 data?.user.raffleBotUser ? data?.user.raffleBotUser : false
@@ -282,6 +265,7 @@ const RaffleList = () => {
               </div>
             </button>
             <button
+              onClick={() => setProxyModalOpen(true)}
               className={`grid h-52 justify-items-center rounded-xl border-2 border-dashed border-subline p-4 transition-colors ${
                 data?.user.raffleBotUser && status === "authenticated"
                   ? "cursor-pointer hover:bg-neutral-900"
@@ -486,6 +470,13 @@ const RaffleList = () => {
       <CaptchaModal
         open={captchaModalOpen}
         closeFunction={() => setCaptchaModalOpen(false)}
+      />
+      <ProxyModal
+        open={proxyModalOpen}
+        closeFunction={() => setProxyModalOpen(false)}
+        raffleBotUser={
+          data?.user.raffleBotUser ? data?.user.raffleBotUser : false
+        }
       />
     </SidebarLayout>
   );

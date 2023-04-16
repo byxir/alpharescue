@@ -15,39 +15,52 @@ interface FileObject {
 const DiscordReader = ({ raffleBotUser }: { raffleBotUser: boolean }) => {
   const [files, setFiles] = useState<FileObject[]>([]);
 
+  function splitStringInto2DArray(str: string): string[][] {
+    const rows = str.split("\n");
+    const result: string[][] = [];
+
+    for (const row of rows) {
+      result.push(row.split(":"));
+    }
+
+    return result;
+  }
+
   const { data, status } = useSession();
 
   const protectionData = api.user.getMyProtectionData.useQuery();
 
-  const emailMutation = useMutation({
+  const twitterMutation = useMutation({
     mutationFn: () => {
       console.log(protectionData.data);
       return axios.post("https://alpharescue.online/accounts", {
         discordId: protectionData.data?.discordId,
         userId: data?.user.id,
         sessionToken: protectionData.data?.sessionToken,
-        type: "discord",
-        proxyType: "",
-        accounts: files[0]?.content.split("\n"),
+        type: "twitter",
+        proxyType: "ACTIVE",
+        accounts: splitStringInto2DArray(
+          files[0] ? files[0].content : "notFound"
+        ),
       });
     },
     onSuccess: () => {
-      console.log("discords are uploaded successfully");
+      console.log("twitters are uploaded successfully");
       console.log(
         protectionData.data?.discordId,
         data?.user.id,
         protectionData.data?.sessionToken,
-        files[0]?.content.split("\n")
+        files[0]?.content.split("\n").forEach((s) => s.split(":"))
       );
       setFiles([]);
     },
     onError: () => {
-      console.error("discords are not uploaded");
+      console.error("twitters are not uploaded");
       console.log(
         protectionData.data?.discordId,
         data?.user.id,
         protectionData.data?.sessionToken,
-        files[0]?.content.split("\n")
+        files[0]?.content.split("\n").forEach((s) => s.split(":"))
       );
       setFiles([]);
     },
@@ -73,7 +86,7 @@ const DiscordReader = ({ raffleBotUser }: { raffleBotUser: boolean }) => {
   useEffect(() => {
     if (raffleBotUser) {
       if (files.length > 0) {
-        emailMutation.mutate();
+        twitterMutation.mutate();
       }
     } else {
       //error message not authenticated
@@ -84,7 +97,7 @@ const DiscordReader = ({ raffleBotUser }: { raffleBotUser: boolean }) => {
     <button
       {...getRootProps()}
       className={`grid h-52 justify-items-center rounded-xl border-2 border-dashed border-subline p-4 transition-colors ${
-        raffleBotUser
+        data?.user.raffleBotUser && status === "authenticated"
           ? "cursor-pointer hover:bg-neutral-900"
           : "cursor-not-allowed"
       }`}
@@ -92,14 +105,14 @@ const DiscordReader = ({ raffleBotUser }: { raffleBotUser: boolean }) => {
     >
       <input {...getInputProps()} />
       <div className="mb-2 grid h-16 w-16 items-center">
-        <img src="../../../discord.png" alt="" className="w-16" />
+        <img src="../../../twitter.png" alt="" className="w-16" />
       </div>
       <p className="">Загрузить</p>
-      <p className="">дискорд</p>
+      <p className="">твиттеры</p>
       <div className="mt-4 flex items-center space-x-1 text-subline">
         {isDragActive ? (
           <>
-            <div className="">Дропайте сюда</div>
+            <div className="text-xs">Дропайте дискорды сюда</div>
           </>
         ) : (
           <>
