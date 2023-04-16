@@ -20,6 +20,7 @@ import { Plus } from "~/design/icons/Plus";
 import { api } from "~/utils/api";
 import ProxyModal from "~/components/accounts/ProxyModal";
 import TwitterReader from "~/components/accounts/FileReaders/TwitterReader";
+import MetamaskReader from "~/components/accounts/FileReaders/MetamaskReader";
 
 /* eslint-disable @next/next/no-img-element */
 const RaffleList = () => {
@@ -207,26 +208,11 @@ const RaffleList = () => {
                 data?.user.raffleBotUser ? data?.user.raffleBotUser : false
               }
             />
-            <button
-              className={`grid h-52 justify-items-center rounded-xl border-2 border-dashed border-subline p-4 transition-colors ${
-                data?.user.raffleBotUser && status === "authenticated"
-                  ? "cursor-pointer hover:bg-neutral-900"
-                  : "cursor-not-allowed"
-              }`}
-              disabled={
-                !(data?.user.raffleBotUser && status === "authenticated")
+            <MetamaskReader
+              raffleBotUser={
+                data?.user.raffleBotUser ? data?.user.raffleBotUser : false
               }
-            >
-              <div className="mb-2 grid h-16 w-16 items-center">
-                <img src="../../../metamask.png" alt="" className="w-16" />
-              </div>
-              <p className="">Загрузить</p>
-              <p className="">кошельки</p>
-              <div className="mt-4 flex items-center space-x-1 text-subline">
-                <Forbidden />
-                <div className="text-xs">Файл не выбран</div>
-              </div>
-            </button>
+            />
             <button
               onClick={() => setCaptchaModalOpen(true)}
               className={`grid h-52 justify-items-center rounded-xl border-2 border-dashed border-subline p-4 transition-colors ${

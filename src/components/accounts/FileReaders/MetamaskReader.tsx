@@ -12,7 +12,7 @@ interface FileObject {
   content: string;
 }
 
-const TwitterReader = ({ raffleBotUser }: { raffleBotUser: boolean }) => {
+const MetamaskReader = ({ raffleBotUser }: { raffleBotUser: boolean }) => {
   const [files, setFiles] = useState<FileObject[]>([]);
 
   function splitStringInto2DArray(str: string): string[][] {
@@ -37,15 +37,15 @@ const TwitterReader = ({ raffleBotUser }: { raffleBotUser: boolean }) => {
         discordId: protectionData.data?.discordId,
         userId: data?.user.id,
         sessionToken: protectionData.data?.sessionToken,
-        type: "twitter",
-        proxyType: "ACTIVE",
+        type: "metamask",
+        proxyType: "",
         accounts: splitStringInto2DArray(
           files[0] ? files[0].content : "notFound"
         ),
       });
     },
     onSuccess: () => {
-      console.log("twitters are uploaded successfully");
+      console.log("wallets are uploaded successfully");
       console.log(
         protectionData.data?.discordId,
         data?.user.id,
@@ -55,7 +55,7 @@ const TwitterReader = ({ raffleBotUser }: { raffleBotUser: boolean }) => {
       setFiles([]);
     },
     onError: () => {
-      console.error("twitters are not uploaded");
+      console.error("wallets are not uploaded");
       console.log(
         protectionData.data?.discordId,
         data?.user.id,
@@ -105,10 +105,10 @@ const TwitterReader = ({ raffleBotUser }: { raffleBotUser: boolean }) => {
     >
       <input {...getInputProps()} />
       <div className="mb-2 grid h-16 w-16 items-center">
-        <img src="../../../twitter.png" alt="" className="w-16" />
+        <img src="../../../metamask.png" alt="" className="w-16" />
       </div>
       <p className="">Загрузить</p>
-      <p className="">твиттеры</p>
+      <p className="">кошельки</p>
       <div className="mt-4 flex items-center space-x-1 text-subline">
         {isDragActive ? (
           <>
@@ -127,4 +127,4 @@ const TwitterReader = ({ raffleBotUser }: { raffleBotUser: boolean }) => {
   );
 };
 
-export default TwitterReader;
+export default MetamaskReader;
