@@ -72,6 +72,12 @@ const Raffle = () => {
   );
 
   useEffect(() => {
+    if (protectionData.data && !myAccounts.data) {
+      void myAccounts.refetch();
+    }
+  }, [protectionData.data]);
+
+  useEffect(() => {
     if (router.isReady) {
       void raffle.refetch();
     }

@@ -172,7 +172,7 @@ const RaffleList = () => {
 
   return (
     <SidebarLayout>
-      <div className="h-screen overflow-auto py-6">
+      <div className="py-6">
         <div className="px-4 md:p-6 2xl:p-14">
           <div
             className={`grid grid-cols-1 justify-between font-sans 2xl:grid-cols-[max-content_max-content]`}
@@ -307,7 +307,7 @@ const RaffleList = () => {
                         {r.platform}
                       </div>
                       <div className="grid grid-cols-[auto_48px] items-center justify-between">
-                        <div className="mt-3 h-max font-benzin text-2xl">
+                        <div className="mt-3 h-max overflow-hidden break-words font-benzin text-2xl">
                           {r.name}
                           <div className="absolute top-18 grid h-20 w-20 items-center justify-items-center rounded-full bg-element">
                             <img
