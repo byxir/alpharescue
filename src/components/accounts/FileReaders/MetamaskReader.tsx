@@ -12,7 +12,15 @@ interface FileObject {
   content: string;
 }
 
-const MetamaskReader = ({ raffleBotUser }: { raffleBotUser: boolean }) => {
+const MetamaskReader = ({
+  raffleBotUser,
+  discordId,
+  sessionToken,
+}: {
+  raffleBotUser: boolean;
+  discordId: string | undefined;
+  sessionToken: string | undefined;
+}) => {
   const [files, setFiles] = useState<FileObject[]>([]);
 
   function splitStringInto2DArray(str: string): string[][] {
@@ -28,15 +36,12 @@ const MetamaskReader = ({ raffleBotUser }: { raffleBotUser: boolean }) => {
 
   const { data, status } = useSession();
 
-  const protectionData = api.user.getMyProtectionData.useQuery();
-
   const twitterMutation = useMutation({
     mutationFn: () => {
-      console.log(protectionData.data);
       return axios.post("https://alpharescue.online/accounts", {
-        discordId: protectionData.data?.discordId,
+        discordId: discordId,
         userId: data?.user.id,
-        sessionToken: protectionData.data?.sessionToken,
+        sessionToken: sessionToken,
         type: "metamask",
         proxyType: "",
         accounts: splitStringInto2DArray(
@@ -47,9 +52,9 @@ const MetamaskReader = ({ raffleBotUser }: { raffleBotUser: boolean }) => {
     onSuccess: () => {
       console.log("wallets are uploaded successfully");
       console.log(
-        protectionData.data?.discordId,
+        discordId,
         data?.user.id,
-        protectionData.data?.sessionToken,
+        sessionToken,
         files[0]?.content.split("\n").forEach((s) => s.split(":"))
       );
       setFiles([]);
@@ -57,9 +62,9 @@ const MetamaskReader = ({ raffleBotUser }: { raffleBotUser: boolean }) => {
     onError: () => {
       console.error("wallets are not uploaded");
       console.log(
-        protectionData.data?.discordId,
+        discordId,
         data?.user.id,
-        protectionData.data?.sessionToken,
+        sessionToken,
         files[0]?.content.split("\n").forEach((s) => s.split(":"))
       );
       setFiles([]);

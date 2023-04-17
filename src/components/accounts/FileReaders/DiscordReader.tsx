@@ -12,20 +12,25 @@ interface FileObject {
   content: string;
 }
 
-const DiscordReader = ({ raffleBotUser }: { raffleBotUser: boolean }) => {
+const DiscordReader = ({
+  raffleBotUser,
+  discordId,
+  sessionToken,
+}: {
+  raffleBotUser: boolean;
+  discordId: string | undefined;
+  sessionToken: string | undefined;
+}) => {
   const [files, setFiles] = useState<FileObject[]>([]);
 
   const { data, status } = useSession();
 
-  const protectionData = api.user.getMyProtectionData.useQuery();
-
   const discordMutation = useMutation({
     mutationFn: () => {
-      console.log(protectionData.data);
       return axios.post("https://alpharescue.online/accounts", {
-        discordId: protectionData.data?.discordId,
+        discordId: discordId,
         userId: data?.user.id,
-        sessionToken: protectionData.data?.sessionToken,
+        sessionToken: sessionToken,
         type: "discord",
         proxyType: "",
         accounts: files[0]?.content.split("\n"),
@@ -34,9 +39,9 @@ const DiscordReader = ({ raffleBotUser }: { raffleBotUser: boolean }) => {
     onSuccess: () => {
       console.log("discords are uploaded successfully");
       console.log(
-        protectionData.data?.discordId,
+        discordId,
         data?.user.id,
-        protectionData.data?.sessionToken,
+        sessionToken,
         files[0]?.content.split("\n")
       );
       setFiles([]);
@@ -44,9 +49,9 @@ const DiscordReader = ({ raffleBotUser }: { raffleBotUser: boolean }) => {
     onError: () => {
       console.error("discords are not uploaded");
       console.log(
-        protectionData.data?.discordId,
+        discordId,
         data?.user.id,
-        protectionData.data?.sessionToken,
+        sessionToken,
         files[0]?.content.split("\n")
       );
       setFiles([]);

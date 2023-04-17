@@ -1,12 +1,17 @@
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { PlusIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import localFont from "next/font/local";
 import { RangeSlider } from "./RangeSlider";
-import { accounts } from "~/utils/tempaccounts";
+import { accounts as tempaccounts } from "~/utils/tempaccounts";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { type Configuration } from "@prisma/client";
+import { type RaffleBotSubscription, type Configuration } from "@prisma/client";
+import { api } from "~/utils/api";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import { type IAccount } from "~/pages/rafflebot/settings";
+import Spinner from "./spinner/Spinner";
 
 const montserrat = localFont({
   src: [
@@ -29,16 +34,36 @@ export default function ConfigurationSlideover({
   open,
   closeFunction,
   configurations,
+  discordId,
+  sessionToken,
 }: {
   open: boolean;
   closeFunction: () => void;
   configurations: Configuration[] | undefined;
+  discordId: string | undefined;
+  sessionToken: string | undefined;
 }) {
   const { data, status } = useSession();
 
   const [chosenConfiguration, setChosenConfiguration] = useState(0);
 
   const [rangeValue, setRangeValue] = useState<number[]>([0, 1000]);
+
+  const myAccounts = useQuery<IAccount[]>(
+    ["accounts"],
+    async () => {
+      const res = await axios.get(
+        `https://alpharescue.online/get_all_accounts?discordId=${String(
+          discordId
+        )}&userId=${String(data?.user.id)}&sessionToken=${String(sessionToken)}`
+      );
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+      return res.data;
+    },
+    {
+      enabled: false,
+    }
+  );
 
   const handleChangeRange = (e: Event, newValue: number | number[]) => {
     setRangeValue(newValue as number[]);
@@ -58,6 +83,12 @@ export default function ConfigurationSlideover({
       setActiveAccounts((prevAccounts) => [...prevAccounts, account]);
     }
   };
+
+  useEffect(() => {
+    if (!myAccounts.data && sessionToken && discordId && open === true) {
+      void myAccounts.refetch();
+    }
+  }, [discordId, sessionToken, open]);
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -209,22 +240,43 @@ export default function ConfigurationSlideover({
                           {data?.user.raffleBotUser &&
                           status === "authenticated" ? (
                             <div className="h-auto font-montserratRegular 2xl:overflow-auto">
-                              {accounts.map((a, index) => (
-                                <div
-                                  className="grid grid-cols-[auto_40px] gap-2"
-                                  key={a.Twitter}
-                                >
-                                  <div className="mb-4 h-14 w-full rounded-xl border border-subline"></div>
+                              {myAccounts.data ? (
+                                myAccounts.data.map((a) => (
                                   <div
-                                    onClick={() => handleActive(a.id)}
-                                    className="mb-4 h-10 cursor-pointer self-center rounded-lg border border-subline p-2.5"
+                                    className="grid w-full grid-cols-[auto_40px] gap-2"
+                                    key={a.name}
                                   >
-                                    {activeAccounts.includes(a.id) ? (
-                                      <div className="h-full w-full rounded-md bg-accent"></div>
-                                    ) : null}
+                                    <div className="mb-4 grid h-14 w-full grid-cols-[5%_17%_18%_20%_20%_20%] items-center rounded-xl border border-subline px-4 py-4 text-subtext">
+                                      <span>{a.name}</span>
+                                      <span>
+                                        {a.TwitterCsrf?.slice(0, 8)}...
+                                      </span>
+                                      <span>
+                                        {a.DiscordToken?.slice(0, 8)}...
+                                      </span>
+                                      <span>
+                                        {a.MetaMaskAddress?.slice(0, 8)}...
+                                      </span>
+                                      <span>
+                                        {a.ProxyData?.slice(7, 17)}...
+                                      </span>
+                                      <span>{a.Email?.slice(0, 12)}...</span>
+                                    </div>
+                                    <div
+                                      onClick={() => handleActive(a.name)}
+                                      className="mb-4 h-10 cursor-pointer self-center rounded-lg border border-subline p-2.5"
+                                    >
+                                      {activeAccounts.includes(a.name) ? (
+                                        <div className="h-full w-full rounded-md bg-accent"></div>
+                                      ) : null}
+                                    </div>
                                   </div>
+                                ))
+                              ) : (
+                                <div className="">
+                                  <Spinner />
                                 </div>
-                              ))}
+                              )}
                             </div>
                           ) : (
                             <div className="mt-6 h-full w-full items-center justify-items-center font-montserratRegular text-subtext">

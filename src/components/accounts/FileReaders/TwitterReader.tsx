@@ -12,7 +12,15 @@ interface FileObject {
   content: string;
 }
 
-const TwitterReader = ({ raffleBotUser }: { raffleBotUser: boolean }) => {
+const TwitterReader = ({
+  raffleBotUser,
+  discordId,
+  sessionToken,
+}: {
+  raffleBotUser: boolean;
+  discordId: string | undefined;
+  sessionToken: string | undefined;
+}) => {
   const [files, setFiles] = useState<FileObject[]>([]);
 
   function splitStringInto2DArray(str: string): string[][] {
@@ -28,15 +36,12 @@ const TwitterReader = ({ raffleBotUser }: { raffleBotUser: boolean }) => {
 
   const { data, status } = useSession();
 
-  const protectionData = api.user.getMyProtectionData.useQuery();
-
   const twitterMutation = useMutation({
     mutationFn: () => {
-      console.log(protectionData.data);
       return axios.post("https://alpharescue.online/accounts", {
-        discordId: protectionData.data?.discordId,
+        discordId: discordId,
         userId: data?.user.id,
-        sessionToken: protectionData.data?.sessionToken,
+        sessionToken: sessionToken,
         type: "twitter",
         proxyType: "ACTIVE",
         accounts: splitStringInto2DArray(
@@ -47,9 +52,9 @@ const TwitterReader = ({ raffleBotUser }: { raffleBotUser: boolean }) => {
     onSuccess: () => {
       console.log("twitters are uploaded successfully");
       console.log(
-        protectionData.data?.discordId,
+        discordId,
         data?.user.id,
-        protectionData.data?.sessionToken,
+        sessionToken,
         files[0]?.content.split("\n").forEach((s) => s.split(":"))
       );
       setFiles([]);
@@ -57,9 +62,9 @@ const TwitterReader = ({ raffleBotUser }: { raffleBotUser: boolean }) => {
     onError: () => {
       console.error("twitters are not uploaded");
       console.log(
-        protectionData.data?.discordId,
+        discordId,
         data?.user.id,
-        protectionData.data?.sessionToken,
+        sessionToken,
         files[0]?.content.split("\n").forEach((s) => s.split(":"))
       );
       setFiles([]);

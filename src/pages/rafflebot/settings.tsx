@@ -5,7 +5,7 @@ import {
   NoSymbolIcon,
   ServerStackIcon,
 } from "@heroicons/react/24/outline";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { signIn, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
@@ -22,6 +22,20 @@ import ProxyModal from "~/components/accounts/ProxyModal";
 import TwitterReader from "~/components/accounts/FileReaders/TwitterReader";
 import MetamaskReader from "~/components/accounts/FileReaders/MetamaskReader";
 
+export type IAccount = {
+  DiscordStatus?: string;
+  DiscordToken?: string;
+  Email?: string;
+  MetaMaskAddress?: string;
+  ProxyData?: string;
+  ProxyStatus?: string;
+  ProxyType?: string;
+  TwitterAuthToken?: string;
+  TwitterCsrf?: string;
+  TwitterStatus?: string;
+  name: string;
+};
+
 /* eslint-disable @next/next/no-img-element */
 const RaffleList = () => {
   const { data, status } = useSession();
@@ -33,6 +47,30 @@ const RaffleList = () => {
   const allMyData = api.user.getAllMyData.useQuery(undefined, {
     enabled: false,
   });
+
+  const myAccounts = useQuery<IAccount[]>(
+    ["raffles"],
+    async () => {
+      const res = await axios.get(
+        `https://alpharescue.online/get_all_accounts?discordId=${String(
+          allMyData.data?.discordId
+        )}&userId=${String(data?.user.id)}&sessionToken=${String(
+          allMyData.data?.sessionToken
+        )}`
+      );
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+      return res.data;
+    },
+    {
+      enabled: false,
+    }
+  );
+
+  const handleFetchAccounts = () => {
+    if (!myAccounts.data) {
+      void myAccounts.refetch();
+    }
+  };
 
   const handleDiscordSignIn = async () => {
     await signIn("discord", {
@@ -202,16 +240,22 @@ const RaffleList = () => {
               raffleBotUser={
                 data?.user.raffleBotUser ? data?.user.raffleBotUser : false
               }
+              discordId={allMyData.data?.discordId}
+              sessionToken={allMyData.data?.sessionToken}
             />
             <DiscordReader
               raffleBotUser={
                 data?.user.raffleBotUser ? data?.user.raffleBotUser : false
               }
+              discordId={allMyData.data?.discordId}
+              sessionToken={allMyData.data?.sessionToken}
             />
             <MetamaskReader
               raffleBotUser={
                 data?.user.raffleBotUser ? data?.user.raffleBotUser : false
               }
+              discordId={allMyData.data?.discordId}
+              sessionToken={allMyData.data?.sessionToken}
             />
             <button
               onClick={() => setCaptchaModalOpen(true)}
@@ -275,6 +319,8 @@ const RaffleList = () => {
               raffleBotUser={
                 data?.user.raffleBotUser ? data?.user.raffleBotUser : false
               }
+              discordId={allMyData.data?.discordId}
+              sessionToken={allMyData.data?.sessionToken}
             />
             <div
               className={`col-span-2 grid h-32 items-center justify-items-center rounded-xl bg-element p-4 text-2xl text-almostwhite transition-colors ${
@@ -439,7 +485,10 @@ const RaffleList = () => {
                 </div>
               ) : null}
               <button
-                onClick={() => setSlideoverOpen(true)}
+                onClick={() => {
+                  setSlideoverOpen(true);
+                  handleFetchAccounts();
+                }}
                 className="mt-10 grid w-full cursor-pointer justify-items-center rounded-xl bg-accent p-3 text-lg text-bg shadow-md transition-all hover:bg-opacity-60"
               >
                 Настроить
@@ -452,10 +501,15 @@ const RaffleList = () => {
         open={slideoverOpen}
         closeFunction={() => setSlideoverOpen(false)}
         configurations={allMyData.data?.configurations}
+        discordId={allMyData.data?.discordId}
+        sessionToken={allMyData.data?.sessionToken}
+        accounts={myAccounts.data}
       />
       <CaptchaModal
         open={captchaModalOpen}
         closeFunction={() => setCaptchaModalOpen(false)}
+        discordId={allMyData.data?.discordId}
+        sessionToken={allMyData.data?.sessionToken}
       />
       <ProxyModal
         open={proxyModalOpen}
@@ -463,6 +517,8 @@ const RaffleList = () => {
         raffleBotUser={
           data?.user.raffleBotUser ? data?.user.raffleBotUser : false
         }
+        discordId={allMyData.data?.discordId}
+        sessionToken={allMyData.data?.sessionToken}
       />
     </SidebarLayout>
   );

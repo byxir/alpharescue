@@ -29,24 +29,23 @@ const montserratRegular = localFont({
 export default function CaptchaModal({
   open,
   closeFunction,
+  discordId,
+  sessionToken,
 }: {
   open: boolean;
   closeFunction: () => void;
+  discordId: string | undefined;
+  sessionToken: string | undefined;
 }) {
   const [captchaKeyString, setCaptchaKeyString] = useState("");
   const { data, status } = useSession();
 
-  const protectionData = api.user.getMyProtectionData.useQuery();
-
-  console.log(protectionData.data);
-
   const captchaMutation = useMutation({
     mutationFn: () => {
-      console.log(protectionData.data);
       return axios.post("https://alpharescue.online/accounts", {
-        discordId: protectionData.data?.discordId,
+        discordId: discordId,
         userId: data?.user.id,
-        sessionToken: protectionData.data?.sessionToken,
+        sessionToken: sessionToken,
         type: "CaptchaKey",
         proxyType: "",
         accounts: captchaKeyString,
@@ -103,8 +102,9 @@ export default function CaptchaModal({
                   <button
                     onClick={() => {
                       if (
-                        protectionData.data &&
-                        data &&
+                        discordId &&
+                        sessionToken &&
+                        data?.user &&
                         status === "authenticated"
                       ) {
                         captchaMutation.mutate();

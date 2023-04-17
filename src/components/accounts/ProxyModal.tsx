@@ -35,24 +35,25 @@ export default function ProxyModal({
   open,
   closeFunction,
   raffleBotUser,
+  discordId,
+  sessionToken,
 }: {
   open: boolean;
   closeFunction: () => void;
   raffleBotUser: boolean;
+  discordId: string | undefined;
+  sessionToken: string | undefined;
 }) {
   const { data, status } = useSession();
   const [files, setFiles] = useState<FileObject[]>([]);
   const [currentProxyType, setCurrentProxyType] = useState("http");
 
-  const protectionData = api.user.getMyProtectionData.useQuery();
-
   const proxyMutation = useMutation({
     mutationFn: () => {
-      console.log(protectionData.data);
       return axios.post("https://alpharescue.online/accounts", {
-        discordId: protectionData.data?.discordId,
+        discordId: discordId,
         userId: data?.user.id,
-        sessionToken: protectionData.data?.sessionToken,
+        sessionToken: sessionToken,
         type: "proxy",
         proxyType: currentProxyType,
         accounts: files[0]?.content.split("\n"),
@@ -61,9 +62,9 @@ export default function ProxyModal({
     onSuccess: () => {
       console.log("discords are uploaded successfully");
       console.log(
-        protectionData.data?.discordId,
+        discordId,
         data?.user.id,
-        protectionData.data?.sessionToken,
+        sessionToken,
         files[0]?.content.split("\n")
       );
       setFiles([]);
@@ -71,9 +72,9 @@ export default function ProxyModal({
     onError: () => {
       console.error("discords are not uploaded");
       console.log(
-        protectionData.data?.discordId,
+        discordId,
         data?.user.id,
-        protectionData.data?.sessionToken,
+        sessionToken,
         files[0]?.content.split("\n")
       );
       setFiles([]);
