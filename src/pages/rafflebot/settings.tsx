@@ -48,30 +48,6 @@ const RaffleList = () => {
     enabled: false,
   });
 
-  const myAccounts = useQuery<IAccount[]>(
-    ["raffles"],
-    async () => {
-      const res = await axios.get(
-        `https://alpharescue.online/get_all_accounts?discordId=${String(
-          allMyData.data?.discordId
-        )}&userId=${String(data?.user.id)}&sessionToken=${String(
-          allMyData.data?.sessionToken
-        )}`
-      );
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-      return res.data;
-    },
-    {
-      enabled: false,
-    }
-  );
-
-  const handleFetchAccounts = () => {
-    if (!myAccounts.data) {
-      void myAccounts.refetch();
-    }
-  };
-
   const handleDiscordSignIn = async () => {
     await signIn("discord", {
       callbackUrl: `${window.location.origin}`,
@@ -487,8 +463,8 @@ const RaffleList = () => {
               <button
                 onClick={() => {
                   setSlideoverOpen(true);
-                  handleFetchAccounts();
                 }}
+                disabled={!allMyData.data}
                 className="mt-10 grid w-full cursor-pointer justify-items-center rounded-xl bg-accent p-3 text-lg text-bg shadow-md transition-all hover:bg-opacity-60"
               >
                 Настроить
@@ -503,7 +479,6 @@ const RaffleList = () => {
         configurations={allMyData.data?.configurations}
         discordId={allMyData.data?.discordId}
         sessionToken={allMyData.data?.sessionToken}
-        accounts={myAccounts.data}
       />
       <CaptchaModal
         open={captchaModalOpen}

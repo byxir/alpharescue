@@ -85,10 +85,15 @@ export default function ConfigurationSlideover({
   };
 
   useEffect(() => {
-    if (!myAccounts.data && sessionToken && discordId && open === true) {
+    if (
+      !myAccounts.data &&
+      discordId != undefined &&
+      sessionToken != undefined &&
+      open === true
+    ) {
       void myAccounts.refetch();
     }
-  }, [discordId, sessionToken, open]);
+  }, [sessionToken, discordId, open]);
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -273,7 +278,7 @@ export default function ConfigurationSlideover({
                                   </div>
                                 ))
                               ) : (
-                                <div className="">
+                                <div className="mt-36 grid w-full justify-items-center">
                                   <Spinner />
                                 </div>
                               )}

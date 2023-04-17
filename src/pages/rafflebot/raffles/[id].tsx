@@ -10,6 +10,8 @@ import { useRouter } from "next/router";
 import { useQuery, type UseQueryResult } from "@tanstack/react-query";
 import axios from "axios";
 import Spinner from "~/components/spinner/Spinner";
+import { api } from "~/utils/api";
+import { type IAccount } from "../settings";
 
 export type IRaffle = {
   banner: string;
@@ -40,6 +42,26 @@ const Raffle = () => {
     async () => {
       const res = await axios.get(
         `https://alpharescue.online/raffles/${String(router.query.id)}`
+      );
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+      return res.data;
+    },
+    {
+      enabled: false,
+    }
+  );
+
+  const protectionData = api.user.getMyProtectionData.useQuery();
+
+  const myAccounts = useQuery<IAccount[]>(
+    ["accounts"],
+    async () => {
+      const res = await axios.get(
+        `https://alpharescue.online/get_all_accounts?discordId=${String(
+          protectionData.data?.discordId
+        )}&userId=${String(data?.user.id)}&sessionToken=${String(
+          protectionData.data?.sessionToken
+        )}`
       );
       // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       return res.data;
@@ -323,7 +345,7 @@ const Raffle = () => {
             </div>
             <div className="mt-12">
               <div className="grid grid-cols-[auto_40px] gap-2">
-                <div className="mb-6 grid grid-cols-[5%_17%_18%_20%_20%_20%] overflow-x-auto rounded-xl border-2 border-subtext bg-element px-4 py-4 text-xs text-subtext sm:text-base">
+                <div className="mb-6 grid grid-cols-[5%_17%_18%_20%_20%_20%] overflow-x-auto rounded-xl border-2 border-subtext bg-element px-4 py-4 font-montserratBold text-xs text-subtext sm:text-base">
                   <span>#</span>
                   <span>Twitter</span>
                   <span>Discord</span>
@@ -349,23 +371,36 @@ const Raffle = () => {
                 </div>
               </div>
               {data?.user.raffleBotUser && status === "authenticated" ? (
-                <div className="h-auto">
-                  {accounts.map((a, index) => (
-                    <div
-                      className="grid grid-cols-[auto_40px] gap-2"
-                      key={a.Twitter}
-                    >
-                      <div className="mb-4 h-14 w-full rounded-xl border border-subline"></div>
+                <div className="h-auto font-montserratRegular 2xl:overflow-auto">
+                  {myAccounts.data ? (
+                    myAccounts.data.map((a) => (
                       <div
-                        onClick={() => handleActive(a.id)}
-                        className="mb-4 h-10 cursor-pointer self-center rounded-lg border border-subline p-2.5"
+                        className="grid w-full grid-cols-[auto_40px] gap-2"
+                        key={a.name}
                       >
-                        {activeAccounts.includes(a.id) ? (
-                          <div className="h-full w-full rounded-md bg-accent"></div>
-                        ) : null}
+                        <div className="mb-4 grid h-14 w-full grid-cols-[5%_17%_18%_20%_20%_20%] items-center rounded-xl border border-subline px-4 py-4 text-subtext">
+                          <span>{a.name}</span>
+                          <span>{a.TwitterCsrf?.slice(0, 8)}...</span>
+                          <span>{a.DiscordToken?.slice(0, 8)}...</span>
+                          <span>{a.MetaMaskAddress?.slice(0, 8)}...</span>
+                          <span>{a.ProxyData?.slice(7, 17)}...</span>
+                          <span>{a.Email?.slice(0, 12)}...</span>
+                        </div>
+                        <div
+                          onClick={() => handleActive(a.name)}
+                          className="mb-4 h-10 cursor-pointer self-center rounded-lg border border-subline p-2.5"
+                        >
+                          {activeAccounts.includes(a.name) ? (
+                            <div className="h-full w-full rounded-md bg-accent"></div>
+                          ) : null}
+                        </div>
                       </div>
+                    ))
+                  ) : (
+                    <div className="mt-36 grid w-full justify-items-center">
+                      <Spinner />
                     </div>
-                  ))}
+                  )}
                 </div>
               ) : (
                 <div className="mt-6 h-full w-full items-center justify-items-center font-montserratRegular text-subtext">
