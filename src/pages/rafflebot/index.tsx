@@ -3,7 +3,6 @@ import SidebarLayout from "~/components/SidebarLayout";
 import { Filter } from "~/design/icons/Filter";
 import { Search } from "~/design/icons/Search";
 import { YourLink } from "~/design/icons/YourLink";
-import { raffles } from "~/utils/tempraffles";
 
 /* eslint-disable @next/next/no-img-element */
 const RaffleList = () => {

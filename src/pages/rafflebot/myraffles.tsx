@@ -1,7 +1,6 @@
 import { useState } from "react";
 import SidebarLayout from "~/components/SidebarLayout";
 import { Search } from "~/design/icons/Search";
-import { raffles } from "~/utils/tempraffles";
 import { useSession } from "next-auth/react";
 import NoSubscription from "~/components/NoSubscription";
 
@@ -23,7 +22,8 @@ const RaffleList = () => {
 
   return (
     <SidebarLayout>
-      <div className="py-6">
+      <div></div>
+      {/* <div className="py-6">
         <div className="px-4 md:p-10 2xl:p-14">
           <div
             className={`grid grid-cols-1 justify-between font-sans 2xl:grid-cols-[max-content_max-content]`}
@@ -162,7 +162,7 @@ const RaffleList = () => {
             ))}
           </div>
         </div>
-      </div>
+      </div> */}
     </SidebarLayout>
   );
 };
