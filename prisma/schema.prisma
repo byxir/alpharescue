@@ -92,11 +92,11 @@ model RaffleBotSubscription {
 }
 
 model Configuration {
-    id           String  @id @default(cuid())
+    id           String @id @default(cuid())
     firstAccount Int?
     lastAccount  Int?
-    exceptions   String?
-    user         User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+    exceptions   String @default("")
+    user         User   @relation(fields: [userId], references: [id], onDelete: Cascade)
     userId       String
 
     @@index([userId])

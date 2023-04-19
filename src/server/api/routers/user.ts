@@ -91,7 +91,50 @@ export const userRouter = createTRPCRouter({
       });
     }),
 
-  getSecretMessage: protectedProcedure.query(() => {
-    return "you can now see this secret message!";
-  }),
+  addConfiguration: protectedProcedure
+    .input(
+      z.object({
+        firstAccount: z.number(),
+        lastAccount: z.number(),
+        exceptions: z.array(z.string()),
+      })
+    )
+    .mutation(({ input, ctx }) => {
+      const exceptionsString = input.exceptions?.join(",");
+      return ctx.prisma.configuration.create({
+        data: {
+          firstAccount: input.firstAccount,
+          lastAccount: input.lastAccount,
+          exceptions: exceptionsString,
+          user: {
+            connect: {
+              id: ctx.session.user.id,
+            },
+          },
+        },
+      });
+    }),
+
+  updateConfiguration: protectedProcedure
+    .input(
+      z.object({
+        firstAccount: z.number(),
+        lastAccount: z.number(),
+        exceptions: z.array(z.string()),
+        configurationId: z.string(),
+      })
+    )
+    .mutation(({ input, ctx }) => {
+      const exceptionsString = input.exceptions?.join(",");
+      return ctx.prisma.configuration.update({
+        where: {
+          id: input.configurationId,
+        },
+        data: {
+          firstAccount: input.firstAccount,
+          lastAccount: input.lastAccount,
+          exceptions: exceptionsString,
+        },
+      });
+    }),
 });

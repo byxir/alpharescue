@@ -140,7 +140,7 @@ export default function LinkModal({
                         value={userLink}
                         onChange={(e) => setUserLink(e.target.value)}
                         className="h-6 w-full bg-transparent font-montserratRegular text-lg placeholder-subtext outline-none"
-                        placeholder="Вставьте ссылку на раффл"
+                        placeholder="Вставьте ссылку"
                       />
                     </div>
                   </div>
@@ -281,9 +281,13 @@ export default function LinkModal({
                       </Link>
                     </>
                   ) : (
-                    <h1 className="mt-6 font-montserratBold text-red-500">
-                      {raffle.data?.message}
-                    </h1>
+                    <>
+                      {raffle.data ? (
+                        <h1 className="mt-6 font-montserratBold text-red-500">
+                          {raffle.data?.message}
+                        </h1>
+                      ) : null}
+                    </>
                   )}
                 </div>
               </Dialog.Panel>

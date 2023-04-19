@@ -68,7 +68,7 @@ const RaffleList = () => {
     if (data) {
       void allMyData.refetch();
     }
-  }, [data]);
+  }, [data, slideoverOpen]);
 
   return (
     <SidebarLayout>

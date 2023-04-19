@@ -3,10 +3,9 @@ import { Dialog, Transition } from "@headlessui/react";
 import { PlusIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import localFont from "next/font/local";
 import { RangeSlider } from "./RangeSlider";
-import { accounts as tempaccounts } from "~/utils/tempaccounts";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { type RaffleBotSubscription, type Configuration } from "@prisma/client";
+import { type Configuration } from "@prisma/client";
 import { api } from "~/utils/api";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
@@ -45,9 +44,36 @@ export default function ConfigurationSlideover({
 }) {
   const { data, status } = useSession();
 
-  const [chosenConfiguration, setChosenConfiguration] = useState(0);
+  const [chosenConfiguration, setChosenConfiguration] = useState<number | null>(
+    null
+  );
+  const [rangeValue, setRangeValue] = useState<number[]>([1, 100]);
+  const [exceptions, setExceptions] = useState<string[] | undefined | null>([]);
+  const [configurationId, setConfigurationId] = useState("");
 
-  const [rangeValue, setRangeValue] = useState<number[]>([0, 1000]);
+  const addConfigurationMutation = api.user.addConfiguration.useMutation();
+  const updateConfigurationMutation =
+    api.user.updateConfiguration.useMutation();
+
+  const handleConfigurationProcedure = () => {
+    if (rangeValue[0] != undefined && rangeValue[1] != undefined) {
+      if (chosenConfiguration === null) {
+        addConfigurationMutation.mutate({
+          firstAccount: rangeValue[0] - 1,
+          lastAccount: rangeValue[1] - 1,
+          exceptions: exceptions ? exceptions : [],
+        });
+        closeFunction();
+      } else {
+        updateConfigurationMutation.mutate({
+          firstAccount: rangeValue[0],
+          lastAccount: rangeValue[1],
+          configurationId: configurationId,
+          exceptions: exceptions ? exceptions : [],
+        });
+      }
+    }
+  };
 
   const myAccounts = useQuery<IAccount[]>(
     ["accounts"],
@@ -64,23 +90,83 @@ export default function ConfigurationSlideover({
       enabled: false,
     }
   );
+  console.log("range value -> ", rangeValue);
+  console.log("exceptions -> ", exceptions);
+  console.log("configurations -> ", configurations);
 
-  const handleChangeRange = (e: Event, newValue: number | number[]) => {
-    setRangeValue(newValue as number[]);
+  const handleChangeRange = (e: Event, newValue: number[] | number) => {
+    const newValueArray = newValue as number[];
+    if (Number(newValueArray[0]) < Number(rangeValue[0])) {
+      const newExceptions = exceptions?.filter(
+        (e) => Number(e) != Number(newValueArray[0]) - 1
+      );
+      setExceptions(newExceptions);
+    }
+    if (Number(newValueArray[1]) > Number(rangeValue[1])) {
+      const newExceptions = exceptions?.filter(
+        (e) => Number(e) != Number(newValueArray[1]) - 1
+      );
+      setExceptions(newExceptions);
+    }
+    setRangeValue(newValueArray);
   };
 
-  const [activeAccounts, setActiveAccounts] = useState<string[]>([]);
-
-  const handleActive = (account: string) => {
-    if (activeAccounts.includes(account)) {
-      const newActiveAccounts = activeAccounts.filter((a) => {
-        if (a != account) {
-          return a;
-        }
-      });
-      setActiveAccounts(newActiveAccounts);
+  const handleExceptions = (account: string) => {
+    if (
+      !exceptions?.includes(account) &&
+      Number(account) + 1 >= Number(rangeValue[0]) &&
+      Number(account) + 1 <= Number(rangeValue[1])
+    ) {
+      exceptions &&
+        setExceptions((prevAccounts) => {
+          if (prevAccounts) {
+            return [...prevAccounts, account];
+          } else {
+            return [account];
+          }
+        });
+    } else if (
+      Number(account) + 1 >= Number(rangeValue[0]) &&
+      Number(account) + 1 <= Number(rangeValue[1])
+    ) {
+      const newExceptions = exceptions?.filter(
+        (e) => Number(account) != Number(e)
+      );
+      setExceptions(newExceptions);
     } else {
-      setActiveAccounts((prevAccounts) => [...prevAccounts, account]);
+      if (Number(account) === Number(rangeValue[1])) {
+        setRangeValue((prev) => [Number(prev[0]), Number(account) + 1]);
+      } else if (Number(account) > Number(rangeValue[1])) {
+        const prevRangeValue = rangeValue;
+        setRangeValue((prev) => [Number(prev[0]), Number(account) + 1]);
+        const newExceptions: string[] = [];
+        for (let i = Number(prevRangeValue[1]); i < Number(account); i++) {
+          newExceptions.push(String(i));
+        }
+        setExceptions((prev) => {
+          if (prev) {
+            return [...prev, ...newExceptions];
+          } else {
+            return [...newExceptions];
+          }
+        });
+      }
+
+      if (Number(account) < Number(rangeValue[0])) {
+        const prevRangeValue = rangeValue;
+        setRangeValue((prev) => [Number(account) + 1, Number(prev[1])]);
+        const newExceptions: string[] = [];
+        for (let i = Number(prevRangeValue[0]) - 2; i > Number(account); i--) {
+          newExceptions.push(String(i));
+        }
+        setExceptions((prev) => {
+          if (prev) {
+            return [...prev, ...newExceptions];
+          } else {
+            return [...newExceptions];
+          }
+        });
+      }
     }
   };
 
@@ -117,7 +203,7 @@ export default function ConfigurationSlideover({
                 leaveTo="translate-x-full"
               >
                 <Dialog.Panel className="pointer-events-auto w-screen max-w-4xl">
-                  <form className="flex flex-col overflow-y-scroll bg-sidebarBg shadow-xl">
+                  <div className="flex flex-col overflow-y-scroll bg-sidebarBg shadow-xl">
                     <div className="flex-1">
                       {/* Header */}
                       <div className="border-b-2 border-subline bg-sidebarBg px-4 py-6 sm:px-6">
@@ -126,9 +212,29 @@ export default function ConfigurationSlideover({
                             <div className="flex items-center space-x-4 font-montserratBold">
                               {configurations[0] ? (
                                 <div
-                                  onClick={() => setChosenConfiguration(1)}
+                                  onClick={() => {
+                                    setChosenConfiguration(0);
+                                    setConfigurationId(
+                                      String(configurations[0]?.id)
+                                    );
+                                    const newRangeValues: number[] = [];
+                                    configurations[0]?.firstAccount
+                                      ? (newRangeValues[0] =
+                                          configurations[0].firstAccount + 1)
+                                      : (newRangeValues[0] = 1);
+                                    configurations[0]?.lastAccount
+                                      ? (newRangeValues[1] =
+                                          configurations[0].lastAccount + 1)
+                                      : (newRangeValues[1] = Number(
+                                          myAccounts.data?.length
+                                        ));
+                                    setRangeValue(newRangeValues);
+                                    setExceptions(
+                                      configurations[0]?.exceptions?.split(",")
+                                    );
+                                  }}
                                   className={`grid h-20 w-20 cursor-pointer items-center justify-items-center rounded-xl bg-element text-xl shadow-md transition-all hover:bg-opacity-60 ${
-                                    chosenConfiguration === 1
+                                    chosenConfiguration === 0
                                       ? "border-2 border-almostwhite"
                                       : ""
                                   }`}
@@ -137,50 +243,122 @@ export default function ConfigurationSlideover({
                                 </div>
                               ) : null}
                               {configurations[1] ? (
-                                <div
-                                  onClick={() => setChosenConfiguration(2)}
+                                <button
+                                  onClick={() => {
+                                    setChosenConfiguration(1);
+                                    setConfigurationId(
+                                      String(configurations[1]?.id)
+                                    );
+                                    const newRangeValues: number[] = [];
+                                    configurations[1]?.firstAccount
+                                      ? (newRangeValues[0] =
+                                          configurations[1].firstAccount + 1)
+                                      : (newRangeValues[0] = 1);
+                                    configurations[1]?.lastAccount
+                                      ? (newRangeValues[1] =
+                                          configurations[1].lastAccount + 1)
+                                      : (newRangeValues[1] = Number(
+                                          myAccounts.data?.length
+                                        ));
+                                    setRangeValue(newRangeValues);
+                                    setExceptions(
+                                      configurations[1]?.exceptions?.split(",")
+                                    );
+                                  }}
+                                  className={`grid h-20 w-20 cursor-pointer items-center justify-items-center rounded-xl bg-element text-xl shadow-md transition-all hover:bg-opacity-60 ${
+                                    chosenConfiguration === 1
+                                      ? "border-2 border-almostwhite"
+                                      : ""
+                                  }`}
+                                >
+                                  2
+                                </button>
+                              ) : null}
+                              {configurations[2] ? (
+                                <button
+                                  onClick={() => {
+                                    setChosenConfiguration(2);
+                                    setConfigurationId(
+                                      String(configurations[2]?.id)
+                                    );
+                                    const newRangeValues: number[] = [];
+                                    configurations[2]?.firstAccount
+                                      ? (newRangeValues[0] =
+                                          configurations[2].firstAccount + 1)
+                                      : (newRangeValues[0] = 1);
+                                    configurations[2]?.lastAccount
+                                      ? (newRangeValues[1] =
+                                          configurations[2].lastAccount + 1)
+                                      : (newRangeValues[1] = Number(
+                                          myAccounts.data?.length
+                                        ));
+                                    setRangeValue(newRangeValues);
+                                    setExceptions(
+                                      configurations[2]?.exceptions?.split(",")
+                                    );
+                                  }}
                                   className={`grid h-20 w-20 cursor-pointer items-center justify-items-center rounded-xl bg-element text-xl shadow-md transition-all hover:bg-opacity-60 ${
                                     chosenConfiguration === 2
                                       ? "border-2 border-almostwhite"
                                       : ""
                                   }`}
                                 >
-                                  2
-                                </div>
+                                  3
+                                </button>
                               ) : null}
-                              {configurations[2] ? (
-                                <div
-                                  onClick={() => setChosenConfiguration(3)}
+                              {configurations[3] ? (
+                                <button
+                                  onClick={() => {
+                                    setChosenConfiguration(3);
+                                    setConfigurationId(
+                                      String(configurations[3]?.id)
+                                    );
+                                    const newRangeValues: number[] = [];
+                                    configurations[3]?.firstAccount
+                                      ? (newRangeValues[0] =
+                                          configurations[3].firstAccount + 1)
+                                      : (newRangeValues[0] = 1);
+                                    configurations[3]?.lastAccount
+                                      ? (newRangeValues[1] =
+                                          configurations[3].lastAccount + 1)
+                                      : (newRangeValues[0] = Number(
+                                          myAccounts.data?.length
+                                        ));
+                                    setRangeValue(newRangeValues);
+                                    setExceptions(
+                                      configurations[3]?.exceptions?.split(",")
+                                    );
+                                  }}
                                   className={`grid h-20 w-20 cursor-pointer items-center justify-items-center rounded-xl bg-element text-xl shadow-md transition-all hover:bg-opacity-60 ${
                                     chosenConfiguration === 3
                                       ? "border-2 border-almostwhite"
                                       : ""
                                   }`}
                                 >
-                                  3
-                                </div>
-                              ) : null}
-                              {configurations[3] ? (
-                                <div
-                                  onClick={() => setChosenConfiguration(4)}
-                                  className={`grid h-20 w-20 cursor-pointer items-center justify-items-center rounded-xl bg-element text-xl shadow-md transition-all hover:bg-opacity-60 ${
-                                    chosenConfiguration === 4
-                                      ? "border-2 border-almostwhite"
-                                      : ""
-                                  }`}
-                                >
                                   4
-                                </div>
+                                </button>
                               ) : null}
                               {configurations.length &&
                               configurations.length < 4 ? (
-                                <div
-                                  className={`txt-center grid h-20 w-20 cursor-pointer items-center justify-items-center rounded-xl bg-element text-xs text-subtext shadow-md transition-all hover:bg-opacity-60`}
+                                <button
+                                  onClick={() => {
+                                    setChosenConfiguration(null);
+                                    setExceptions([]);
+                                    setRangeValue([
+                                      1,
+                                      Number(myAccounts.data?.length),
+                                    ]);
+                                  }}
+                                  className={`txt-center grid h-20 w-20 cursor-pointer items-center justify-items-center rounded-xl bg-element text-xs text-subtext shadow-md transition-all hover:bg-opacity-60 ${
+                                    chosenConfiguration === null
+                                      ? "border-2 border-white"
+                                      : ""
+                                  }`}
                                 >
                                   <div className="w-12">
                                     <PlusIcon />
                                   </div>
-                                </div>
+                                </button>
                               ) : null}
                             </div>
                           ) : null}
@@ -203,17 +381,17 @@ export default function ConfigurationSlideover({
                       {/* Divider container */}
                       <div className="sm:divide-b h-[calc(100vh-208px)] overflow-auto px-8 pt-8 sm:divide-subline">
                         <div className="mx-10 grid grid-cols-[max-content_auto_max-content] items-center">
-                          <div className="mr-5">0</div>
+                          <div className="mr-5">1</div>
                           <RangeSlider
                             getAriaLabel={() => "Account range"}
                             value={rangeValue}
                             onChange={handleChangeRange}
                             valueLabelDisplay="auto"
-                            min={0}
-                            max={1000}
-                            step={5}
+                            min={1}
+                            max={100}
+                            step={1}
                           />
-                          <div className="ml-5">All</div>
+                          <div className="ml-5">Все</div>
                         </div>
                         <div className="mt-12">
                           <div className="grid grid-cols-[auto_40px] gap-2">
@@ -252,7 +430,7 @@ export default function ConfigurationSlideover({
                                     key={a.name}
                                   >
                                     <div className="mb-4 grid h-14 w-full grid-cols-[5%_17%_18%_20%_20%_20%] items-center rounded-xl border border-subline px-4 py-4 text-subtext">
-                                      <span>{a.name}</span>
+                                      <span>{Number(a.name) + 1}</span>
                                       <span>
                                         {a.TwitterCsrf?.slice(0, 8)}...
                                       </span>
@@ -268,10 +446,14 @@ export default function ConfigurationSlideover({
                                       <span>{a.Email?.slice(0, 12)}...</span>
                                     </div>
                                     <div
-                                      onClick={() => handleActive(a.name)}
+                                      onClick={() => handleExceptions(a.name)}
                                       className="mb-4 h-10 cursor-pointer self-center rounded-lg border border-subline p-2.5"
                                     >
-                                      {activeAccounts.includes(a.name) ? (
+                                      {!exceptions?.includes(a.name) &&
+                                      Number(a.name) >=
+                                        Number(rangeValue[0]) - 1 &&
+                                      Number(a.name) <=
+                                        Number(rangeValue[1]) - 1 ? (
                                         <div className="h-full w-full rounded-md bg-accent"></div>
                                       ) : null}
                                     </div>
@@ -310,19 +492,24 @@ export default function ConfigurationSlideover({
                         <button
                           type="button"
                           className="bg rounded-md bg-element px-3 py-2 text-sm font-semibold text-almostwhite shadow-sm focus:outline-none"
-                          onClick={closeFunction}
+                          onClick={() => {
+                            setChosenConfiguration(null);
+                            closeFunction();
+                          }}
                         >
                           Отмена
                         </button>
                         <button
-                          type="submit"
+                          onClick={handleConfigurationProcedure}
                           className="inline-flex justify-center rounded-md bg-accent px-3 py-2 text-sm font-semibold text-bg shadow-sm transition-all hover:bg-opacity-60"
                         >
-                          Сохранить
+                          {chosenConfiguration === null
+                            ? "Добавить"
+                            : "Сохранить"}
                         </button>
                       </div>
                     </div>
-                  </form>
+                  </div>
                 </Dialog.Panel>
               </Transition.Child>
             </div>
