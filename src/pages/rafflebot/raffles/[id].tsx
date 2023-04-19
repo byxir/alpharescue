@@ -3,7 +3,6 @@ import LaunchButton from "~/components/LaunchButton/LaunchButton";
 import SidebarLayout from "~/components/SidebarLayout";
 import { useEffect, useState } from "react";
 import { RangeSlider } from "~/components/RangeSlider";
-import { accounts } from "~/utils/tempaccounts";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
