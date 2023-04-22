@@ -57,13 +57,13 @@ export default function Software() {
               <li>• Кошельки (можно сгенерировать на коинтул)</li>
               <li>
                 • Почты (можно софтом нарегать ethermail и купить mail.ru
-                почты), В редких случаях - дискорд
+                почты), в редких случаях - дискорд.
               </li>
             </ul>
             <br></br>
             <i className="text-almostwhite">
               Если у вас есть всё из списка выше, вы сможете использовать весь
-              софт, который мы выпускаем, в некоторых случаях для использования
+              софт, который мы выпускаем. В некоторых случаях для использования
               софта не нужен твиттер, как и дискорд.
             </i>
             <br></br>
@@ -134,7 +134,7 @@ export default function Software() {
         <div className="mt-32 grid justify-items-end sm:mt-48">
           <div className="flex items-center space-x-3 font-benzin text-sm text-almostwhite md:space-x-6 md:text-2xl">
             <span>Читать далее:</span>
-            <Link href="software">
+            <Link href="giveaways">
               <button className="rounded-xl bg-element p-3 shadow-md  hover:bg-opacity-60 md:p-6">
                 Розыгрыши WL
               </button>

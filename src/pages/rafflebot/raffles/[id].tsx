@@ -11,6 +11,7 @@ import axios from "axios";
 import Spinner from "~/components/spinner/Spinner";
 import { api } from "~/utils/api";
 import { type IAccount } from "../settings";
+import RaffleTimeModal from "~/components/RaffleTimeModal";
 
 export type IRaffle = {
   banner: string;
@@ -35,6 +36,7 @@ export type IRaffle = {
 
 const Raffle = () => {
   const router = useRouter();
+  const [timeModalOpen, setTimeModalOpen] = useState(false);
 
   const raffle: UseQueryResult<IRaffle> = useQuery<IRaffle>(
     ["raffle"],
@@ -321,6 +323,7 @@ const Raffle = () => {
                 authorized={
                   data?.user.raffleBotUser && status === "authenticated"
                 }
+                openModal={() => setTimeModalOpen(true)}
               >
                 <p className="text-2xl">Запустить</p>
                 <p className="text-2xl">абуз</p>
@@ -428,6 +431,10 @@ const Raffle = () => {
           </div>
         </div>
       )}
+      <RaffleTimeModal
+        open={timeModalOpen}
+        closeFunction={() => setTimeModalOpen(false)}
+      />
     </SidebarLayout>
   );
 };

@@ -10,7 +10,7 @@ export default function Discord() {
         <div className="mb-20 grid grid-cols-1 gap-10 md:mb-28 md:grid-cols-[1fr_2fr]">
           <div className="">
             <h1 className="font-benzin text-5xl text-almostwhite">
-              RESCUE Discord
+              Доступ в Discord
             </h1>
             <p className="mt-4">
               Дискорд – наша основная социальная сеть, в которой мы делимся
@@ -22,7 +22,7 @@ export default function Discord() {
             <div className="mt-4 flex space-x-2">
               <div>1. </div>
               <div>
-                Зеркала некоторых западных альфа-групп, список которых постоянно
+                Зеркала западных альфа-групп, список которых постоянно
                 пополняется
               </div>
             </div>
@@ -78,7 +78,7 @@ export default function Discord() {
             <span>
               – в каналах этой категории можно найти сигналы на спот и фьючерсы,
               наша команда регулярно заходит в сделки по сигналам из каналов,
-              поэтому можем смело рекомендовать. В категории 6 каналов.
+              поэтому можем смело рекомендовать.
             </span>
           </div>
           <div className="mt-8 font-montserratBold text-2xl text-almostwhite md:px-8">
@@ -94,7 +94,8 @@ export default function Discord() {
               – эта категория инструментов и аллерт ботов. В ней можно найти
               ботов на щитки, ботов, которые сигнализируют о покупках NFT
               различными трейдерами и коллекционерами. Так же преминт парсер,
-              подборки рафлов и многое другое, более подробно читайте тут
+              подборки рафлов и многое другое. более подробно читайте{" "}
+              <a className="text-accent underline">здесь</a>
             </span>
           </div>
           <div className="mt-8 font-montserratBold text-2xl text-almostwhite md:px-8">
@@ -156,7 +157,7 @@ export default function Discord() {
 
         <div className="md:px-6">
           <h1 className="mb-6 mt-28 font-benzin text-4xl text-almostwhite md:mt-36">
-            Коммьюнити
+            Комьюнити
           </h1>
 
           <div className="md:px-8">

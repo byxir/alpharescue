@@ -4,7 +4,7 @@ import { SessionProvider } from "next-auth/react";
 import localFont from "next/font/local";
 import "../styles/globals.css";
 
-const benzin = localFont({
+export const benzin = localFont({
   src: [
     {
       path: "../fonts/Benzin-Semibold.ttf",
@@ -12,7 +12,7 @@ const benzin = localFont({
   ],
   variable: "--font-benzin",
 });
-const montserrat = localFont({
+export const montserrat = localFont({
   src: [
     {
       path: "../fonts/Montserrat-Bold.ttf",
@@ -20,7 +20,7 @@ const montserrat = localFont({
   ],
   variable: "--font-montserratBold",
 });
-const montserratRegular = localFont({
+export const montserratRegular = localFont({
   src: [
     {
       path: "../fonts/Montserrat-Regular.ttf",
@@ -28,7 +28,7 @@ const montserratRegular = localFont({
   ],
   variable: "--font-montserratRegular",
 });
-const abibas = localFont({
+export const abibas = localFont({
   src: [
     {
       path: "../fonts/Abibas.ttf",
