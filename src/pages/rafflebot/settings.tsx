@@ -65,7 +65,7 @@ const RaffleList = () => {
   };
 
   useEffect(() => {
-    if (data) {
+    if (data && !allMyData.data) {
       void allMyData.refetch();
     }
   }, [data, slideoverOpen]);

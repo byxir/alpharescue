@@ -2,7 +2,7 @@
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { type ChangeEvent, useEffect, useMemo, useState, memo } from "react";
+import { type ChangeEvent, useEffect, useMemo, useState } from "react";
 import FilterDropdown from "~/components/FilterDropdown";
 import LinkModal from "~/components/LinkModal";
 import SidebarLayout from "~/components/SidebarLayout";
@@ -51,21 +51,42 @@ const RaffleList = () => {
     enabled: false,
   });
 
-  const raffles = useQuery<IRaffle[]>(
-    ["raffles"],
-    async () => {
-      const res = await axios.get(
-        `https://alpharescue.online/raffles?platform=${String(
-          router.query.platform
-        )}&category=${
-          router.query.platform === "Premint" ? category : "selection"
-        }`
-      );
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-      return res.data;
-    },
+  const fetchRaffles = async ({
+    _platform,
+    _category,
+  }: {
+    _platform: string;
+    _category: string;
+  }): Promise<IRaffle[] | null> => {
+    if (!_platform) {
+      return null;
+    }
+
+    const res = await axios.get(
+      `https://alpharescue.online/raffles?platform=${String(
+        _platform
+      )}&category=${_platform === "Premint" ? _category : "selection"}`
+    );
+    if (res.status != 200) {
+      throw new Error("network error, try again later");
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return res.data;
+  };
+  const queryFn = async (): Promise<IRaffle[] | null> => {
+    return fetchRaffles({
+      _platform: String(router.query.platform),
+      _category: category,
+    });
+  };
+
+  const raffles = useQuery<IRaffle[] | null>(
+    ["raffles", router.query.platform, category],
+    queryFn,
     {
-      enabled: false,
+      staleTime: Infinity,
+      cacheTime: Infinity,
+      enabled: !!router.query.platform,
     }
   );
 
@@ -142,13 +163,13 @@ const RaffleList = () => {
     }
   }, [data?.user.id]);
 
-  useEffect(() => {
-    if (!router.isReady) return;
-    void raffles.refetch();
-    setSortingMethod("");
+  // useEffect(() => {
+  //   if (!router.isReady) return;
+  //   void raffles.refetch();
+  //   setSortingMethod("");
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [router.isReady, router.query.platform, category]);
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [category]);
 
   const updateQuery = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value);

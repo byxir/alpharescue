@@ -37,9 +37,10 @@ export type IRaffle = {
 const Raffle = () => {
   const router = useRouter();
   const [timeModalOpen, setTimeModalOpen] = useState(false);
+  const [exceptions, setExceptions] = useState<string[] | undefined | null>([]);
 
   const raffle: UseQueryResult<IRaffle> = useQuery<IRaffle>(
-    ["raffle"],
+    ["raffle", router.query],
     async () => {
       const res = await axios.get(
         `https://alpharescue.online/raffles/${String(router.query.id)}`
@@ -51,17 +52,16 @@ const Raffle = () => {
       enabled: false,
     }
   );
-
-  const protectionData = api.user.getMyProtectionData.useQuery();
+  const allMyData = api.user.getAllMyData.useQuery();
 
   const myAccounts = useQuery<IAccount[]>(
     ["accounts"],
     async () => {
       const res = await axios.get(
         `https://alpharescue.online/get_all_accounts?discordId=${String(
-          protectionData.data?.discordId
+          allMyData.data?.discordId
         )}&userId=${String(data?.user.id)}&sessionToken=${String(
-          protectionData.data?.sessionToken
+          allMyData.data?.sessionToken
         )}`
       );
       // eslint-disable-next-line @typescript-eslint/no-unsafe-return
@@ -73,10 +73,10 @@ const Raffle = () => {
   );
 
   useEffect(() => {
-    if (protectionData.data && !myAccounts.data) {
+    if (allMyData.data && !myAccounts.data) {
       void myAccounts.refetch();
     }
-  }, [protectionData.data]);
+  }, [allMyData.data]);
 
   useEffect(() => {
     if (router.isReady) {
@@ -84,14 +84,14 @@ const Raffle = () => {
     }
   }, [router.isReady, router.query.id]);
 
-  const [rangeValue, setRangeValue] = useState<number[]>([0, 1000]);
-  const handleChangeRange = (e: Event, newValue: number | number[]) => {
-    setRangeValue(newValue as number[]);
-  };
+  const [rangeValue, setRangeValue] = useState<number[]>([0, 100]);
   const [activeAccounts, setActiveAccounts] = useState<string[]>([]);
   const [activeConfiguration, setActiveConfiguration] = useState(0);
 
   const { data, status } = useSession();
+  console.log("configuration -> ", activeConfiguration);
+  console.log("range -> ", rangeValue);
+  console.log("exceptions -> ", exceptions);
 
   const handleActive = (account: string) => {
     if (activeAccounts.includes(account)) {
@@ -105,6 +105,82 @@ const Raffle = () => {
       setActiveAccounts((prevAccounts) => [...prevAccounts, account]);
     }
   };
+  const handleChangeRange = (e: Event, newValue: number[] | number) => {
+    const newValueArray = newValue as number[];
+    if (Number(newValueArray[0]) < Number(rangeValue[0])) {
+      const newExceptions = exceptions?.filter(
+        (e) => Number(e) != Number(newValueArray[0]) - 1
+      );
+      setExceptions(newExceptions);
+    }
+    if (Number(newValueArray[1]) > Number(rangeValue[1])) {
+      const newExceptions = exceptions?.filter(
+        (e) => Number(e) != Number(newValueArray[1]) - 1
+      );
+      setExceptions(newExceptions);
+    }
+    setRangeValue(newValueArray);
+  };
+
+  const handleExceptions = (account: string) => {
+    if (
+      !exceptions?.includes(account) &&
+      Number(account) + 1 >= Number(rangeValue[0]) &&
+      Number(account) + 1 <= Number(rangeValue[1])
+    ) {
+      exceptions &&
+        setExceptions((prevAccounts) => {
+          if (prevAccounts) {
+            return [...prevAccounts, account];
+          } else {
+            return [account];
+          }
+        });
+    } else if (
+      Number(account) + 1 >= Number(rangeValue[0]) &&
+      Number(account) + 1 <= Number(rangeValue[1])
+    ) {
+      const newExceptions = exceptions?.filter(
+        (e) => Number(account) != Number(e)
+      );
+      setExceptions(newExceptions);
+    } else {
+      if (Number(account) === Number(rangeValue[1])) {
+        setRangeValue((prev) => [Number(prev[0]), Number(account) + 1]);
+      } else if (Number(account) > Number(rangeValue[1])) {
+        const prevRangeValue = rangeValue;
+        setRangeValue((prev) => [Number(prev[0]), Number(account) + 1]);
+        const newExceptions: string[] = [];
+        for (let i = Number(prevRangeValue[1]); i < Number(account); i++) {
+          newExceptions.push(String(i));
+        }
+        setExceptions((prev) => {
+          if (prev) {
+            return [...prev, ...newExceptions];
+          } else {
+            return [...newExceptions];
+          }
+        });
+      }
+
+      if (Number(account) < Number(rangeValue[0])) {
+        const prevRangeValue = rangeValue;
+        setRangeValue((prev) => [Number(account) + 1, Number(prev[1])]);
+        const newExceptions: string[] = [];
+        for (let i = Number(prevRangeValue[0]) - 2; i > Number(account); i--) {
+          newExceptions.push(String(i));
+        }
+        setExceptions((prev) => {
+          if (prev) {
+            return [...prev, ...newExceptions];
+          } else {
+            return [...newExceptions];
+          }
+        });
+      }
+    }
+  };
+
   const handleChangeConfiguration = (newActiveConfiguration: number) => {
     if (data?.user.raffleBotUser && status === "authenticated") {
       setActiveConfiguration(newActiveConfiguration);
@@ -174,7 +250,8 @@ const Raffle = () => {
                   </Link>
                 </div>
                 <div className="mt-3 text-subtext">
-                  Deadline: {raffle.data?.deadline}
+                  Дедлайн:{" "}
+                  {raffle.data.deadline ? raffle.data.deadline : "не указано"}
                 </div>
                 <div className="mt-10 grid grid-cols-[repeat(2,_max-content)] gap-3 sm:gap-6 2xls:grid-cols-[repeat(4,_max-content)]">
                   <div className="grid h-20 grid-rows-[repeat(2,_max-content)]">
@@ -277,46 +354,58 @@ const Raffle = () => {
                   Выбрать готовую конфигурацию
                 </div>
                 <div className="grid grid-cols-[repeat(4,_max-content)] gap-2">
-                  <div
-                    onClick={() => handleChangeConfiguration(1)}
-                    className={`grid h-12 w-12 cursor-pointer items-center justify-items-center rounded-lg bg-element text-2xl shadow-md transition-all hover:bg-opacity-60 ${
-                      activeConfiguration === 1
-                        ? "border-2 border-almostwhite"
-                        : ""
-                    }`}
-                  >
-                    1
-                  </div>
-                  <div
-                    onClick={() => handleChangeConfiguration(2)}
-                    className={`grid h-12 w-12 cursor-pointer items-center justify-items-center rounded-lg bg-element text-2xl shadow-md transition-all hover:bg-opacity-60 ${
-                      activeConfiguration === 2
-                        ? "border-2 border-almostwhite"
-                        : ""
-                    }`}
-                  >
-                    2
-                  </div>
-                  <div
-                    onClick={() => handleChangeConfiguration(3)}
-                    className={`grid h-12 w-12 cursor-pointer items-center justify-items-center rounded-lg bg-element text-2xl shadow-md transition-all hover:bg-opacity-60 ${
-                      activeConfiguration === 3
-                        ? "border-2 border-almostwhite"
-                        : ""
-                    }`}
-                  >
-                    3
-                  </div>
-                  <div
-                    onClick={() => handleChangeConfiguration(4)}
-                    className={`grid h-12 w-12 cursor-pointer items-center justify-items-center rounded-lg bg-element text-2xl shadow-md transition-all hover:bg-opacity-60 ${
-                      activeConfiguration === 4
-                        ? "border-2 border-almostwhite"
-                        : ""
-                    }`}
-                  >
-                    4
-                  </div>
+                  {allMyData.data?.configurations ? (
+                    <>
+                      {allMyData.data?.configurations[0] ? (
+                        <div
+                          onClick={() => handleChangeConfiguration(1)}
+                          className={`grid h-12 w-12 cursor-pointer items-center justify-items-center rounded-lg bg-element text-2xl shadow-md transition-all hover:bg-opacity-60 ${
+                            activeConfiguration === 1
+                              ? "border-2 border-almostwhite"
+                              : ""
+                          }`}
+                        >
+                          1
+                        </div>
+                      ) : null}
+                      {allMyData.data?.configurations[1] ? (
+                        <div
+                          onClick={() => handleChangeConfiguration(2)}
+                          className={`grid h-12 w-12 cursor-pointer items-center justify-items-center rounded-lg bg-element text-2xl shadow-md transition-all hover:bg-opacity-60 ${
+                            activeConfiguration === 2
+                              ? "border-2 border-almostwhite"
+                              : ""
+                          }`}
+                        >
+                          2
+                        </div>
+                      ) : null}
+                      {allMyData.data?.configurations[2] ? (
+                        <div
+                          onClick={() => handleChangeConfiguration(3)}
+                          className={`grid h-12 w-12 cursor-pointer items-center justify-items-center rounded-lg bg-element text-2xl shadow-md transition-all hover:bg-opacity-60 ${
+                            activeConfiguration === 3
+                              ? "border-2 border-almostwhite"
+                              : ""
+                          }`}
+                        >
+                          3
+                        </div>
+                      ) : null}
+                      {allMyData.data?.configurations[3] ? (
+                        <div
+                          onClick={() => handleChangeConfiguration(4)}
+                          className={`grid h-12 w-12 cursor-pointer items-center justify-items-center rounded-lg bg-element text-2xl shadow-md transition-all hover:bg-opacity-60 ${
+                            activeConfiguration === 4
+                              ? "border-2 border-almostwhite"
+                              : ""
+                          }`}
+                        >
+                          4
+                        </div>
+                      ) : null}
+                    </>
+                  ) : null}
                 </div>
               </div>
               <LaunchButton
@@ -343,8 +432,8 @@ const Raffle = () => {
                       onChange={handleChangeRange}
                       valueLabelDisplay="auto"
                       min={0}
-                      max={1000}
-                      step={5}
+                      max={100}
+                      step={1}
                     />
                     <div className="ml-5">All</div>
                   </div>
@@ -395,10 +484,12 @@ const Raffle = () => {
                           <span>{a.Email?.slice(0, 12)}...</span>
                         </div>
                         <div
-                          onClick={() => handleActive(a.name)}
+                          onClick={() => handleExceptions(a.name)}
                           className="mb-4 h-10 cursor-pointer self-center rounded-lg border border-subline p-2.5"
                         >
-                          {activeAccounts.includes(a.name) ? (
+                          {!exceptions?.includes(a.name) &&
+                          Number(a.name) >= Number(rangeValue[0]) - 1 &&
+                          Number(a.name) <= Number(rangeValue[1]) - 1 ? (
                             <div className="h-full w-full rounded-md bg-accent"></div>
                           ) : null}
                         </div>
