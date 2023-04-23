@@ -41,6 +41,7 @@ import { api } from "~/utils/api";
 
 import "~/styles/globals.css";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import Banner from "~/components/RunningRaffleBanner";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
@@ -52,6 +53,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
       className={`${benzin.variable} ${montserratRegular.variable} ${abibas.variable} ${montserrat.variable} font-sans`}
     >
       <SessionProvider session={session}>
+        <Banner />
         <Component {...pageProps} />
         <ReactQueryDevtools initialIsOpen={false} position={"bottom-right"} />
       </SessionProvider>
