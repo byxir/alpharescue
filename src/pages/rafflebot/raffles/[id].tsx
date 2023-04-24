@@ -86,13 +86,10 @@ const Raffle = () => {
   }, [router.isReady, router.query.id]);
 
   const [rangeValue, setRangeValue] = useState<number[]>([1, 100]);
-  const [activeAccounts, setActiveAccounts] = useState<string[]>([]);
   const [chosenConfiguration, setChosenConfiguration] = useState(0);
   const [configurationId, setConfigurationId] = useState("");
 
   const { data, status } = useSession();
-  console.log("range -> ", rangeValue);
-  console.log("exceptions -> ", exceptions);
 
   const handleChangeRange = (e: Event, newValue: number[] | number) => {
     setChosenConfiguration(0);

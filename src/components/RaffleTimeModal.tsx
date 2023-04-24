@@ -63,7 +63,7 @@ export default function RaffleTimeModal({
       userId: "clg5dzhmq0000mj08pkwqftop",
       sessionToken: "30fccbe9-cbde-4200-b8de-da2e5567cc97",
       exceptions: [],
-      firstAcc: 0,
+      firstAcc: 1,
       lastAcc: 4,
       time: 30,
       raffleId: _raffleId,
@@ -89,7 +89,6 @@ export default function RaffleTimeModal({
       _firstAcc != undefined &&
       _lastAcc != undefined
     ) {
-      console.log("made it to the if");
       startRaffleMutation.mutate();
       closeFunction();
       setTimeout(() => {
@@ -97,18 +96,6 @@ export default function RaffleTimeModal({
       }, 1000);
     }
   };
-
-  console.log(
-    allMyData.data?.discordId,
-    data?.user.id,
-    allMyData.data?.sessionToken,
-    value * 60,
-    _raffleId,
-    data?.user.raffleBotUser,
-    status,
-    _firstAcc,
-    _lastAcc
-  );
 
   const calculateValue = (value: number) => {
     return value;

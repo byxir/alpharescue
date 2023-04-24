@@ -17,7 +17,6 @@ async function createSampleConfiguration() {
       user: true,
     },
   });
-  console.log("config1 -> ", config1);
 }
 
 async function createSampleRaffleBotSubscription() {
@@ -38,7 +37,6 @@ async function createSampleRaffleBotSubscription() {
       },
     },
   });
-  console.log(raffleBotSubscription);
 }
 
 async function main() {
@@ -50,7 +48,6 @@ main()
     await prisma.$disconnect();
   })
   .catch(async (e) => {
-    console.error(e);
     await prisma.$disconnect();
     process.exit(1);
   });

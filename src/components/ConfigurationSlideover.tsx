@@ -97,9 +97,6 @@ export default function ConfigurationSlideover({
       enabled: false,
     }
   );
-  console.log("range value -> ", rangeValue);
-  console.log("exceptions -> ", exceptions);
-  console.log("configurations -> ", configurations);
 
   const handleChangeRange = (e: Event, newValue: number[] | number) => {
     const newValueArray = newValue as number[];

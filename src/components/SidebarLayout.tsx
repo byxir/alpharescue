@@ -1,7 +1,11 @@
 /* eslint-disable @next/next/no-img-element */
 import { Fragment, type ReactNode, useState, useEffect } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import {
+  Bars3Icon,
+  ClipboardDocumentCheckIcon,
+  XMarkIcon,
+} from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { Settings } from "~/design/icons/Settings";
 import { useRouter } from "next/router";
@@ -53,12 +57,6 @@ const navigation = [
     icon: "../../../../freenft.png",
     pathname: "/rafflebot/platforms/FreeNFT",
     noScale: true,
-  },
-  {
-    name: "Мои раффлы",
-    icon: "../../../../star.png",
-    pathname: "/rafflebot/myraffles",
-    margin: true,
   },
 ];
 
@@ -168,7 +166,6 @@ export default function SidebarLayout({ children }: { children: ReactNode }) {
                           href={`${item.pathname}`}
                           key={item.name}
                           className={classNames(
-                            item.margin ? "mt-5" : "",
                             `/rafflebot/platforms/${current}` === item.pathname
                               ? "bg-bg text-white"
                               : "text-almostwhite hover:bg-bg hover:bg-opacity-75",
@@ -192,7 +189,7 @@ export default function SidebarLayout({ children }: { children: ReactNode }) {
                   <Link
                     href="/rafflebot/settings"
                     onClick={() => setSidebarOpen(false)}
-                    className="grid cursor-pointer grid-cols-[repeat(2,_max-content)] justify-center space-x-2 border-t border-subline p-4 font-montserratBold transition-colors hover:bg-bg"
+                    className="grid cursor-pointer grid-cols-[repeat(2,_max-content)] justify-center space-x-2 p-4 font-montserratBold transition-colors hover:bg-bg"
                   >
                     <Settings />
                     <div className="font-mon font-bold text-almostwhite">
@@ -232,7 +229,6 @@ export default function SidebarLayout({ children }: { children: ReactNode }) {
                     href={`${item.pathname}`}
                     key={item.name}
                     className={classNames(
-                      item.margin ? "mb-32 mt-5" : "",
                       current === item.pathname
                         ? "bg-bg text-white"
                         : "text-almostwhite hover:bg-bg hover:bg-opacity-75",
@@ -252,8 +248,19 @@ export default function SidebarLayout({ children }: { children: ReactNode }) {
               </nav>
             </div>
             <Link
-              href="/rafflebot/settings"
+              href="/rafflebot/myraffles"
               className="grid cursor-pointer grid-cols-[repeat(2,_max-content)] justify-center space-x-2 border-t border-subline p-4 transition-colors hover:bg-bg"
+            >
+              <div className="h-6 w-6">
+                <ClipboardDocumentCheckIcon />
+              </div>
+              <div className="font-mon font-bold text-almostwhite">
+                Мои раффлы
+              </div>
+            </Link>
+            <Link
+              href="/rafflebot/settings"
+              className="grid cursor-pointer grid-cols-[repeat(2,_max-content)] justify-center space-x-2  p-4 transition-colors hover:bg-bg"
             >
               <Settings />
               <div className="font-mon font-bold text-almostwhite">

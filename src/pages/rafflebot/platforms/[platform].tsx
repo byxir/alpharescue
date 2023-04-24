@@ -92,7 +92,6 @@ const RaffleList = () => {
 
   const addFavoritesMutation = api.user.addFavorite.useMutation();
   const deleteFavoritesMutation = api.user.deleteFavorite.useMutation();
-  console.log("page rerendered!!!");
 
   const handleAddFavorites = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
@@ -123,15 +122,12 @@ const RaffleList = () => {
 
   const sortedRaffles = useMemo(() => {
     if (sortingMethod === "subscribers") {
-      console.log("sorting by subscribers");
       return raffles.data?.sort((a, b) =>
         a.subscribers <= b.subscribers ? 1 : -1
       );
     } else if (sortingMethod === "hold") {
-      console.log("sorting by hold");
       return raffles.data?.filter((r) => r.hold === 0);
     } else if (sortingMethod === "favorites") {
-      console.log("sorting by favorites");
       return raffles.data?.filter((r) => {
         if (
           ((me.data &&

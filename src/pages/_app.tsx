@@ -70,10 +70,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
             toggleEventStream: () => setEventStreamTrigger(!eventStreamTrigger),
           }}
         >
-          <Banner
-            openEventStream={eventStreamTrigger}
-            toggleEventStream={() => console.log("open")}
-          />
+          <Banner openEventStream={eventStreamTrigger} />
           <Component {...pageProps} />
           <ReactQueryDevtools initialIsOpen={false} position={"bottom-right"} />
         </ToggleEventStreamContext.Provider>

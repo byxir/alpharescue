@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export default function Example() {
   return (
-    <div className="relative isolate grid h-auto overflow-hidden bg-gray-900 font-montserratRegular xl:h-[calc(100vh-92px)]">
+    <div className="relative isolate grid h-auto overflow-hidden bg-bg font-montserratRegular xl:h-[calc(100vh-92px)]">
       <img
         src="../../../herobg.png"
         className="absolute inset-0 -z-10 h-full w-full object-cover"

@@ -5,7 +5,6 @@ import { api } from "~/utils/api";
 
 export interface EventStreamComponentProps {
   openEventStream: boolean;
-  toggleEventStream: () => void;
 }
 
 export interface RunningRaffleEventStreamData {
@@ -15,10 +14,7 @@ export interface RunningRaffleEventStreamData {
   accessedAccountsNumber: number;
 }
 
-const Banner: React.FC<EventStreamComponentProps> = ({
-  openEventStream,
-  toggleEventStream,
-}) => {
+const Banner: React.FC<EventStreamComponentProps> = ({ openEventStream }) => {
   const [eventSource, setEventSource] = useState<EventSource | null>(null);
   const [showLayout, setShowLayout] = useState(false);
 
@@ -62,7 +58,6 @@ const Banner: React.FC<EventStreamComponentProps> = ({
       };
 
       source.onerror = () => {
-        console.error("An error occurred with the event stream.");
         setRunningRaffleName(null);
         setAccessedAccounts(null);
         setTotalAccounts(null);
