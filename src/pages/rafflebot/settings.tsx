@@ -479,6 +479,7 @@ const RaffleList = () => {
         configurations={allMyData.data?.configurations}
         discordId={allMyData.data?.discordId}
         sessionToken={allMyData.data?.sessionToken}
+        refetchConfigurations={() => void allMyData.refetch()}
       />
       <CaptchaModal
         open={captchaModalOpen}

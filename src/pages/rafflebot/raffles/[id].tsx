@@ -52,6 +52,7 @@ const Raffle = () => {
       enabled: false,
     }
   );
+
   const allMyData = api.user.getAllMyData.useQuery();
 
   const myAccounts = useQuery<IAccount[]>(
@@ -84,28 +85,17 @@ const Raffle = () => {
     }
   }, [router.isReady, router.query.id]);
 
-  const [rangeValue, setRangeValue] = useState<number[]>([0, 100]);
+  const [rangeValue, setRangeValue] = useState<number[]>([1, 100]);
   const [activeAccounts, setActiveAccounts] = useState<string[]>([]);
-  const [activeConfiguration, setActiveConfiguration] = useState(0);
+  const [chosenConfiguration, setChosenConfiguration] = useState(0);
+  const [configurationId, setConfigurationId] = useState("");
 
   const { data, status } = useSession();
-  console.log("configuration -> ", activeConfiguration);
   console.log("range -> ", rangeValue);
   console.log("exceptions -> ", exceptions);
 
-  const handleActive = (account: string) => {
-    if (activeAccounts.includes(account)) {
-      const newActiveAccounts = activeAccounts.filter((a) => {
-        if (a != account) {
-          return a;
-        }
-      });
-      setActiveAccounts(newActiveAccounts);
-    } else {
-      setActiveAccounts((prevAccounts) => [...prevAccounts, account]);
-    }
-  };
   const handleChangeRange = (e: Event, newValue: number[] | number) => {
+    setChosenConfiguration(0);
     const newValueArray = newValue as number[];
     if (Number(newValueArray[0]) < Number(rangeValue[0])) {
       const newExceptions = exceptions?.filter(
@@ -181,9 +171,9 @@ const Raffle = () => {
     }
   };
 
-  const handleChangeConfiguration = (newActiveConfiguration: number) => {
+  const handleChangeConfiguration = (newChosenConfiguration: number) => {
     if (data?.user.raffleBotUser && status === "authenticated") {
-      setActiveConfiguration(newActiveConfiguration);
+      setChosenConfiguration(newChosenConfiguration);
     }
   };
   const determineColor = (platform: string) => {
@@ -358,9 +348,41 @@ const Raffle = () => {
                     <>
                       {allMyData.data?.configurations[0] ? (
                         <div
-                          onClick={() => handleChangeConfiguration(1)}
+                          onClick={() => {
+                            setChosenConfiguration(1);
+                            setConfigurationId(
+                              String(
+                                allMyData.data?.configurations &&
+                                  allMyData.data.configurations[0]?.id
+                              )
+                            );
+                            const newRangeValues: number[] = [];
+                            allMyData.data?.configurations &&
+                            allMyData.data.configurations[1]?.firstAccount
+                              ? (newRangeValues[0] =
+                                  Number(
+                                    allMyData.data.configurations[0]
+                                      ?.firstAccount
+                                  ) + 1)
+                              : (newRangeValues[0] = 1);
+                            allMyData.data?.configurations &&
+                            allMyData.data.configurations[0]?.lastAccount
+                              ? (newRangeValues[1] =
+                                  allMyData.data.configurations[0].lastAccount +
+                                  1)
+                              : (newRangeValues[1] = Number(
+                                  myAccounts.data?.length
+                                ));
+                            setRangeValue(newRangeValues);
+                            setExceptions(
+                              allMyData.data?.configurations &&
+                                allMyData.data.configurations[0]?.exceptions?.split(
+                                  ","
+                                )
+                            );
+                          }}
                           className={`grid h-12 w-12 cursor-pointer items-center justify-items-center rounded-lg bg-element text-2xl shadow-md transition-all hover:bg-opacity-60 ${
-                            activeConfiguration === 1
+                            chosenConfiguration === 1
                               ? "border-2 border-almostwhite"
                               : ""
                           }`}
@@ -370,9 +392,39 @@ const Raffle = () => {
                       ) : null}
                       {allMyData.data?.configurations[1] ? (
                         <div
-                          onClick={() => handleChangeConfiguration(2)}
+                          onClick={() => {
+                            setChosenConfiguration(2);
+                            setConfigurationId(
+                              String(
+                                allMyData.data?.configurations &&
+                                  allMyData.data.configurations[1]?.id
+                              )
+                            );
+                            const newRangeValues: number[] = [];
+                            allMyData.data?.configurations &&
+                            allMyData.data.configurations[1]?.firstAccount
+                              ? (newRangeValues[0] =
+                                  allMyData.data.configurations[1]
+                                    .firstAccount + 1)
+                              : (newRangeValues[0] = 1);
+                            allMyData.data?.configurations &&
+                            allMyData.data.configurations[1]?.lastAccount
+                              ? (newRangeValues[1] =
+                                  allMyData.data.configurations[1].lastAccount +
+                                  1)
+                              : (newRangeValues[1] = Number(
+                                  myAccounts.data?.length
+                                ));
+                            setRangeValue(newRangeValues);
+                            setExceptions(
+                              allMyData.data?.configurations &&
+                                allMyData.data.configurations[1]?.exceptions?.split(
+                                  ","
+                                )
+                            );
+                          }}
                           className={`grid h-12 w-12 cursor-pointer items-center justify-items-center rounded-lg bg-element text-2xl shadow-md transition-all hover:bg-opacity-60 ${
-                            activeConfiguration === 2
+                            chosenConfiguration === 2
                               ? "border-2 border-almostwhite"
                               : ""
                           }`}
@@ -382,9 +434,39 @@ const Raffle = () => {
                       ) : null}
                       {allMyData.data?.configurations[2] ? (
                         <div
-                          onClick={() => handleChangeConfiguration(3)}
+                          onClick={() => {
+                            setChosenConfiguration(3);
+                            setConfigurationId(
+                              String(
+                                allMyData.data?.configurations &&
+                                  allMyData.data.configurations[2]?.id
+                              )
+                            );
+                            const newRangeValues: number[] = [];
+                            allMyData.data?.configurations &&
+                            allMyData.data.configurations[2]?.firstAccount
+                              ? (newRangeValues[0] =
+                                  allMyData.data.configurations[2]
+                                    .firstAccount + 1)
+                              : (newRangeValues[0] = 1);
+                            allMyData.data?.configurations &&
+                            allMyData.data.configurations[2]?.lastAccount
+                              ? (newRangeValues[1] =
+                                  allMyData.data.configurations[2].lastAccount +
+                                  1)
+                              : (newRangeValues[1] = Number(
+                                  myAccounts.data?.length
+                                ));
+                            setRangeValue(newRangeValues);
+                            setExceptions(
+                              allMyData.data?.configurations &&
+                                allMyData.data.configurations[2]?.exceptions?.split(
+                                  ","
+                                )
+                            );
+                          }}
                           className={`grid h-12 w-12 cursor-pointer items-center justify-items-center rounded-lg bg-element text-2xl shadow-md transition-all hover:bg-opacity-60 ${
-                            activeConfiguration === 3
+                            chosenConfiguration === 3
                               ? "border-2 border-almostwhite"
                               : ""
                           }`}
@@ -394,9 +476,39 @@ const Raffle = () => {
                       ) : null}
                       {allMyData.data?.configurations[3] ? (
                         <div
-                          onClick={() => handleChangeConfiguration(4)}
+                          onClick={() => {
+                            setChosenConfiguration(4);
+                            setConfigurationId(
+                              String(
+                                allMyData.data?.configurations &&
+                                  allMyData.data.configurations[3]?.id
+                              )
+                            );
+                            const newRangeValues: number[] = [];
+                            allMyData.data?.configurations &&
+                            allMyData.data.configurations[3]?.firstAccount
+                              ? (newRangeValues[0] =
+                                  allMyData.data.configurations[3]
+                                    .firstAccount + 1)
+                              : (newRangeValues[0] = 1);
+                            allMyData.data?.configurations &&
+                            allMyData.data.configurations[3]?.lastAccount
+                              ? (newRangeValues[1] =
+                                  allMyData.data.configurations[3].lastAccount +
+                                  1)
+                              : (newRangeValues[1] = Number(
+                                  myAccounts.data?.length
+                                ));
+                            setRangeValue(newRangeValues);
+                            setExceptions(
+                              allMyData.data?.configurations &&
+                                allMyData.data.configurations[3]?.exceptions?.split(
+                                  ","
+                                )
+                            );
+                          }}
                           className={`grid h-12 w-12 cursor-pointer items-center justify-items-center rounded-lg bg-element text-2xl shadow-md transition-all hover:bg-opacity-60 ${
-                            activeConfiguration === 4
+                            chosenConfiguration === 4
                               ? "border-2 border-almostwhite"
                               : ""
                           }`}
@@ -525,6 +637,10 @@ const Raffle = () => {
       <RaffleTimeModal
         open={timeModalOpen}
         closeFunction={() => setTimeModalOpen(false)}
+        _raffleId={String(router.query.id)}
+        _exceptions={exceptions}
+        _firstAcc={rangeValue[0]}
+        _lastAcc={rangeValue[1]}
       />
     </SidebarLayout>
   );

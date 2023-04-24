@@ -1,8 +1,18 @@
-import { Fragment, useState } from "react";
+import { Fragment, useContext, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { Slider } from "@mui/material";
-import { benzin, montserrat, montserratRegular } from "~/pages/_app";
+import {
+  type IToggleEventStreamContext,
+  benzin,
+  montserrat,
+  montserratRegular,
+} from "~/pages/_app";
 import TrueLaunchButton from "./LaunchButton/TrueLaunchButton";
+import { api } from "~/utils/api";
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
+import { useSession } from "next-auth/react";
+import { ToggleEventStreamContext } from "~/pages/_app";
 
 function valueLabelFormat(value: number) {
   const units = ["min.", "h."];
@@ -22,21 +32,86 @@ function valueLabelFormat(value: number) {
 export default function RaffleTimeModal({
   open,
   closeFunction,
+  _raffleId,
+  _exceptions,
+  _firstAcc,
+  _lastAcc,
 }: {
   open: boolean;
   closeFunction: () => void;
+  _raffleId: string;
+  _exceptions: string[] | null | undefined;
+  _firstAcc: number | undefined;
+  _lastAcc: number | undefined;
 }) {
   const [value, setValue] = useState(120);
   const handleChange = (event: Event, newValue: number | number[]) => {
     setValue(newValue as number);
   };
+  const { data, status } = useSession();
+
+  const { toggleEventStream } = useContext<IToggleEventStreamContext>(
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+    ToggleEventStreamContext
+  );
+
+  const allMyData = api.user.getAllMyData.useQuery();
+
+  const startRaffleMutation = useMutation(["startRaffle"], () => {
+    return axios.post(`https://alpharescue.online/startraffle`, {
+      discordId: "460719167738347520",
+      userId: "clg5dzhmq0000mj08pkwqftop",
+      sessionToken: "30fccbe9-cbde-4200-b8de-da2e5567cc97",
+      exceptions: [],
+      firstAcc: 0,
+      lastAcc: 4,
+      time: 30,
+      raffleId: _raffleId,
+    });
+  });
+
+  // https://alpharescue.online/events?userId=z`clg5dzhmq0000mj08pkwqftop&sessionToken=30fccbe9-cbde-4200-b8de-da2e5567cc97&discordId=460719167738347520
+
+  // discordId: allMyData.data?.discordId,
+  //     userId: data?.user.id,
+  //     sessionToken: allMyData.data?.sessionToken,
+  //     exceptions: _exceptions,
+  //     firstAcc: _firstAcc,
+  //     lastAcc: _lastAcc,
+  //     time: value * 60,
+  //     raffleId: _raffleId,
+
+  const startRaffle = () => {
+    if (
+      data?.user.raffleBotUser &&
+      status === "authenticated" &&
+      allMyData.data &&
+      _firstAcc != undefined &&
+      _lastAcc != undefined
+    ) {
+      console.log("made it to the if");
+      startRaffleMutation.mutate();
+      closeFunction();
+      setTimeout(() => {
+        toggleEventStream();
+      }, 1000);
+    }
+  };
+
+  console.log(
+    allMyData.data?.discordId,
+    data?.user.id,
+    allMyData.data?.sessionToken,
+    value * 60,
+    _raffleId,
+    data?.user.raffleBotUser,
+    status,
+    _firstAcc,
+    _lastAcc
+  );
 
   const calculateValue = (value: number) => {
     return value;
-  };
-
-  const startRaffle = () => {
-    closeFunction();
   };
 
   return (
@@ -93,7 +168,7 @@ export default function RaffleTimeModal({
                 <div className="jusify-center mt-10 grid grid-cols-3 grid-rows-2 items-center justify-items-center gap-8 font-montserratBold text-subtext">
                   <div
                     onClick={() => setValue(20)}
-                    className={`grid w-36 cursor-pointer items-center justify-items-center rounded-xl bg-element p-6 text-xl shadow-md shadow-md transition-all hover:bg-opacity-60 ${
+                    className={`grid w-36 cursor-pointer items-center justify-items-center rounded-xl bg-element p-6 text-xl  shadow-md transition-all hover:bg-opacity-60 ${
                       value === 20
                         ? "outline outline-2 outline-almostwhite"
                         : ""
@@ -103,7 +178,7 @@ export default function RaffleTimeModal({
                   </div>
                   <div
                     onClick={() => setValue(60)}
-                    className={`grid w-36 cursor-pointer items-center justify-items-center rounded-xl bg-element p-6 text-xl shadow-md shadow-md transition-all hover:bg-opacity-60 ${
+                    className={`grid w-36 cursor-pointer items-center justify-items-center rounded-xl bg-element p-6 text-xl shadow-md transition-all hover:bg-opacity-60 ${
                       value === 60
                         ? "outline outline-2 outline-almostwhite"
                         : ""
@@ -113,7 +188,7 @@ export default function RaffleTimeModal({
                   </div>
                   <div
                     onClick={() => setValue(120)}
-                    className={`grid w-36 cursor-pointer items-center justify-items-center rounded-xl bg-element p-6 text-xl shadow-md shadow-md transition-all hover:bg-opacity-60 ${
+                    className={`grid w-36 cursor-pointer items-center justify-items-center rounded-xl bg-element p-6 text-xl shadow-md transition-all hover:bg-opacity-60 ${
                       value === 120
                         ? "outline outline-2 outline-almostwhite"
                         : ""
@@ -123,7 +198,7 @@ export default function RaffleTimeModal({
                   </div>
                   <div
                     onClick={() => setValue(180)}
-                    className={`grid w-36 cursor-pointer items-center justify-items-center rounded-xl bg-element p-6 text-xl shadow-md shadow-md transition-all hover:bg-opacity-60 ${
+                    className={`grid w-36 cursor-pointer items-center justify-items-center rounded-xl bg-element p-6 text-xl shadow-md transition-all hover:bg-opacity-60 ${
                       value === 180
                         ? "outline outline-2 outline-almostwhite"
                         : ""
@@ -133,7 +208,7 @@ export default function RaffleTimeModal({
                   </div>
                   <div
                     onClick={() => setValue(360)}
-                    className={`grid w-36 cursor-pointer items-center justify-items-center rounded-xl bg-element p-6 text-xl shadow-md shadow-md transition-all hover:bg-opacity-60 ${
+                    className={`grid w-36 cursor-pointer items-center justify-items-center rounded-xl bg-element p-6 text-xl shadow-md transition-all hover:bg-opacity-60 ${
                       value === 360
                         ? "outline outline-2 outline-almostwhite"
                         : ""
@@ -143,7 +218,7 @@ export default function RaffleTimeModal({
                   </div>
                   <div
                     onClick={() => setValue(720)}
-                    className={`grid w-36 cursor-pointer items-center justify-items-center rounded-xl bg-element p-6 text-xl shadow-md shadow-md transition-all hover:bg-opacity-60 ${
+                    className={`grid w-36 cursor-pointer items-center justify-items-center rounded-xl bg-element p-6 text-xl shadow-md transition-all hover:bg-opacity-60 ${
                       value === 720
                         ? "outline outline-2 outline-almostwhite"
                         : ""

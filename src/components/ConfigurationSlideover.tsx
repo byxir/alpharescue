@@ -7,7 +7,7 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { type Configuration } from "@prisma/client";
 import { api } from "~/utils/api";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { type IAccount } from "~/pages/rafflebot/settings";
 import Spinner from "./spinner/Spinner";
@@ -35,12 +35,14 @@ export default function ConfigurationSlideover({
   configurations,
   discordId,
   sessionToken,
+  refetchConfigurations,
 }: {
   open: boolean;
   closeFunction: () => void;
   configurations: Configuration[] | undefined;
   discordId: string | undefined;
   sessionToken: string | undefined;
+  refetchConfigurations: () => void;
 }) {
   const { data, status } = useSession();
 
@@ -50,8 +52,13 @@ export default function ConfigurationSlideover({
   const [rangeValue, setRangeValue] = useState<number[]>([1, 100]);
   const [exceptions, setExceptions] = useState<string[] | undefined | null>([]);
   const [configurationId, setConfigurationId] = useState("");
+  const queryClient = useQueryClient();
 
-  const addConfigurationMutation = api.user.addConfiguration.useMutation();
+  const addConfigurationMutation = api.user.addConfiguration.useMutation({
+    onSuccess: () => {
+      refetchConfigurations();
+    },
+  });
   const updateConfigurationMutation =
     api.user.updateConfiguration.useMutation();
 

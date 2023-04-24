@@ -33,6 +33,14 @@ export const api = createTRPCNext<AppRouter>({
        *
        * @see https://trpc.io/docs/links
        */
+      queryClientConfig: {
+        defaultOptions: {
+          queries: {
+            staleTime: 1000 * 60 * 5,
+            cacheTime: 1000 * 60 * 10,
+          },
+        },
+      },
       links: [
         loggerLink({
           enabled: (opts) =>
