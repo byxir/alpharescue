@@ -34,14 +34,12 @@ const Banner: React.FC<EventStreamComponentProps> = ({
   useEffect(() => {
     if (protectionData.data) {
       const source = new EventSource(
-        `https://alpharescue.online/events?userId=clg5dzhmq0000mj08pkwqftop&sessionToken=30fccbe9-cbde-4200-b8de-da2e5567cc97&discordId=460719167738347520`
+        `https://alpharescue.online/events?userId=${String(
+          data?.user.id
+        )}&sessionToken=${String(
+          protectionData.data?.sessionToken
+        )}&discordId=${String(protectionData.data?.discordId)}`
       );
-
-      // `https://alpharescue.online/events?userId=${String(
-      //     data?.user.id
-      //   )}&sessionToken=${String(
-      //     protectionData.data?.sessionToken
-      //   )}&discordId=${String(protectionData.data?.discordId)}`
 
       source.onmessage = (event) => {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument

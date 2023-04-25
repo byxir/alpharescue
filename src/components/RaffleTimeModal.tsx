@@ -61,13 +61,13 @@ export default function RaffleTimeModal({
     ["startRaffle"],
     () => {
       return axios.post(`https://alpharescue.online/startraffle`, {
-        discordId: "460719167738347520",
-        userId: "clg5dzhmq0000mj08pkwqftop",
-        sessionToken: "30fccbe9-cbde-4200-b8de-da2e5567cc97",
-        exceptions: [],
-        firstAcc: 1,
-        lastAcc: 4,
-        time: 30,
+        discordId: allMyData.data?.discordId,
+        userId: data?.user.id,
+        sessionToken: allMyData.data?.sessionToken,
+        exceptions: _exceptions,
+        firstAcc: _firstAcc,
+        lastAcc: _lastAcc,
+        time: value * 60,
         raffleId: _raffleId,
       });
     },
@@ -79,15 +79,6 @@ export default function RaffleTimeModal({
   );
 
   // https://alpharescue.online/events?userId=z`clg5dzhmq0000mj08pkwqftop&sessionToken=30fccbe9-cbde-4200-b8de-da2e5567cc97&discordId=460719167738347520
-
-  // discordId: allMyData.data?.discordId,
-  //     userId: data?.user.id,
-  //     sessionToken: allMyData.data?.sessionToken,
-  //     exceptions: _exceptions,
-  //     firstAcc: _firstAcc,
-  //     lastAcc: _lastAcc,
-  //     time: value * 60,
-  //     raffleId: _raffleId,
 
   const startRaffle = () => {
     if (

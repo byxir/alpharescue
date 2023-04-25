@@ -9,6 +9,7 @@ import { useRouter } from "next/router";
 import { useQuery, type UseQueryResult } from "@tanstack/react-query";
 import axios from "axios";
 import Spinner from "~/components/spinner/Spinner";
+import { api } from "~/utils/api";
 
 type IMyRaffle = {
   banner: string;
@@ -40,13 +41,17 @@ type IMyRaffle = {
 const MyRaffle = () => {
   const router = useRouter();
 
+  const protectionData = api.user.getMyProtectionData.useQuery();
+
   const myRaffle: UseQueryResult<IMyRaffle> = useQuery<IMyRaffle>(
     ["myRaffle", router.query.id],
     async () => {
       const res = await axios.get(
         `https://alpharescue.online/myRaffle/${String(
           router.query.id
-        )}?userId=clg5dzhmq0000mj08pkwqftop&sessionToken=30fccbe9-cbde-4200-b8de-da2e5567cc97&discordId=460719167738347520`
+        )}?discordId=${String(protectionData.data?.discordId)}&userId=${String(
+          data?.user.id
+        )}&sessionToken=${String(protectionData.data?.sessionToken)}`
       );
       // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       return res.data;
@@ -59,10 +64,10 @@ const MyRaffle = () => {
   console.log("myRaffle -> ", myRaffle.data);
 
   useEffect(() => {
-    if (router.isReady) {
+    if (router.isReady && protectionData.data) {
       void myRaffle.refetch();
     }
-  }, [router.isReady, router.query.id]);
+  }, [router.isReady, router.query.id, protectionData.data]);
 
   const { data, status } = useSession();
 

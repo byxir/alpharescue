@@ -39,18 +39,12 @@ const RaffleList = () => {
 
   const protectionData = api.user.getMyProtectionData.useQuery();
 
-  // `https://alpharescue.online/favouriteRaffles?discordId=${String(
-  //       protectionData.data?.discordId
-  //     )}&userId=${String(data?.user.id)}&sessionToken=${String(
-  //       protectionData.data?.sessionToken
-  //     )}`
-
   const fetchMyRaffles = async (): Promise<IMyRaffle[] | null> => {
     const res = await axios.get(
       `https://alpharescue.online/myRaffles?discordId=${String(
-        "460719167738347520"
-      )}&userId=${"clg5dzhmq0000mj08pkwqftop"}&sessionToken=${String(
-        "30fccbe9-cbde-4200-b8de-da2e5567cc97"
+        protectionData.data?.discordId
+      )}&userId=${String(data?.user.id)}&sessionToken=${String(
+        protectionData.data?.sessionToken
       )}`
     );
     console.log("res -> ", res.data);
