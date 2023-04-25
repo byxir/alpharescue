@@ -4,9 +4,10 @@ import { type NextApiRequest, type NextApiResponse } from "next";
 import { prisma } from "../../../server/db";
 
 const userByIdHandler = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { id } = req.body.user.social_accounts[0].id;
-
   if (req.method === "GET") return res.status(200).end();
+  console.log("req -> ", req);
+
+  const { id } = req.body.data.user.social_accounts[0].id;
 
   if (!id || typeof id !== "string") {
     return res.status(200).json({ error: "connection established" });
@@ -49,9 +50,7 @@ const userByIdHandler = async (req: NextApiRequest, res: NextApiResponse) => {
     },
   });
 
-  res
-    .status(200)
-    .json({ newSubscription: newSubscription, newRoles: newRoles });
+  res.status(200).json({ message: "good" });
 };
 
 export default userByIdHandler;
