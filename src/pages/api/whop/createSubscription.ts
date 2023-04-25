@@ -7,7 +7,11 @@ const userByIdHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "GET") return res.status(200).end();
   console.log("req -> ", req);
 
-  const { id } = req.body.data.user.social_accounts[0].id;
+  let id;
+
+  if (req.body.data.user.social_accounts[0]?.id) {
+    id = req.body.data.user.social_accounts[0].id;
+  }
 
   if (!id || typeof id !== "string") {
     return res.status(200).json({ error: "connection established" });
