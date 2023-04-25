@@ -4,14 +4,10 @@ import { type NextApiRequest, type NextApiResponse } from "next";
 import { prisma } from "../../../server/db";
 
 const userByIdHandler = async (req: NextApiRequest, res: NextApiResponse) => {
-  if (req.method !== "GET") {
-    return res.status(405).end();
-  }
-
   const { id } = req.body.user.social_accounts[0].id;
 
   if (!id || typeof id !== "string") {
-    return res.status(400).json({ error: "Invalid id" });
+    return res.status(200).json({ error: "connection established" });
   }
 
   const currentUser = await prisma.account.findUnique({
