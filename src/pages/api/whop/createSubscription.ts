@@ -6,6 +6,8 @@ import { prisma } from "../../../server/db";
 const userByIdHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { id } = req.body.user.social_accounts[0].id;
 
+  if (req.method === "GET") return res.status(200).end();
+
   if (!id || typeof id !== "string") {
     return res.status(200).json({ error: "connection established" });
   }
