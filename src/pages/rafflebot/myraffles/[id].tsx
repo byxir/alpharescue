@@ -239,7 +239,7 @@ const MyRaffle = () => {
             </div>
             <div className="mt-12">
               <div className="grid grid-cols-[auto] gap-2">
-                <div className="mb-6 grid grid-cols-[40px_200px_auto] overflow-x-auto rounded-xl border-2 border-subtext bg-element px-4 py-4 font-montserratBold text-xs text-subtext sm:text-base">
+                <div className="mb-6 grid grid-cols-[20px_120px_auto] overflow-x-auto rounded-xl border-2 border-subtext bg-element px-4 py-4 font-montserratBold text-xs text-subtext sm:grid-cols-[40px_200px_auto] sm:text-base">
                   <span>#</span>
                   <span>Metamask адрес</span>
                   <span>Результат</span>
@@ -255,7 +255,7 @@ const MyRaffle = () => {
                           key={a.name}
                         >
                           <div
-                            className={`mb-4 grid w-full grid-cols-[20px_140px_auto] items-center rounded-xl border text-xs sm:grid-cols-[40px_200px_auto] sm:text-base ${
+                            className={`mb-4 grid w-full grid-cols-[20px_120px_auto] items-center rounded-xl border text-xs sm:grid-cols-[40px_200px_auto] sm:text-base ${
                               a.status === true
                                 ? "border-green-300 text-green-300"
                                 : "border-red-500 text-red-500"

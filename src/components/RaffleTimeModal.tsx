@@ -57,18 +57,26 @@ export default function RaffleTimeModal({
 
   const allMyData = api.user.getAllMyData.useQuery();
 
-  const startRaffleMutation = useMutation(["startRaffle"], () => {
-    return axios.post(`https://alpharescue.online/startraffle`, {
-      discordId: "460719167738347520",
-      userId: "clg5dzhmq0000mj08pkwqftop",
-      sessionToken: "30fccbe9-cbde-4200-b8de-da2e5567cc97",
-      exceptions: [],
-      firstAcc: 1,
-      lastAcc: 4,
-      time: 30,
-      raffleId: _raffleId,
-    });
-  });
+  const startRaffleMutation = useMutation(
+    ["startRaffle"],
+    () => {
+      return axios.post(`https://alpharescue.online/startraffle`, {
+        discordId: "460719167738347520",
+        userId: "clg5dzhmq0000mj08pkwqftop",
+        sessionToken: "30fccbe9-cbde-4200-b8de-da2e5567cc97",
+        exceptions: [],
+        firstAcc: 1,
+        lastAcc: 4,
+        time: 30,
+        raffleId: _raffleId,
+      });
+    },
+    {
+      onSuccess: () => {
+        toggleEventStream();
+      },
+    }
+  );
 
   // https://alpharescue.online/events?userId=z`clg5dzhmq0000mj08pkwqftop&sessionToken=30fccbe9-cbde-4200-b8de-da2e5567cc97&discordId=460719167738347520
 
@@ -91,9 +99,6 @@ export default function RaffleTimeModal({
     ) {
       startRaffleMutation.mutate();
       closeFunction();
-      setTimeout(() => {
-        toggleEventStream();
-      }, 1000);
     }
   };
 
@@ -133,7 +138,7 @@ export default function RaffleTimeModal({
                 <div className="text-center font-benzin text-2xl">
                   Выберите время захода
                 </div>
-                <div className="mt-8 flex items-center space-x-4 font-montserratBold text-xl text-almostwhite">
+                <div className="mt-8 flex items-center space-x-4 font-montserratBold text-base text-almostwhite sm:text-xl">
                   <span className="w-auto text-center">20min.</span>
                   <Slider
                     color="primary"
@@ -152,13 +157,11 @@ export default function RaffleTimeModal({
                   />
                   <span className="w-auto text-center">12h.</span>
                 </div>
-                <div className="jusify-center mt-10 grid grid-cols-3 grid-rows-2 items-center justify-items-center gap-8 font-montserratBold text-subtext">
+                <div className="jusify-center mt-10 grid h-[304px] grid-cols-2 grid-rows-3 items-center justify-items-center gap-8 font-montserratBold text-subtext sm:h-[192px] sm:grid-cols-3 sm:grid-rows-2">
                   <div
                     onClick={() => setValue(20)}
                     className={`grid w-36 cursor-pointer items-center justify-items-center rounded-xl bg-element p-6 text-xl  shadow-md transition-all hover:bg-opacity-60 ${
-                      value === 20
-                        ? "outline outline-2 outline-almostwhite"
-                        : ""
+                      value === 20 ? "border-2 border-almostwhite" : ""
                     }`}
                   >
                     20 мин.
@@ -166,9 +169,7 @@ export default function RaffleTimeModal({
                   <div
                     onClick={() => setValue(60)}
                     className={`grid w-36 cursor-pointer items-center justify-items-center rounded-xl bg-element p-6 text-xl shadow-md transition-all hover:bg-opacity-60 ${
-                      value === 60
-                        ? "outline outline-2 outline-almostwhite"
-                        : ""
+                      value === 60 ? "border-2 border-almostwhite" : ""
                     }`}
                   >
                     1 час
@@ -176,9 +177,7 @@ export default function RaffleTimeModal({
                   <div
                     onClick={() => setValue(120)}
                     className={`grid w-36 cursor-pointer items-center justify-items-center rounded-xl bg-element p-6 text-xl shadow-md transition-all hover:bg-opacity-60 ${
-                      value === 120
-                        ? "outline outline-2 outline-almostwhite"
-                        : ""
+                      value === 120 ? " border-2 border-almostwhite" : ""
                     }`}
                   >
                     2 часа
@@ -186,9 +185,7 @@ export default function RaffleTimeModal({
                   <div
                     onClick={() => setValue(180)}
                     className={`grid w-36 cursor-pointer items-center justify-items-center rounded-xl bg-element p-6 text-xl shadow-md transition-all hover:bg-opacity-60 ${
-                      value === 180
-                        ? "outline outline-2 outline-almostwhite"
-                        : ""
+                      value === 180 ? " border-2 border-almostwhite" : ""
                     }`}
                   >
                     3 часа
@@ -196,9 +193,7 @@ export default function RaffleTimeModal({
                   <div
                     onClick={() => setValue(360)}
                     className={`grid w-36 cursor-pointer items-center justify-items-center rounded-xl bg-element p-6 text-xl shadow-md transition-all hover:bg-opacity-60 ${
-                      value === 360
-                        ? "outline outline-2 outline-almostwhite"
-                        : ""
+                      value === 360 ? "border-2 border-almostwhite" : ""
                     }`}
                   >
                     6 часов
@@ -206,9 +201,7 @@ export default function RaffleTimeModal({
                   <div
                     onClick={() => setValue(720)}
                     className={`grid w-36 cursor-pointer items-center justify-items-center rounded-xl bg-element p-6 text-xl shadow-md transition-all hover:bg-opacity-60 ${
-                      value === 720
-                        ? "outline outline-2 outline-almostwhite"
-                        : ""
+                      value === 720 ? " border-2 border-almostwhite" : ""
                     }`}
                   >
                     12 часов

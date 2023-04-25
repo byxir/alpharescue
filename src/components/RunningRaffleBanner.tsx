@@ -5,6 +5,7 @@ import { api } from "~/utils/api";
 
 export interface EventStreamComponentProps {
   openEventStream: boolean;
+  refetchMyRaffles: () => Promise<void>;
 }
 
 export interface RunningRaffleEventStreamData {
@@ -14,7 +15,10 @@ export interface RunningRaffleEventStreamData {
   accessedAccountsNumber: number;
 }
 
-const Banner: React.FC<EventStreamComponentProps> = ({ openEventStream }) => {
+const Banner: React.FC<EventStreamComponentProps> = ({
+  openEventStream,
+  refetchMyRaffles,
+}) => {
   const [eventSource, setEventSource] = useState<EventSource | null>(null);
   const [showLayout, setShowLayout] = useState(false);
 
@@ -53,6 +57,7 @@ const Banner: React.FC<EventStreamComponentProps> = ({ openEventStream }) => {
           setRunningRaffleName(data.currentRaffleName);
           setAccessedAccounts(data.accessedAccountsNumber);
           setTotalAccounts(data.totalAccountsNumber);
+          void refetchMyRaffles();
           source.close();
         }
       };
@@ -138,8 +143,8 @@ const Banner: React.FC<EventStreamComponentProps> = ({ openEventStream }) => {
               }}
             />
           </div>
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-            <div className="flex items-center space-x-6 text-sm leading-6 text-gray-900">
+          <div className="flex flex-wrap items-center gap-y-2 sm:gap-x-4">
+            <div className="items-center space-y-3 text-sm leading-6 text-gray-900 sm:flex sm:space-x-6 sm:space-y-0">
               <strong className="font-benzin">{runningRaffleName}</strong>
               <div className="h-5 w-64 flex-none rounded-full bg-bg p-1 text-sm font-semibold text-white shadow-sm hover:bg-gray-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900">
                 <div

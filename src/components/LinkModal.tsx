@@ -130,7 +130,7 @@ export default function LinkModal({
             >
               <Dialog.Panel className="relative overflow-hidden rounded-xl bg-sidebarBg px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-2xl sm:p-6">
                 <div className="flex w-full space-x-4 font-montserratBold">
-                  <div className="flex w-full items-center space-x-4 rounded-xl bg-element py-4 pl-6 pr-2 text-subtext shadow-md">
+                  <div className="flex w-full items-center space-x-2 rounded-xl bg-element py-4 pl-3 pr-2 text-xs text-subtext shadow-md sm:space-x-4 sm:pl-6 sm:text-base">
                     <div className="h-6 w-6">
                       <MagnifyingGlassIcon />
                     </div>
@@ -139,7 +139,7 @@ export default function LinkModal({
                         type="text"
                         value={userLink}
                         onChange={(e) => setUserLink(e.target.value)}
-                        className="h-6 w-full bg-transparent font-montserratRegular text-lg placeholder-subtext outline-none"
+                        className="h-6 w-full bg-transparent pl-0 font-montserratRegular text-sm placeholder-subtext outline-none sm:text-lg"
                         placeholder="Вставьте ссылку"
                       />
                     </div>

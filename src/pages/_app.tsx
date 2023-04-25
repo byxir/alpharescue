@@ -44,6 +44,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import Banner from "~/components/RunningRaffleBanner";
 import { useState } from "react";
 import React from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 export interface IToggleEventStreamContext {
   toggleEventStream: () => void;
@@ -59,6 +60,12 @@ const MyApp: AppType<{ session: Session | null }> = ({
   pageProps: { session, ...pageProps },
 }) => {
   const [eventStreamTrigger, setEventStreamTrigger] = useState(false);
+  const queryClient = useQueryClient();
+
+  const refetchFunction = async () => {
+    await queryClient.refetchQueries(["myraffles"]);
+  };
+
   return (
     <main
       lang="en"
@@ -70,7 +77,10 @@ const MyApp: AppType<{ session: Session | null }> = ({
             toggleEventStream: () => setEventStreamTrigger(!eventStreamTrigger),
           }}
         >
-          <Banner openEventStream={eventStreamTrigger} />
+          <Banner
+            openEventStream={eventStreamTrigger}
+            refetchMyRaffles={() => refetchFunction()}
+          />
           <Component {...pageProps} />
           <ReactQueryDevtools initialIsOpen={false} position={"bottom-right"} />
         </ToggleEventStreamContext.Provider>

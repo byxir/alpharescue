@@ -334,7 +334,7 @@ const Raffle = () => {
               </div>
             </div>
           </div>
-          <div className="h-100vh overflow-auto border-t-2 border-subline px-4 pt-14 md:px-10 2xl:border-none 2xl:pt-11">
+          <div className="h-100vh border-t-2 border-subline px-4 pt-14 md:px-10 2xl:overflow-y-auto 2xl:border-none 2xl:pt-11">
             <div className="grid items-center justify-items-center sm:grid-cols-[max-content_max-content] sm:justify-between">
               <div className="mb-14 grid justify-items-center sm:mb-3 sm:justify-items-start md:mb-4">
                 <div className="mb-6 text-center text-xl sm:w-48 sm:text-start md:w-auto lg:w-64 lg:text-2xl xl:w-auto 2xl:w-64 2xls:w-auto">
@@ -549,9 +549,9 @@ const Raffle = () => {
                 ) : null}
               </div>
             </div>
-            <div className="mt-12">
-              <div className="grid grid-cols-[auto_40px] gap-2">
-                <div className="mb-6 grid grid-cols-[5%_17%_18%_20%_20%_20%] overflow-x-auto rounded-xl border-2 border-subtext bg-element px-4 py-4 font-montserratBold text-xs text-subtext sm:text-base">
+            <div className="mt-12 block w-full overflow-x-scroll">
+              <div className="grid min-w-[682px] grid-cols-[auto_40px] gap-2">
+                <div className="mb-6 grid grid-cols-[5%_17%_18%_20%_20%_20%] rounded-xl border-2 border-subtext bg-element px-4 py-4 font-montserratBold text-xs text-subtext sm:text-base">
                   <span>#</span>
                   <span>Twitter</span>
                   <span>Discord</span>
@@ -577,14 +577,14 @@ const Raffle = () => {
                 </div>
               </div>
               {data?.user.raffleBotUser && status === "authenticated" ? (
-                <div className="h-auto font-montserratRegular 2xl:overflow-auto">
+                <div className="h-auto font-montserratRegular">
                   {myAccounts.data ? (
                     myAccounts.data.map((a) => (
                       <div
-                        className="grid w-full grid-cols-[auto_40px] gap-2"
+                        className="grid w-full grid-cols-[auto_40px] gap-2 overflow-scroll"
                         key={a.name}
                       >
-                        <div className="mb-4 grid h-14 w-full grid-cols-[5%_17%_18%_20%_20%_20%] items-center rounded-xl border border-subline px-4 py-4 text-subtext">
+                        <div className="mb-4 grid w-full grid-cols-[5%_17%_18%_20%_20%_20%] items-center rounded-xl border border-subline px-4 py-4 text-subtext">
                           <span>{a.name}</span>
                           <span>{a.TwitterCsrf?.slice(0, 8)}...</span>
                           <span>{a.DiscordToken?.slice(0, 8)}...</span>
