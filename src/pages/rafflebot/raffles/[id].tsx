@@ -636,8 +636,8 @@ const Raffle = () => {
         closeFunction={() => setTimeModalOpen(false)}
         _raffleId={String(router.query.id)}
         _exceptions={exceptions}
-        _firstAcc={rangeValue[0]}
-        _lastAcc={rangeValue[1]}
+        _firstAcc={Number(rangeValue[0]) - 1}
+        _lastAcc={Number(rangeValue[1]) - 1}
       />
     </SidebarLayout>
   );

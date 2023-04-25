@@ -44,7 +44,7 @@ export default function RaffleTimeModal({
   _firstAcc: number | undefined;
   _lastAcc: number | undefined;
 }) {
-  const [value, setValue] = useState(120);
+  const [value, setValue] = useState(180);
   const handleChange = (event: Event, newValue: number | number[]) => {
     setValue(newValue as number);
   };
@@ -175,6 +175,7 @@ export default function RaffleTimeModal({
                   </div>
                   <div
                     onClick={() => setValue(180)}
+                    autoFocus
                     className={`grid w-36 cursor-pointer items-center justify-items-center rounded-xl bg-element p-6 text-xl shadow-md transition-all hover:bg-opacity-60 ${
                       value === 180 ? " border-2 border-almostwhite" : ""
                     }`}
