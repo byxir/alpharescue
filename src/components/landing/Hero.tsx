@@ -55,9 +55,9 @@ export default function Example() {
         <div className="mx-auto grid w-full max-w-2xl justify-items-center lg:flex-none">
           <div className="mb-16 mt-24 flex-none">
             <img
-              src="../../../tempterminal.png"
+              src="../../../herogif.gif"
               alt="App screenshot"
-              className="justify-self-center rounded-2xl shadow-2xl xl:max-w-2xl 2xl:max-w-3xl"
+              className="justify-self-center rounded-lg shadow-2xl xl:max-w-2xl 2xl:max-w-3xl"
             />
           </div>
         </div>
