@@ -51,7 +51,14 @@ const MyRaffle = () => {
           router.query.id
         )}?discordId=${String(protectionData.data?.discordId)}&userId=${String(
           data?.user.id
-        )}&sessionToken=${String(protectionData.data?.sessionToken)}`
+        )}`,
+        {
+          headers: {
+            Authorization: `Bearer ${String(
+              protectionData.data?.sessionToken
+            )}`,
+          },
+        }
       );
       // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       return res.data;

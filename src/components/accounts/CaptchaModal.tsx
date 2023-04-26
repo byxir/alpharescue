@@ -31,11 +31,13 @@ export default function CaptchaModal({
   closeFunction,
   discordId,
   sessionToken,
+  refetchFunction,
 }: {
   open: boolean;
   closeFunction: () => void;
   discordId: string | undefined;
   sessionToken: string | undefined;
+  refetchFunction: () => void;
 }) {
   const [captchaKeyString, setCaptchaKeyString] = useState("");
   const { data, status } = useSession();
@@ -56,6 +58,7 @@ export default function CaptchaModal({
         }
       );
     },
+    onSuccess: () => refetchFunction(),
   });
 
   return (

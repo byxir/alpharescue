@@ -5,7 +5,6 @@ import {
   NoSymbolIcon,
   ServerStackIcon,
 } from "@heroicons/react/24/outline";
-import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { signIn, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
@@ -21,6 +20,7 @@ import { api } from "~/utils/api";
 import ProxyModal from "~/components/accounts/ProxyModal";
 import TwitterReader from "~/components/accounts/FileReaders/TwitterReader";
 import MetamaskReader from "~/components/accounts/FileReaders/MetamaskReader";
+import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 
 export type IAccount = {
   DiscordStatus?: string;
@@ -44,6 +44,8 @@ const Settings = () => {
   const [captchaModalOpen, setCaptchaModalOpen] = useState(false);
   const [proxyModalOpen, setProxyModalOpen] = useState(false);
 
+  const queryClient = useQueryClient();
+
   const allMyData = api.user.getAllMyData.useQuery(undefined, {
     enabled: false,
   });
@@ -62,6 +64,10 @@ const Settings = () => {
     } else {
       await handleDiscordSignIn();
     }
+  };
+
+  const refetchFunction = async () => {
+    await queryClient.refetchQueries(["myraffles"]);
   };
 
   useEffect(() => {
@@ -218,6 +224,7 @@ const Settings = () => {
               }
               discordId={allMyData.data?.discordId}
               sessionToken={allMyData.data?.sessionToken}
+              refetchFunction={refetchFunction}
             />
             <DiscordReader
               raffleBotUser={
@@ -225,6 +232,7 @@ const Settings = () => {
               }
               discordId={allMyData.data?.discordId}
               sessionToken={allMyData.data?.sessionToken}
+              refetchFunction={refetchFunction}
             />
             <MetamaskReader
               raffleBotUser={
@@ -232,6 +240,7 @@ const Settings = () => {
               }
               discordId={allMyData.data?.discordId}
               sessionToken={allMyData.data?.sessionToken}
+              refetchFunction={refetchFunction}
             />
             <button
               onClick={() => setCaptchaModalOpen(true)}
@@ -297,6 +306,7 @@ const Settings = () => {
               }
               discordId={allMyData.data?.discordId}
               sessionToken={allMyData.data?.sessionToken}
+              refetchFunction={refetchFunction}
             />
             <div
               className={`col-span-2 grid h-32 items-center justify-items-center rounded-xl bg-element p-4 text-2xl text-almostwhite transition-colors ${
@@ -486,6 +496,7 @@ const Settings = () => {
         closeFunction={() => setCaptchaModalOpen(false)}
         discordId={allMyData.data?.discordId}
         sessionToken={allMyData.data?.sessionToken}
+        refetchFunction={refetchFunction}
       />
       <ProxyModal
         open={proxyModalOpen}
@@ -495,6 +506,7 @@ const Settings = () => {
         }
         discordId={allMyData.data?.discordId}
         sessionToken={allMyData.data?.sessionToken}
+        refetchFunction={refetchFunction}
       />
     </SidebarLayout>
   );

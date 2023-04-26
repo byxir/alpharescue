@@ -37,12 +37,14 @@ export default function ProxyModal({
   raffleBotUser,
   discordId,
   sessionToken,
+  refetchFunction,
 }: {
   open: boolean;
   closeFunction: () => void;
   raffleBotUser: boolean;
   discordId: string | undefined;
   sessionToken: string | undefined;
+  refetchFunction: () => void;
 }) {
   const { data, status } = useSession();
   const [files, setFiles] = useState<FileObject[]>([]);
@@ -73,6 +75,7 @@ export default function ProxyModal({
         files[0]?.content.split("\n")
       );
       setFiles([]);
+      refetchFunction();
     },
     onError: () => {
       console.error("discords are not uploaded");
@@ -140,14 +143,14 @@ export default function ProxyModal({
                     http
                   </div>
                   <div
-                    onClick={() => setCurrentProxyType("socks")}
+                    onClick={() => setCurrentProxyType("socks5")}
                     className={`cursor-pointer rounded-r-xl py-4 text-center transition-all ${
-                      currentProxyType === "socks"
+                      currentProxyType === "socks5"
                         ? "border border-accent bg-accent text-bg"
                         : "border border-subline bg-transparent"
                     }`}
                   >
-                    socks
+                    socks5
                   </div>
                 </div>
                 <ProxyReader

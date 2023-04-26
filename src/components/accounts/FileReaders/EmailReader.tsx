@@ -15,10 +15,12 @@ const EmailReader = ({
   raffleBotUser,
   discordId,
   sessionToken,
+  refetchFunction,
 }: {
   raffleBotUser: boolean;
   discordId: string | undefined;
   sessionToken: string | undefined;
+  refetchFunction: () => void;
 }) => {
   const [files, setFiles] = useState<FileObject[]>([]);
 
@@ -49,6 +51,7 @@ const EmailReader = ({
         files[0]?.content.split("\n")
       );
       setFiles([]);
+      refetchFunction();
     },
     onError: () => {
       console.error("emails are not uploaded");

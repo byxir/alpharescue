@@ -16,10 +16,12 @@ const MetamaskReader = ({
   raffleBotUser,
   discordId,
   sessionToken,
+  refetchFunction,
 }: {
   raffleBotUser: boolean;
   discordId: string | undefined;
   sessionToken: string | undefined;
+  refetchFunction: () => void;
 }) => {
   const [files, setFiles] = useState<FileObject[]>([]);
 
@@ -63,6 +65,7 @@ const MetamaskReader = ({
         files[0]?.content.split("\n").forEach((s) => s.split(":"))
       );
       setFiles([]);
+      refetchFunction();
     },
     onError: () => {
       console.error("wallets are not uploaded");

@@ -16,10 +16,12 @@ const DiscordReader = ({
   raffleBotUser,
   discordId,
   sessionToken,
+  refetchFunction,
 }: {
   raffleBotUser: boolean;
   discordId: string | undefined;
   sessionToken: string | undefined;
+  refetchFunction: () => void;
 }) => {
   const [files, setFiles] = useState<FileObject[]>([]);
 
@@ -49,7 +51,9 @@ const DiscordReader = ({
         sessionToken,
         files[0]?.content.split("\n")
       );
+
       setFiles([]);
+      refetchFunction();
     },
     onError: () => {
       console.error("discords are not uploaded");

@@ -43,11 +43,13 @@ const RaffleList = () => {
     const res = await axios.get(
       `https://alpharescue.online/myRaffles?discordId=${String(
         protectionData.data?.discordId
-      )}&userId=${String(data?.user.id)}&sessionToken=${String(
-        protectionData.data?.sessionToken
-      )}`
+      )}&userId=${String(data?.user.id)}`,
+      {
+        headers: {
+          Authorization: `Bearer ${String(protectionData.data?.sessionToken)}`,
+        },
+      }
     );
-    console.log("res -> ", res.data);
     if (res.status != 200) {
       throw new Error("network error, try again later");
     }
