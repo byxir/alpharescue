@@ -1,57 +1,59 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { type NextApiRequest, type NextApiResponse } from "next";
 import { prisma } from "../../../server/db";
 
 const userByIdHandler = async (req: NextApiRequest, res: NextApiResponse) => {
-  if (req.method === "GET") return res.status(200).end();
-  console.log("req -> ", req);
+  if (req.method === "GET") return res.status(200).json({ success: true });
 
   let id;
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   if (req.body.data.user.social_accounts[0].id) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
     id = req.body.data.user.social_accounts[0].id;
   }
 
-  if (!id || typeof id !== "string") {
-    return res
-      .status(200)
-      .json({ error: "connection established", message: id });
-  }
-
-  const currentUser = await prisma.account.findFirst({
-    where: {
-      providerAccountId: id,
-    },
-    include: {
-      user: true,
-    },
-  });
-
-  const newFlags = await prisma.account.update({
-    where: {
-      id: currentUser?.id,
-    },
-    data: {
-      user: {
-        update: {
-          raffleBotUser: false,
+  if (!id || typeof id != "string") {
+    return res.status(200).json({ error: "connection established" });
+  } else {
+    const currentUser = await prisma.account.findFirst({
+      where: {
+        providerAccountId: id,
+      },
+      include: {
+        user: {
+          include: {
+            RaffleBotSubscription: true,
+          },
         },
       },
-    },
-  });
+    });
 
-  const newSubscription = await prisma.raffleBotSubscription.delete({
-    where: {
-      userId: currentUser?.id,
-    },
-  });
-  res.status(200).json({
-    message: "good",
-    currentUser: currentUser,
-    newFlags,
-    newSubscription,
-  });
+    if (currentUser && currentUser.user.RaffleBotSubscription) {
+      const deniedFlags = await prisma.account.update({
+        where: {
+          id: currentUser?.id,
+        },
+        data: {
+          user: {
+            update: {
+              raffleBotUser: false,
+              communityMember: false,
+            },
+          },
+        },
+      });
+
+      const deniedSubscription = await prisma.raffleBotSubscription.delete({
+        where: {
+          userId: currentUser?.userId,
+        },
+      });
+    }
+
+    return res.status(200).json({
+      message: "good",
+    });
+  }
 };
 
 export default userByIdHandler;
