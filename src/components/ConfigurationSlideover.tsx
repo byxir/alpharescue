@@ -42,7 +42,7 @@ export default function ConfigurationSlideover({
   configurations: Configuration[] | undefined;
   discordId: string | undefined;
   sessionToken: string | undefined;
-  refetchConfigurations: () => void;
+  refetchConfigurations: () => Promise<any>;
 }) {
   const { data, status } = useSession();
 
@@ -54,13 +54,13 @@ export default function ConfigurationSlideover({
   const [configurationId, setConfigurationId] = useState("");
 
   const addConfigurationMutation = api.user.addConfiguration.useMutation({
-    onSuccess: () => {
-      refetchConfigurations();
+    onSuccess: async () => {
+      await refetchConfigurations();
     },
   });
   const updateConfigurationMutation = api.user.updateConfiguration.useMutation({
-    onSuccess: () => {
-      refetchConfigurations();
+    onSuccess: async () => {
+      await refetchConfigurations();
     },
   });
 

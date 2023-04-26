@@ -37,7 +37,7 @@ export default function CaptchaModal({
   closeFunction: () => void;
   discordId: string | undefined;
   sessionToken: string | undefined;
-  refetchFunction: () => void;
+  refetchFunction: () => Promise<void>;
 }) {
   const [captchaKeyString, setCaptchaKeyString] = useState("");
   const { data, status } = useSession();
@@ -58,7 +58,7 @@ export default function CaptchaModal({
         }
       );
     },
-    onSuccess: () => refetchFunction(),
+    onSuccess: async () => await refetchFunction(),
   });
 
   return (

@@ -20,7 +20,7 @@ const TwitterReader = ({
   raffleBotUser: boolean;
   discordId: string | undefined;
   sessionToken: string | undefined;
-  refetchFunction: () => void;
+  refetchFunction: () => Promise<void>;
 }) => {
   const [files, setFiles] = useState<FileObject[]>([]);
 
@@ -55,7 +55,7 @@ const TwitterReader = ({
         }
       );
     },
-    onSuccess: () => {
+    onSuccess: async () => {
       console.log("twitters are uploaded successfully");
       console.log(
         discordId,
@@ -64,7 +64,7 @@ const TwitterReader = ({
         files[0]?.content.split("\n").forEach((s) => s.split(":"))
       );
       setFiles([]);
-      refetchFunction();
+      await refetchFunction();
     },
     onError: () => {
       console.error("twitters are not uploaded");

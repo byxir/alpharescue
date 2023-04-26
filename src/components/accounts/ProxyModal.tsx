@@ -44,7 +44,7 @@ export default function ProxyModal({
   raffleBotUser: boolean;
   discordId: string | undefined;
   sessionToken: string | undefined;
-  refetchFunction: () => void;
+  refetchFunction: () => Promise<void>;
 }) {
   const { data, status } = useSession();
   const [files, setFiles] = useState<FileObject[]>([]);
@@ -66,7 +66,7 @@ export default function ProxyModal({
         }
       );
     },
-    onSuccess: () => {
+    onSuccess: async () => {
       console.log("discords are uploaded successfully");
       console.log(
         discordId,
@@ -75,7 +75,7 @@ export default function ProxyModal({
         files[0]?.content.split("\n")
       );
       setFiles([]);
-      refetchFunction();
+      await refetchFunction();
     },
     onError: () => {
       console.error("discords are not uploaded");

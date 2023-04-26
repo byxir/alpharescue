@@ -1,11 +1,9 @@
-/* eslint-disable jsx-a11y/alt-text */
 import {
   AtSymbolIcon,
   KeyIcon,
   NoSymbolIcon,
   ServerStackIcon,
 } from "@heroicons/react/24/outline";
-import axios from "axios";
 import { signIn, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import CaptchaModal from "~/components/accounts/CaptchaModal";
@@ -489,7 +487,7 @@ const Settings = () => {
         configurations={allMyData.data?.configurations}
         discordId={allMyData.data?.discordId}
         sessionToken={allMyData.data?.sessionToken}
-        refetchConfigurations={() => void allMyData.refetch()}
+        refetchConfigurations={() => allMyData.refetch()}
       />
       <CaptchaModal
         open={captchaModalOpen}

@@ -20,7 +20,7 @@ const EmailReader = ({
   raffleBotUser: boolean;
   discordId: string | undefined;
   sessionToken: string | undefined;
-  refetchFunction: () => void;
+  refetchFunction: () => Promise<void>;
 }) => {
   const [files, setFiles] = useState<FileObject[]>([]);
 
@@ -42,7 +42,7 @@ const EmailReader = ({
         }
       );
     },
-    onSuccess: () => {
+    onSuccess: async () => {
       console.log("emails are uploaded successfully");
       console.log(
         discordId,
@@ -51,7 +51,7 @@ const EmailReader = ({
         files[0]?.content.split("\n")
       );
       setFiles([]);
-      refetchFunction();
+      await refetchFunction();
     },
     onError: () => {
       console.error("emails are not uploaded");
