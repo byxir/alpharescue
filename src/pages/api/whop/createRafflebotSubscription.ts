@@ -43,9 +43,14 @@ const userByIdHandler = async (req: NextApiRequest, res: NextApiResponse) => {
         },
       });
 
+      const currentDate = new Date();
+      const expiresDate = new Date(
+        currentDate.getTime() + 8 * 24 * 60 * 60 * 1000
+      );
+
       const newSubscription = await prisma.raffleBotSubscription.create({
         data: {
-          expires: new Date(),
+          expires: expiresDate,
           rafflesLeft: 5,
           rafflesPerDay: 5,
           maxNumAccounts: 150,
