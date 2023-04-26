@@ -1,60 +1,88 @@
 {
   "action": "membership.went_valid",
   "data": {
-    "id": "mem_DWWmfqMNSk5TVF",
-    "created_at": "2022-12-05 02:28:57 +0200",
+    "id": "mem_xBYrCixCFOhy2i",
     "product": {
-      "id": "pass_mPTCDbFCVK0Qs",
-      "created_at": "2022-06-11 21:00:17 +0200",
-      "name": "Demo",
-      "visibility": "visible"
+      "id": "prod_u2JVgbsd9h956",
+      "name": "Rescue Community Pass",
+      "visibility": "visible",
+      "created_at": 1675081277,
+      "experiences": [
+        "exp_67Kor6ZUOFGaqj",
+        "exp_e0kkyBPcbdQisE",
+        "exp_aQqKFI8YjucNtj"
+      ],
+      "plans": [
+        "plan_J9dR3D7aoCUrV",
+        "plan_pqomrUZnmEi60",
+        "plan_pl28JKB8hMQkA",
+        "plan_psHLvobpwsgvQ"
+      ]
     },
     "user": {
-      "id": "user_6jwBLroz2fSAB",
-      "username": "userebd0603178",
-      "email": "email603180@gmail.com",
-      "profile_pic_url": "https://ui-avatars.com/api/?name=name603180&background=13192c&color=fff",
-      "social_accounts": []
+      "id": "user_TwX4XC8ssN7GW",
+      "username": "autobiographicbaronc2c0",
+      "email": "filimon1234554321@mail.ru",
+      "profile_pic_url": "https://cdn.discordapp.com/avatars/460719167738347520/32644f3e0b931c0fe5f074a767593e7e",
+      "social_accounts": [
+        {
+          "service": "discord",
+          "username": "Debug#6546",
+          "id": "460719167738347520"
+        }
+      ]
     },
     "plan": {
-      "id": "plan_gU2ZhthbGX4ez",
-      "product": {
-        "id": "pass_mPTCDbFCVK0Qs",
-        "created_at": "2022-06-11 21:00:17 +0200",
-        "name": "Demo",
-        "visibility": "visible"
-      },
-      "plan_type": "renewal",
+      "id": "plan_pl28JKB8hMQkA",
+      "plan_type": "one_time",
       "release_method": "buy_now",
       "visibility": "visible",
-      "billing_period": 30,
-      "internal_notes": "Demo plan",
+      "billing_period": null,
+      "internal_notes": null,
       "metadata": {},
-      "direct_link": "https://whop.com/demo/checkout/plan_gU2ZhthbGX4ez",
-      "renewal_price": "1.0",
+      "direct_link": "https://whop.com/checkout/plan_pl28JKB8hMQkA?d2c=true",
+      "renewal_price": "0.0",
       "initial_price": "0.0",
       "base_currency": "usd",
-      "created_at": "2022-06-29 04:09:29 +0200",
       "requirements": {},
-      "release_method_settings": {
-        "max_entries": null,
-        "nft_weighted_entries": false
-      },
-      "card_payments": true,
-      "stock": 100,
-      "unlimited_stock": true
+      "release_method_settings": {},
+      "accepted_payment_methods": [
+        "free"
+      ],
+      "stock": 0,
+      "unlimited_stock": true,
+      "created_at": 1682446323,
+      "card_payments": false
     },
-    "status": "active",
-    "license_key": "DEMO-508ED6-8D5E4B16-2A409FW",
-    "metadata": {},
+    "email": "filimon1234554321@mail.ru",
+    "status": "completed",
     "valid": true,
+    "cancel_at_period_end": false,
+    "payment_processor": "free",
+    "license_key": "A-CB528D-87C1A3C0-5D153FW",
+    "metadata": {},
     "quantity": 1,
-    "renewal_period_start": "2022-12-05 02:28:57 +0200",
-    "renewal_period_end": "2023-01-04 02:28:57 +0200",
     "wallet_address": null,
     "custom_fields_responses": {},
-    "discord": null,
-    "email": "email603180@gmail.com",
+    "discord": {
+      "id": "460719167738347520",
+      "username": "Debug#6546",
+      "image_url": "https://cdn.discordapp.com/avatars/460719167738347520/32644f3e0b931c0fe5f074a767593e7e"
+    },
+    "nft_tokens": [],
+    "expires_at": 1682706498,
+    "renewal_period_start": null,
+    "renewal_period_end": null,
+    "created_at": 1682447298,
+    "manage_url": "https://whop.com/hub/mem_xBYrCixCFOhy2i/",
+    "affiliate_page_url": "https://whop.com/alpha-rescue/?a=autobiographicbaronc2c0",
+    "checkout_session": null,
+    "access_pass": {
+      "id": "prod_u2JVgbsd9h956",
+      "name": "Rescue Community Pass",
+      "visibility": "visible",
+      "created_at": 1675081277
+    },
     "status_reason": "created"
   }
 }

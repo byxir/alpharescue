@@ -60,16 +60,23 @@ export default function RaffleTimeModal({
   const startRaffleMutation = useMutation(
     ["startRaffle"],
     () => {
-      return axios.post(`https://alpharescue.online/startraffle`, {
-        discordId: allMyData.data?.discordId,
-        userId: data?.user.id,
-        sessionToken: allMyData.data?.sessionToken,
-        exceptions: _exceptions,
-        firstAcc: _firstAcc,
-        lastAcc: _lastAcc,
-        time: value * 60,
-        raffleId: _raffleId,
-      });
+      return axios.post(
+        `https://alpharescue.online/startraffle`,
+        {
+          discordId: allMyData.data?.discordId,
+          userId: data?.user.id,
+          exceptions: _exceptions,
+          firstAcc: _firstAcc,
+          lastAcc: _lastAcc,
+          time: value * 60,
+          raffleId: _raffleId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${String(allMyData.data?.sessionToken)}`,
+          },
+        }
+      );
     },
     {
       onSuccess: () => {

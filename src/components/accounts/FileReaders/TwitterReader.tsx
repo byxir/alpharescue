@@ -5,7 +5,6 @@ import axios from "axios";
 import { useSession } from "next-auth/react";
 import { useCallback, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
-import { api } from "~/utils/api";
 
 interface FileObject {
   name: string;
@@ -38,16 +37,21 @@ const TwitterReader = ({
 
   const twitterMutation = useMutation({
     mutationFn: () => {
-      return axios.post("https://alpharescue.online/accounts", {
-        discordId: discordId,
-        userId: data?.user.id,
-        sessionToken: sessionToken,
-        type: "twitter",
-        proxyType: "ACTIVE",
-        accounts: splitStringInto2DArray(
-          files[0] ? files[0].content : "notFound"
-        ),
-      });
+      return axios.post(
+        "https://alpharescue.online/accounts",
+        {
+          discordId: discordId,
+          userId: data?.user.id,
+          type: "twitter",
+          proxyType: "ACTIVE",
+          accounts: splitStringInto2DArray(
+            files[0] ? files[0].content : "notFound"
+          ),
+        },
+        {
+          headers: { Authorization: `Bearer ${String(sessionToken)}` },
+        }
+      );
     },
     onSuccess: () => {
       console.log("twitters are uploaded successfully");
@@ -117,7 +121,7 @@ const TwitterReader = ({
       <div className="mt-4 flex items-center space-x-1 text-subline">
         {isDragActive ? (
           <>
-            <div className="text-xs">Дропайте дискорды сюда</div>
+            <div className="text-xs">Дропайте твиттеры сюда</div>
           </>
         ) : (
           <>

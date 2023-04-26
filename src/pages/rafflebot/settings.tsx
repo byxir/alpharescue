@@ -37,7 +37,7 @@ export type IAccount = {
 };
 
 /* eslint-disable @next/next/no-img-element */
-const RaffleList = () => {
+const Settings = () => {
   const { data, status } = useSession();
   const [slideoverOpen, setSlideoverOpen] = useState(false);
 
@@ -500,4 +500,4 @@ const RaffleList = () => {
   );
 };
 
-export default RaffleList;
+export default Settings;

@@ -27,14 +27,19 @@ const DiscordReader = ({
 
   const discordMutation = useMutation({
     mutationFn: () => {
-      return axios.post("https://alpharescue.online/accounts", {
-        discordId: discordId,
-        userId: data?.user.id,
-        sessionToken: sessionToken,
-        type: "discord",
-        proxyType: "",
-        accounts: files[0]?.content.split("\n"),
-      });
+      return axios.post(
+        "https://alpharescue.online/accounts",
+        {
+          discordId: discordId,
+          userId: data?.user.id,
+          type: "discord",
+          proxyType: "",
+          accounts: files[0]?.content.split("\n"),
+        },
+        {
+          headers: { Authorization: `Bearer ${String(sessionToken)}` },
+        }
+      );
     },
     onSuccess: () => {
       console.log("discords are uploaded successfully");

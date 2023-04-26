@@ -52,15 +52,17 @@ export default function ConfigurationSlideover({
   const [rangeValue, setRangeValue] = useState<number[]>([1, 100]);
   const [exceptions, setExceptions] = useState<string[] | undefined | null>([]);
   const [configurationId, setConfigurationId] = useState("");
-  const queryClient = useQueryClient();
 
   const addConfigurationMutation = api.user.addConfiguration.useMutation({
     onSuccess: () => {
       refetchConfigurations();
     },
   });
-  const updateConfigurationMutation =
-    api.user.updateConfiguration.useMutation();
+  const updateConfigurationMutation = api.user.updateConfiguration.useMutation({
+    onSuccess: () => {
+      refetchConfigurations();
+    },
+  });
 
   const handleConfigurationProcedure = () => {
     if (rangeValue[0] != undefined && rangeValue[1] != undefined) {
@@ -88,7 +90,10 @@ export default function ConfigurationSlideover({
       const res = await axios.get(
         `https://alpharescue.online/get_all_accounts?discordId=${String(
           discordId
-        )}&userId=${String(data?.user.id)}&sessionToken=${String(sessionToken)}`
+        )}&userId=${String(data?.user.id)}`,
+        {
+          headers: { Authorization: `Bearer ${String(sessionToken)}` },
+        }
       );
       // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       return res.data;

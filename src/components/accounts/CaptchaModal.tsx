@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import { KeyIcon } from "@heroicons/react/24/outline";
 import localFont from "next/font/local";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
@@ -42,14 +42,19 @@ export default function CaptchaModal({
 
   const captchaMutation = useMutation({
     mutationFn: () => {
-      return axios.post("https://alpharescue.online/accounts", {
-        discordId: discordId,
-        userId: data?.user.id,
-        sessionToken: sessionToken,
-        type: "CaptchaKey",
-        proxyType: "",
-        accounts: captchaKeyString,
-      });
+      return axios.post(
+        "https://alpharescue.online/accounts",
+        {
+          discordId: discordId,
+          userId: data?.user.id,
+          type: "CaptchaKey",
+          proxyType: "",
+          accounts: captchaKeyString,
+        },
+        {
+          headers: { Authorization: `Bearer ${String(sessionToken)}` },
+        }
+      );
     },
   });
 
@@ -87,7 +92,7 @@ export default function CaptchaModal({
                 <div className="flex w-full space-x-4 font-montserratBold">
                   <div className="flex w-full items-center space-x-4 rounded-xl bg-element py-4 pl-6 pr-2 text-subtext shadow-md">
                     <div className="h-6 w-6">
-                      <MagnifyingGlassIcon />
+                      <KeyIcon />
                     </div>
                     <div className="h-6 w-full">
                       <input

@@ -38,16 +38,21 @@ const MetamaskReader = ({
 
   const twitterMutation = useMutation({
     mutationFn: () => {
-      return axios.post("https://alpharescue.online/accounts", {
-        discordId: discordId,
-        userId: data?.user.id,
-        sessionToken: sessionToken,
-        type: "metamask",
-        proxyType: "",
-        accounts: splitStringInto2DArray(
-          files[0] ? files[0].content : "notFound"
-        ),
-      });
+      return axios.post(
+        "https://alpharescue.online/accounts",
+        {
+          discordId: discordId,
+          userId: data?.user.id,
+          type: "metamask",
+          proxyType: "",
+          accounts: splitStringInto2DArray(
+            files[0] ? files[0].content : "notFound"
+          ),
+        },
+        {
+          headers: { Authorization: `Bearer ${String(sessionToken)}` },
+        }
+      );
     },
     onSuccess: () => {
       console.log("wallets are uploaded successfully");
@@ -117,7 +122,7 @@ const MetamaskReader = ({
       <div className="mt-4 flex items-center space-x-1 text-subline">
         {isDragActive ? (
           <>
-            <div className="text-xs">Дропайте дискорды сюда</div>
+            <div className="text-xs">Дропайте кошельки сюда</div>
           </>
         ) : (
           <>

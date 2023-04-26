@@ -38,7 +38,9 @@ const Banner: React.FC<EventStreamComponentProps> = ({
           data?.user.id
         )}&sessionToken=${String(
           protectionData.data?.sessionToken
-        )}&discordId=${String(protectionData.data?.discordId)}`
+        )}&discordId=${String(
+          protectionData.data?.discordId
+        )}&sessionToken=${String(protectionData.data?.sessionToken)}`
       );
 
       source.onmessage = (event) => {

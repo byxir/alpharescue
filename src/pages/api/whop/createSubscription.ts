@@ -9,26 +9,28 @@ const userByIdHandler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   let id;
 
-  if (req.body.data.user.social_accounts[0]?.id) {
+  if (req.body.data.user.social_accounts[0].id) {
     id = req.body.data.user.social_accounts[0].id;
   }
 
   if (!id || typeof id !== "string") {
-    return res.status(200).json({ error: "connection established" });
+    return res
+      .status(200)
+      .json({ error: "connection established", message: id });
   }
 
-  const currentUser = await prisma.account.findUnique({
+  const currentUser = await prisma.account.findFirst({
     where: {
-      id,
+      providerAccountId: id,
     },
     include: {
       user: true,
     },
   });
 
-  const newRoles = await prisma.account.update({
+  const newFlags = await prisma.account.update({
     where: {
-      id,
+      id: currentUser?.id,
     },
     data: {
       user: {
@@ -48,13 +50,19 @@ const userByIdHandler = async (req: NextApiRequest, res: NextApiResponse) => {
       maxNumAccounts: 150,
       user: {
         connect: {
-          id: currentUser?.user.id,
+          id: currentUser?.userId,
         },
       },
     },
   });
-
-  res.status(200).json({ message: "good" });
+  res
+    .status(200)
+    .json({
+      message: "good",
+      currentUser: currentUser,
+      newFlags,
+      newSubscription,
+    });
 };
 
 export default userByIdHandler;

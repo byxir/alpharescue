@@ -50,14 +50,19 @@ export default function ProxyModal({
 
   const proxyMutation = useMutation({
     mutationFn: () => {
-      return axios.post("https://alpharescue.online/accounts", {
-        discordId: discordId,
-        userId: data?.user.id,
-        sessionToken: sessionToken,
-        type: "proxy",
-        proxyType: currentProxyType,
-        accounts: files[0]?.content.split("\n"),
-      });
+      return axios.post(
+        "https://alpharescue.online/accounts",
+        {
+          discordId: discordId,
+          userId: data?.user.id,
+          type: "proxy",
+          proxyType: currentProxyType,
+          accounts: files[0]?.content.split("\n"),
+        },
+        {
+          headers: { Authorization: `Bearer ${String(sessionToken)}` },
+        }
+      );
     },
     onSuccess: () => {
       console.log("discords are uploaded successfully");
@@ -135,14 +140,14 @@ export default function ProxyModal({
                     http
                   </div>
                   <div
-                    onClick={() => setCurrentProxyType("sock")}
+                    onClick={() => setCurrentProxyType("socks")}
                     className={`cursor-pointer rounded-r-xl py-4 text-center transition-all ${
-                      currentProxyType === "sock"
+                      currentProxyType === "socks"
                         ? "border border-accent bg-accent text-bg"
                         : "border border-subline bg-transparent"
                     }`}
                   >
-                    sock
+                    socks
                   </div>
                 </div>
                 <ProxyReader

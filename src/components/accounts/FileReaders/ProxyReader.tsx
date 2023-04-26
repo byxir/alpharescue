@@ -43,7 +43,7 @@ const ProxyReader = ({
       <div className="flex items-center space-x-2 font-montserratBold text-subline">
         {isDragActive ? (
           <>
-            <div className="">Дропайте почты сюда</div>
+            <div className="">Дропайте прокси сюда</div>
           </>
         ) : (
           <>

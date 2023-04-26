@@ -187,13 +187,24 @@ export default function SidebarLayout({ children }: { children: ReactNode }) {
                     </nav>
                   </div>
                   <Link
+                    href="/rafflebot/myraffles"
+                    className="grid cursor-pointer grid-cols-[repeat(2,_max-content)] justify-center space-x-2 border-t border-subline p-4 transition-colors hover:bg-bg"
+                  >
+                    <div className="h-6 w-6">
+                      <ClipboardDocumentCheckIcon />
+                    </div>
+                    <div className="font-mon font-bold text-almostwhite">
+                      Мои раффлы
+                    </div>
+                  </Link>
+                  <Link
                     href="/rafflebot/settings"
                     onClick={() => setSidebarOpen(false)}
                     className="grid cursor-pointer grid-cols-[repeat(2,_max-content)] justify-center space-x-2 p-4 font-montserratBold transition-colors hover:bg-bg"
                   >
                     <Settings />
                     <div className="font-mon font-bold text-almostwhite">
-                      Settings
+                      Настройки
                     </div>
                   </Link>
                 </Dialog.Panel>
@@ -264,7 +275,7 @@ export default function SidebarLayout({ children }: { children: ReactNode }) {
             >
               <Settings />
               <div className="font-mon font-bold text-almostwhite">
-                Settings
+                Настройки
               </div>
             </Link>
           </div>

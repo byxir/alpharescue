@@ -26,14 +26,19 @@ const EmailReader = ({
 
   const emailMutation = useMutation({
     mutationFn: () => {
-      return axios.post("https://alpharescue.online/accounts", {
-        discordId: discordId,
-        userId: data?.user.id,
-        sessionToken: sessionToken,
-        type: "email",
-        proxyType: "",
-        accounts: files[0]?.content.split("\n"),
-      });
+      return axios.post(
+        "https://alpharescue.online/accounts",
+        {
+          discordId: discordId,
+          userId: data?.user.id,
+          type: "email",
+          proxyType: "",
+          accounts: files[0]?.content.split("\n"),
+        },
+        {
+          headers: { Authorization: `Bearer ${String(sessionToken)}` },
+        }
+      );
     },
     onSuccess: () => {
       console.log("emails are uploaded successfully");

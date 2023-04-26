@@ -61,9 +61,12 @@ const Raffle = () => {
       const res = await axios.get(
         `https://alpharescue.online/get_all_accounts?discordId=${String(
           allMyData.data?.discordId
-        )}&userId=${String(data?.user.id)}&sessionToken=${String(
-          allMyData.data?.sessionToken
-        )}`
+        )}&userId=${String(data?.user.id)}`,
+        {
+          headers: {
+            Authorization: `Bearer ${String(allMyData.data?.sessionToken)}`,
+          },
+        }
       );
       // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       return res.data;
