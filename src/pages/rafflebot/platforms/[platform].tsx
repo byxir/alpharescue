@@ -421,13 +421,12 @@ const RaffleList = () => {
             )}
           </div>
         </div>
-        {/* <button
-          onClick={loadMore}
-          disabled={!raffles.hasNextPage || raffles.isFetchingNextPage}
-        >
-          load more
-        </button> */}
         <div ref={sentinelRef}></div>
+        {(raffles.isFetchingNextPage || raffles.isFetching) && (
+          <div className="grid w-full justify-items-center">
+            <Spinner />
+          </div>
+        )}
       </div>
     </SidebarLayout>
   );
