@@ -1,8 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { type ChangeEvent, useEffect, useMemo, useState } from "react";
+import { type ChangeEvent, useEffect, useMemo, useState, useRef } from "react";
 import FilterDropdown from "~/components/FilterDropdown";
 import LinkModal from "~/components/LinkModal";
 import SidebarLayout from "~/components/SidebarLayout";
@@ -13,7 +13,10 @@ import debounce from "lodash.debounce";
 import Spinner from "~/components/spinner/Spinner";
 import axios from "axios";
 import { useSession } from "next-auth/react";
-import { api } from "~/utils/api";
+import { type RouterOutputs, api } from "~/utils/api";
+import React from "react";
+
+type meType = RouterOutputs["user"]["getMeWithFavoriteRaffles"] | undefined;
 
 type IRaffle = {
   banner: string;
@@ -36,12 +39,16 @@ type IRaffle = {
   NumberOfWinners: string;
 };
 
+interface fetchRafflesResponse {
+  raffles: IRaffle[];
+  nextPage?: number;
+}
+
 const RaffleList = () => {
   const router = useRouter();
   const { data } = useSession();
   const [linkModalOpen, setLinkModalOpen] = useState(false);
   const [sortingMethod, setSortingMethod] = useState("");
-  const [raffleState, setRaffleState] = useState<IRaffle[]>([]);
   const [category, setCategory] = useState("selection");
   const [searchText, setSearchText] = useState("");
   const [favoriteRafflesCopy, setFavoriteRafflesCopy] = useState<string[]>([]);
@@ -54,41 +61,91 @@ const RaffleList = () => {
   const fetchRaffles = async ({
     _platform,
     _category,
+    _page,
   }: {
     _platform: string;
     _category: string;
-  }): Promise<IRaffle[] | null> => {
+    _page: number;
+  }): Promise<fetchRafflesResponse> => {
     if (!_platform) {
-      return null;
+      return { nextPage: 0, raffles: [] };
     }
 
     const res = await axios.get(
       `https://alpharescue.online/raffles?platform=${String(
         _platform
-      )}&category=${_platform === "Premint" ? _category : "selection"}`
+      )}&category=${
+        _platform === "Premint" ? _category : "selection"
+      }&page=${_page}`
     );
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const data: fetchRafflesResponse = await res.data;
+
     if (res.status != 200) {
       throw new Error("network error, try again later");
     }
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    return res.data;
+    return data;
   };
-  const queryFn = async (): Promise<IRaffle[] | null> => {
+  const queryFn = async ({ pageParam = 0 }): Promise<fetchRafflesResponse> => {
     return fetchRaffles({
       _platform: String(router.query.platform),
       _category: category,
+      _page: pageParam,
     });
   };
 
-  const raffles = useQuery<IRaffle[] | null>(
+  const raffles = useInfiniteQuery<fetchRafflesResponse, Error>(
     ["raffles", router.query.platform, category],
     queryFn,
     {
       staleTime: Infinity,
       cacheTime: Infinity,
       enabled: !!router.query.platform,
+      getNextPageParam: (
+        lastPage: fetchRafflesResponse,
+        allPages: fetchRafflesResponse[]
+      ) => {
+        return lastPage.nextPage;
+      },
     }
   );
+
+  const allData: IRaffle[] =
+    raffles.data?.pages.flatMap((page: fetchRafflesResponse) => page.raffles) ||
+    [];
+
+  const noHoldData = () => {
+    return allData.filter((r) => r.hold === 0);
+  };
+
+  const favoriteData = () => {
+    return allData.filter((r: { id: string }) => {
+      if (
+        ((me.data &&
+          me.data.favoriteRaffles &&
+          me.data.favoriteRaffles.filter((rr) => r.id === rr.trueRaffleId)
+            .length > 0) ||
+          favoriteRafflesCopy.includes(r.id)) &&
+        !deletedRafflesCopy.includes(r.id)
+      ) {
+        return r;
+      }
+    });
+  };
+
+  const sortedBySubscribers = () => {
+    return allData.sort(
+      (a: { subscribers: number }, b: { subscribers: number }) =>
+        a.subscribers <= b.subscribers ? 1 : -1
+    );
+  };
+
+  const loadMore = () => {
+    if (!raffles.isFetchingNextPage && raffles.hasNextPage) {
+      void raffles.fetchNextPage();
+    }
+  };
 
   const addFavoritesMutation = api.user.addFavorite.useMutation();
   const deleteFavoritesMutation = api.user.deleteFavorite.useMutation();
@@ -120,52 +177,11 @@ const RaffleList = () => {
     }
   };
 
-  const sortedRaffles = useMemo(() => {
-    if (sortingMethod === "subscribers") {
-      return raffles.data?.sort((a, b) =>
-        a.subscribers <= b.subscribers ? 1 : -1
-      );
-    } else if (sortingMethod === "hold") {
-      return raffles.data?.filter((r) => r.hold === 0);
-    } else if (sortingMethod === "favorites") {
-      return raffles.data?.filter((r) => {
-        if (
-          ((me.data &&
-            me.data.favoriteRaffles &&
-            me.data.favoriteRaffles.filter((rr) => r.id === rr.trueRaffleId)
-              .length > 0) ||
-            favoriteRafflesCopy.includes(r.id)) &&
-          !deletedRafflesCopy.includes(r.id)
-        ) {
-          return r;
-        }
-      });
-    } else {
-      return raffles.data;
-    }
-  }, [sortingMethod, raffles.data]);
-
-  useEffect(() => {
-    if (sortedRaffles) {
-      setRaffleState(sortedRaffles);
-    }
-
-    return () => setRaffleState([]);
-  }, [sortedRaffles]);
-
   useEffect(() => {
     if (data?.user.id) {
       void me.refetch();
     }
   }, [data?.user.id]);
-
-  // useEffect(() => {
-  //   if (!router.isReady) return;
-  //   void raffles.refetch();
-  //   setSortingMethod("");
-
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [category]);
 
   const updateQuery = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value);
@@ -173,6 +189,36 @@ const RaffleList = () => {
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
   const debouncedUpdate = debounce(updateQuery, 350);
+
+  const sentinelRef = useRef<HTMLDivElement | null>(null);
+  const [observer, setObserver] = useState<IntersectionObserver | null>(null);
+
+  useEffect(() => {
+    if (observer) {
+      observer.disconnect();
+    }
+
+    const newObserver = new IntersectionObserver(
+      (entries) => {
+        const firstEntry = entries[0];
+
+        if (firstEntry?.isIntersecting) {
+          loadMore();
+        }
+      },
+      { threshold: 1.0 }
+    );
+
+    if (sentinelRef.current) {
+      newObserver.observe(sentinelRef.current);
+    }
+
+    setObserver(newObserver);
+
+    return () => {
+      newObserver.disconnect();
+    };
+  }, [raffles.hasNextPage]);
 
   const determineColor = (platform = String(router.query.platform)) => {
     if (platform === "Premint") {
@@ -189,7 +235,7 @@ const RaffleList = () => {
 
   return (
     <SidebarLayout>
-      <div className="py-6">
+      <div className="min-h-screen py-6">
         <div className="px-4 md:p-6 2xl:p-14">
           <div
             className={`grid grid-cols-1 justify-between font-sans 2xl:grid-cols-[max-content_max-content]`}
@@ -288,142 +334,260 @@ const RaffleList = () => {
               />
             </div>
           </div>
-          {raffles.isFetching ? (
+          {raffles.isFetchingNextPage && (
             <div className="mt-24 grid justify-items-center">
               <Spinner />
             </div>
-          ) : (
-            <div className="grid grid-flow-row grid-cols-1 gap-7 md:grid-cols-2 xl:grid-cols-3">
-              {raffleState
-                .filter((r) =>
-                  r.name.toLowerCase().includes(searchText.toLowerCase())
-                )
-                .map((r) => (
-                  <Link
-                    href={`/rafflebot/raffles/${r.id}`}
-                    rel="noopener noreferrer"
-                    target="_blank"
-                    className="min-w-104 relative grid grid-rows-[112px_auto] rounded-xl bg-element shadow-md"
-                    key={r.id}
-                  >
-                    <div className="relative h-28">
-                      <img
-                        src={r.banner ? r.banner : "../../../../herobg.png"}
-                        className="h-full w-full rounded-t-xl object-cover"
-                        alt=""
-                      />
-                      {!r.banner && (
-                        <div className="absolute right-8 top-1/3 flex space-x-3 font-benzin text-2xl text-bg 2xl:text-3xl">
-                          ALPHA RESCUE
-                        </div>
-                      )}
-                    </div>
-                    <div className="mt-3 grid px-6 pb-6">
-                      <div
-                        className={`justify ml-24`}
-                        style={{ color: determineColor(r.platform) }}
-                      >
-                        {r.platform}
-                      </div>
-                      <div className="grid grid-cols-[auto_48px] items-center justify-between">
-                        <div className="mt-3 h-max overflow-hidden break-words font-benzin text-2xl">
-                          {r.name}
-                          <div className="absolute top-18 grid h-20 w-20 items-center justify-items-center rounded-full bg-element">
-                            <img
-                              src={r.profilePicture}
-                              className="h-16 w-16 rounded-full"
-                              alt=""
-                            />
-                          </div>
-                        </div>
-
-                        <button
-                          // eslint-disable-next-line @typescript-eslint/no-misused-promises
-                          onClick={(e) => handleAddFavorites(e, r.id)}
-                          className="z-10 mt-3 grid h-max w-12 cursor-pointer justify-items-center rounded-xl py-2 transition-colors hover:bg-sidebarBg"
-                        >
-                          {((me.data &&
-                            me.data.favoriteRaffles &&
-                            me.data.favoriteRaffles.filter(
-                              (rr) => r.id === rr.trueRaffleId
-                            ).length > 0) ||
-                            favoriteRafflesCopy.includes(r.id)) &&
-                          !deletedRafflesCopy.includes(r.id) ? (
-                            <div className="grid h-6 w-6 items-center justify-items-center">
-                              <img
-                                src="../../../starYellow.png"
-                                alt="star icon"
-                                className="h-6 w-6"
-                              />
-                            </div>
-                          ) : (
-                            <Star />
-                          )}
-                        </button>
-                      </div>
-                      <div className="mt-2 text-sm font-semibold text-subtext">
-                        Дедлайн - {r.deadline ? r.deadline : "Не указано"}
-                      </div>
-                      <div className="mt-8 grid grid-cols-[max-content_max-content] grid-rows-[max-content_max-content] justify-start gap-6 self-end sm:grid-cols-[repeat(4,_max-content)] md:grid-cols-[max-content_max-content] md:grid-rows-[max-content_max-content] 2xls:grid-cols-[max-content_max-content_max-content_auto] 2xls:grid-rows-1 2xls:justify-evenly">
-                        <div className="">
-                          <div className="text-lg font-bold text-almostwhite">
-                            {r.hold ? r.hold : 0} ETH
-                          </div>
-                          <div className="text-xs font-semibold text-subtext">
-                            <p>Сумма холда</p>
-                          </div>
-                        </div>
-                        <div className="ml-8 2xls:ml-0">
-                          <div className="text-lg font-bold text-almostwhite">
-                            {r.subscribers ? r.subscribers : "Не указано"}
-                          </div>
-                          <div className="text-xs font-semibold text-subtext">
-                            <p>Подписчики</p>
-                            <p>в Twitter</p>
-                          </div>
-                        </div>
-                        <div className="">
-                          <div className="text-lg font-bold text-almostwhite">
-                            {r.NumberOfWinners
-                              ? r.NumberOfWinners
-                              : "Не указано"}
-                          </div>
-                          <div className="text-xs font-semibold text-subtext">
-                            <p>Количество</p>
-                            <p>Победителей</p>
-                          </div>
-                        </div>
-                        <div className="ml-7 grid grid-cols-2 grid-rows-2 gap-1 2xls:ml-0">
-                          {r.requirements.filter(
-                            (rq) => rq.platform === "Twitter"
-                          ).length > 0 ? (
-                            <div className="grid h-8 w-8 items-center justify-items-center">
-                              <img src="../../../../twitter.png" alt="" />
-                            </div>
-                          ) : null}
-                          {r.requirements.filter(
-                            (rq) => rq.platform === "Discord"
-                          ).length > 0 ? (
-                            <div className="grid h-8 w-8 items-center justify-items-center">
-                              <img src="../../../../discord.png" alt="" />
-                            </div>
-                          ) : null}
-                          {r.hold && r.hold != 0 ? (
-                            <div className="grid h-8 w-8 items-center justify-items-center">
-                              <img src="../../../../metamask.png" alt="" />
-                            </div>
-                          ) : null}
-                        </div>
-                      </div>
-                    </div>
-                  </Link>
-                ))}
-            </div>
           )}
+          <div className="grid grid-flow-row grid-cols-1 gap-7 md:grid-cols-2 xl:grid-cols-3">
+            {sortingMethod === "" && (
+              <>
+                {allData
+                  .filter((r) =>
+                    r.name.toLowerCase().includes(searchText.toLowerCase())
+                  )
+                  .map((r) => (
+                    <MemorizedRaffle
+                      key={r.id}
+                      r={r}
+                      me={me.data}
+                      _platform={String(router.query.platform)}
+                      handleAddFavorites={handleAddFavorites}
+                      favoriteRafflesCopy={favoriteRafflesCopy}
+                      deletedRafflesCopy={deletedRafflesCopy}
+                    />
+                  ))}
+              </>
+            )}
+
+            {sortingMethod === "hold" && (
+              <>
+                {noHoldData()
+                  .filter((r) =>
+                    r.name.toLowerCase().includes(searchText.toLowerCase())
+                  )
+                  .map((r) => (
+                    <MemorizedRaffle
+                      r={r}
+                      key={r.id}
+                      me={me.data}
+                      _platform={String(router.query.platform)}
+                      handleAddFavorites={handleAddFavorites}
+                      favoriteRafflesCopy={favoriteRafflesCopy}
+                      deletedRafflesCopy={deletedRafflesCopy}
+                    />
+                  ))}
+              </>
+            )}
+
+            {sortingMethod === "subscribers" && (
+              <>
+                {sortedBySubscribers()
+                  .filter((r) =>
+                    r.name.toLowerCase().includes(searchText.toLowerCase())
+                  )
+                  .map((r) => (
+                    <MemorizedRaffle
+                      r={r}
+                      key={r.id}
+                      me={me.data}
+                      _platform={String(router.query.platform)}
+                      handleAddFavorites={handleAddFavorites}
+                      favoriteRafflesCopy={favoriteRafflesCopy}
+                      deletedRafflesCopy={deletedRafflesCopy}
+                    />
+                  ))}
+              </>
+            )}
+
+            {sortingMethod === "favorites" && (
+              <>
+                {favoriteData()
+                  .filter((r) =>
+                    r.name.toLowerCase().includes(searchText.toLowerCase())
+                  )
+                  .map((r) => (
+                    <MemorizedRaffle
+                      r={r}
+                      key={r.id}
+                      me={me.data}
+                      _platform={String(router.query.platform)}
+                      handleAddFavorites={handleAddFavorites}
+                      favoriteRafflesCopy={favoriteRafflesCopy}
+                      deletedRafflesCopy={deletedRafflesCopy}
+                    />
+                  ))}
+              </>
+            )}
+          </div>
         </div>
+        {/* <button
+          onClick={loadMore}
+          disabled={!raffles.hasNextPage || raffles.isFetchingNextPage}
+        >
+          load more
+        </button> */}
+        <div ref={sentinelRef}></div>
       </div>
     </SidebarLayout>
   );
 };
 
 export default RaffleList;
+
+const MemorizedRaffle: React.FC<{
+  r: IRaffle;
+  me: meType;
+  _platform: string;
+  handleAddFavorites: (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    raffleId: string
+  ) => void;
+  favoriteRafflesCopy: string[];
+  deletedRafflesCopy: string[];
+}> = React.memo(function InlineRaffle({
+  r,
+  me,
+  _platform,
+  handleAddFavorites,
+  favoriteRafflesCopy,
+  deletedRafflesCopy,
+}: {
+  r: IRaffle;
+  me: meType;
+  _platform: string;
+  handleAddFavorites: (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    raffleId: string
+  ) => void;
+  favoriteRafflesCopy: string[];
+  deletedRafflesCopy: string[];
+}) {
+  const determineColor = (_platform: string) => {
+    if (_platform === "Premint") {
+      return "#2CBBDB";
+    } else if (_platform === "Alphabot") {
+      return "#63FF1E";
+    } else if (_platform === "Superful") {
+      return "#6767AB";
+    } else if (_platform === "FreeNFT") {
+      return "#FFFFFF";
+    }
+    return "";
+  };
+
+  return (
+    <Link
+      href={`/rafflebot/raffles/${r.id}`}
+      rel="noopener noreferrer"
+      target="_blank"
+      className="min-w-104 relative grid grid-rows-[112px_auto] rounded-xl bg-element shadow-md"
+      key={r.id}
+    >
+      <div className="relative h-28">
+        <img
+          src={r.banner ? r.banner : "../../../../herobg.png"}
+          className="h-full w-full rounded-t-xl object-cover"
+          alt=""
+        />
+        {!r.banner && (
+          <div className="absolute right-8 top-1/3 flex space-x-3 font-benzin text-2xl text-bg 2xl:text-3xl">
+            ALPHA RESCUE
+          </div>
+        )}
+      </div>
+      <div className="mt-3 grid px-6 pb-6">
+        <div
+          className={`justify ml-24`}
+          style={{ color: determineColor(r.platform) }}
+        >
+          {r.platform}
+        </div>
+        <div className="grid grid-cols-[auto_48px] items-center justify-between">
+          <div className="mt-3 h-max overflow-hidden break-words font-benzin text-2xl">
+            {r.name}
+            <div className="absolute top-18 grid h-20 w-20 items-center justify-items-center rounded-full bg-element">
+              <img
+                src={r.profilePicture}
+                className="h-16 w-16 rounded-full"
+                alt=""
+              />
+            </div>
+          </div>
+          <button
+            // eslint-disable-next-line @typescript-eslint/no-misused-promises
+            onClick={(e) => handleAddFavorites(e, r.id)}
+            className="z-10 mt-3 grid h-max w-12 cursor-pointer justify-items-center rounded-xl py-2 transition-colors hover:bg-sidebarBg"
+          >
+            {((me &&
+              me.favoriteRaffles &&
+              me.favoriteRaffles.filter((rr) => r.id === rr.trueRaffleId)
+                .length > 0) ||
+              favoriteRafflesCopy.includes(r.id)) &&
+            !deletedRafflesCopy.includes(r.id) ? (
+              <div className="grid h-6 w-6 items-center justify-items-center">
+                <img
+                  src="../../../starYellow.png"
+                  alt="star icon"
+                  className="h-6 w-6"
+                />
+              </div>
+            ) : (
+              <Star />
+            )}
+          </button>
+        </div>
+        <div className="mt-2 text-sm font-semibold text-subtext">
+          Дедлайн - {r.deadline ? r.deadline : "Не указано"}
+        </div>
+        <div className="mt-8 grid grid-cols-[max-content_max-content] grid-rows-[max-content_max-content] justify-start gap-6 self-end sm:grid-cols-[repeat(4,_max-content)] md:grid-cols-[max-content_max-content] md:grid-rows-[max-content_max-content] 2xls:grid-cols-[max-content_max-content_max-content_auto] 2xls:grid-rows-1 2xls:justify-evenly">
+          <div className="">
+            <div className="text-lg font-bold text-almostwhite">
+              {r.hold ? r.hold : 0} ETH
+            </div>
+            <div className="text-xs font-semibold text-subtext">
+              <p>Сумма холда</p>
+            </div>
+          </div>
+          <div className="ml-8 2xls:ml-0">
+            <div className="text-lg font-bold text-almostwhite">
+              {r.subscribers ? r.subscribers : "Не указано"}
+            </div>
+            <div className="text-xs font-semibold text-subtext">
+              <p>Подписчики</p>
+              <p>в Twitter</p>
+            </div>
+          </div>
+          <div className="">
+            <div className="text-lg font-bold text-almostwhite">
+              {r.NumberOfWinners ? r.NumberOfWinners : "Не указано"}
+            </div>
+            <div className="text-xs font-semibold text-subtext">
+              <p>Количество</p>
+              <p>Победителей</p>
+            </div>
+          </div>
+          <div className="ml-7 grid grid-cols-2 grid-rows-2 gap-1 2xls:ml-0">
+            {r.requirements.filter((rq) => rq.platform === "Twitter").length >
+            0 ? (
+              <div className="grid h-8 w-8 items-center justify-items-center">
+                <img src="../../../../twitter.png" alt="" />
+              </div>
+            ) : null}
+            {r.requirements.filter((rq) => rq.platform === "Discord").length >
+            0 ? (
+              <div className="grid h-8 w-8 items-center justify-items-center">
+                <img src="../../../../discord.png" alt="" />
+              </div>
+            ) : null}
+            {r.hold && r.hold != 0 ? (
+              <div className="grid h-8 w-8 items-center justify-items-center">
+                <img src="../../../../metamask.png" alt="" />
+              </div>
+            ) : null}
+          </div>
+        </div>
+      </div>
+    </Link>
+  );
+});

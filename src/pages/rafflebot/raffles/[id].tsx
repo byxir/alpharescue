@@ -41,6 +41,7 @@ const Raffle = () => {
   const [exceptions, setExceptions] = useState<string[] | undefined | null>([]);
   const [showNoRafflesNotification, setShowNoRafflesNotification] =
     useState(false);
+  const { data, status } = useSession();
 
   const raffle: UseQueryResult<IRaffle> = useQuery<IRaffle>(
     ["raffle", router.query],
@@ -82,10 +83,14 @@ const Raffle = () => {
   );
 
   useEffect(() => {
-    if (allMyData.data && (!myAccounts.data || myAccounts.isStale)) {
+    if (
+      allMyData.data &&
+      data?.user &&
+      (!myAccounts.data || myAccounts.isStale)
+    ) {
       void myAccounts.refetch();
     }
-  }, [allMyData.data, myAccounts.data, myAccounts.isStale]);
+  }, [allMyData.data, data?.user, myAccounts.data, myAccounts.isStale]);
 
   useEffect(() => {
     if (router.isReady) {
@@ -98,8 +103,6 @@ const Raffle = () => {
     myAccounts.data?.length || 1,
   ]);
   const [chosenConfiguration, setChosenConfiguration] = useState(0);
-
-  const { data, status } = useSession();
 
   const handleChangeRange = (e: Event, newValue: number[] | number) => {
     setChosenConfiguration(0);
@@ -178,11 +181,6 @@ const Raffle = () => {
     }
   };
 
-  const handleChangeConfiguration = (newChosenConfiguration: number) => {
-    if (data?.user.raffleBotUser && status === "authenticated") {
-      setChosenConfiguration(newChosenConfiguration);
-    }
-  };
   const determineColor = (platform: string) => {
     if (platform === "Premint") {
       return "#2CBBDB";

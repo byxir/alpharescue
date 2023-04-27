@@ -53,7 +53,7 @@ const userByIdHandler = async (req: NextApiRequest, res: NextApiResponse) => {
           expires: expiresDate,
           rafflesLeft: 5,
           rafflesPerDay: 5,
-          maxNumAccounts: 150,
+          maxNumAccounts: 50,
           user: {
             connect: {
               id: currentUser?.userId,

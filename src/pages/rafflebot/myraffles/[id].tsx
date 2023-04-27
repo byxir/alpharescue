@@ -261,26 +261,30 @@ const MyRaffle = () => {
                 <div className="h-auto font-montserratRegular 2xl:overflow-auto">
                   {myRaffle.data ? (
                     <>
-                      {myRaffle.data.result.map((a) => (
-                        <div
-                          className={`grid w-full grid-cols-[auto] gap-2`}
-                          key={a.name}
-                        >
+                      {myRaffle.data.result
+                        .sort((a, b) => (a.name > b.name ? 1 : -1))
+                        .map((a) => (
                           <div
-                            className={`mb-4 grid w-full grid-cols-[20px_120px_auto] items-center rounded-xl border text-xs sm:grid-cols-[40px_200px_auto] sm:text-base ${
-                              a.status === true
-                                ? "border-green-300 text-green-300"
-                                : "border-red-500 text-red-500"
-                            } px-4 py-4`}
+                            className={`grid w-full grid-cols-[auto] gap-2`}
+                            key={a.name}
                           >
-                            <span className="justify-self-start">{a.name}</span>
-                            <span className="w-40 justify-self-start">
-                              {a.address?.slice(0, 15)}...
-                            </span>
-                            <span className="w-full">{a.data}</span>
+                            <div
+                              className={`mb-4 grid w-full grid-cols-[20px_120px_auto] items-center rounded-xl border text-xs sm:grid-cols-[40px_200px_auto] sm:text-base ${
+                                a.status === true
+                                  ? "border-green-300 text-green-300"
+                                  : "border-red-500 text-red-500"
+                              } px-4 py-4`}
+                            >
+                              <span className="justify-self-start">
+                                {Number(a.name) + 1}
+                              </span>
+                              <span className="w-40 justify-self-start">
+                                {a.address?.slice(0, 15)}...
+                              </span>
+                              <span className="w-full">{a.data}</span>
+                            </div>
                           </div>
-                        </div>
-                      ))}
+                        ))}
                     </>
                   ) : (
                     <div className="mt-36 grid w-full justify-items-center">
