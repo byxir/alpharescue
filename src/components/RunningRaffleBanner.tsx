@@ -31,6 +31,8 @@ const Banner: React.FC<EventStreamComponentProps> = ({
   const { data, status } = useSession();
   const protectionData = api.user.getMyProtectionData.useQuery();
 
+  const decrementRaffles = api.user.reduceRemainingRaffles.useMutation();
+
   useEffect(() => {
     if (protectionData.data) {
       const source = new EventSource(
@@ -59,6 +61,7 @@ const Banner: React.FC<EventStreamComponentProps> = ({
           setTotalAccounts(data.totalAccountsNumber);
           void refetchMyRaffles();
           source.close();
+          decrementRaffles.mutate();
         }
       };
 

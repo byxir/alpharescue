@@ -4,7 +4,7 @@ import {
   NoSymbolIcon,
   ServerStackIcon,
 } from "@heroicons/react/24/outline";
-import { signIn, useSession } from "next-auth/react";
+import { signIn, signOut, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import CaptchaModal from "~/components/accounts/CaptchaModal";
 import ConfigurationSlideover from "~/components/ConfigurationSlideover";
@@ -19,6 +19,8 @@ import ProxyModal from "~/components/accounts/ProxyModal";
 import TwitterReader from "~/components/accounts/FileReaders/TwitterReader";
 import MetamaskReader from "~/components/accounts/FileReaders/MetamaskReader";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
+import axios from "axios";
+import OnLoadNotification from "~/components/notifications/OnLoadNotification";
 
 export type IAccount = {
   DiscordStatus?: string;
@@ -41,6 +43,7 @@ const Settings = () => {
 
   const [captchaModalOpen, setCaptchaModalOpen] = useState(false);
   const [proxyModalOpen, setProxyModalOpen] = useState(false);
+  const [onLoadNotificationShow, setOnLoadNotificationShow] = useState(false);
 
   const queryClient = useQueryClient();
 
@@ -152,6 +155,15 @@ const Settings = () => {
                             </button>
                           </div>
                         </div>
+                        <div className="grid w-full items-center justify-items-center">
+                          <button
+                            // eslint-disable-next-line @typescript-eslint/no-misused-promises
+                            onClick={() => signOut()}
+                            className="mt-4 cursor-pointer rounded-xl bg-red-600 p-3 shadow-md transition-all hover:bg-opacity-60"
+                          >
+                            Выйти из аккаунта
+                          </button>
+                        </div>
                       </>
                     ) : (
                       <div className="grid h-full items-center justify-items-center">
@@ -223,6 +235,7 @@ const Settings = () => {
               discordId={allMyData.data?.discordId}
               sessionToken={allMyData.data?.sessionToken}
               refetchFunction={refetchFunction}
+              showNotification={() => setOnLoadNotificationShow(true)}
             />
             <DiscordReader
               raffleBotUser={
@@ -231,6 +244,7 @@ const Settings = () => {
               discordId={allMyData.data?.discordId}
               sessionToken={allMyData.data?.sessionToken}
               refetchFunction={refetchFunction}
+              showNotification={() => setOnLoadNotificationShow(true)}
             />
             <MetamaskReader
               raffleBotUser={
@@ -239,16 +253,23 @@ const Settings = () => {
               discordId={allMyData.data?.discordId}
               sessionToken={allMyData.data?.sessionToken}
               refetchFunction={refetchFunction}
+              showNotification={() => setOnLoadNotificationShow(true)}
             />
             <button
-              onClick={() => setCaptchaModalOpen(true)}
+              onClick={() => {
+                setCaptchaModalOpen(true);
+              }}
               className={`grid h-52 justify-items-center rounded-xl border-2 border-dashed border-subline p-4 transition-colors ${
                 data?.user.raffleBotUser && status === "authenticated"
                   ? "cursor-pointer hover:bg-neutral-900"
                   : "cursor-not-allowed"
               }`}
               disabled={
-                !(data?.user.raffleBotUser && status === "authenticated")
+                !(
+                  data?.user.raffleBotUser &&
+                  status === "authenticated" &&
+                  allMyData.data
+                )
               }
             >
               <div className="mb-2 grid h-16 w-16 items-center">
@@ -305,6 +326,7 @@ const Settings = () => {
               discordId={allMyData.data?.discordId}
               sessionToken={allMyData.data?.sessionToken}
               refetchFunction={refetchFunction}
+              showNotification={() => setOnLoadNotificationShow(true)}
             />
             <div
               className={`col-span-2 grid h-32 items-center justify-items-center rounded-xl bg-element p-4 text-2xl text-almostwhite transition-colors ${
@@ -328,19 +350,24 @@ const Settings = () => {
                         <div className="mt-6 grid grid-cols-[100px_auto] items-center justify-between text-xs sm:gap-x-2 sm:gap-y-2">
                           <p className="w-max text-subtext">Начальный: </p>
                           <p className="text-end text-base text-almostwhite">
-                            {allMyData.data?.configurations[0]?.firstAccount}
+                            {allMyData.data?.configurations[0]?.firstAccount !=
+                              null &&
+                              allMyData.data?.configurations[0]?.firstAccount +
+                                1}
                           </p>
                           <p className="w-max text-subtext">Последний: </p>
                           <p className="text-end text-base text-almostwhite">
-                            {allMyData.data?.configurations[0]?.lastAccount}
+                            {allMyData.data?.configurations[0]?.lastAccount &&
+                              allMyData.data?.configurations[0]?.lastAccount +
+                                1}
                           </p>
                           <p className="w-max text-subtext">Исключения: </p>
                           <p className="text-end text-base text-almostwhite">
-                            {
-                              allMyData.data?.configurations[0]?.exceptions?.split(
-                                ","
-                              ).length
-                            }
+                            {allMyData.data?.configurations[0].exceptions
+                              ? allMyData.data?.configurations[0]?.exceptions?.split(
+                                  ","
+                                ).length
+                              : 0}
                           </p>
                         </div>
                       </>
@@ -365,19 +392,24 @@ const Settings = () => {
                         <div className="mt-6 grid grid-cols-[100px_auto] items-center justify-between text-xs sm:gap-x-2 sm:gap-y-2">
                           <p className="w-max text-subtext">Начальный: </p>
                           <p className="text-end text-base text-almostwhite">
-                            {allMyData.data?.configurations[1]?.firstAccount}
+                            {allMyData.data?.configurations[1]?.firstAccount !=
+                              null &&
+                              allMyData.data?.configurations[1]?.firstAccount +
+                                1}
                           </p>
                           <p className="w-max text-subtext">Последний: </p>
                           <p className="text-end text-base text-almostwhite">
-                            {allMyData.data?.configurations[1]?.lastAccount}
+                            {allMyData.data?.configurations[1]?.lastAccount &&
+                              allMyData.data?.configurations[1]?.lastAccount +
+                                1}
                           </p>
                           <p className="w-max text-subtext">Исключения: </p>
                           <p className="text-end text-base text-almostwhite">
-                            {
-                              allMyData.data?.configurations[1]?.exceptions?.split(
-                                ","
-                              ).length
-                            }
+                            {allMyData.data?.configurations[1].exceptions
+                              ? allMyData.data?.configurations[1]?.exceptions?.split(
+                                  ","
+                                ).length
+                              : 0}
                           </p>
                         </div>
                       </>
@@ -402,19 +434,24 @@ const Settings = () => {
                         <div className="mt-6 grid grid-cols-[100px_auto] items-center justify-between text-xs sm:gap-x-2 sm:gap-y-2">
                           <p className="w-max text-subtext">Начальный: </p>
                           <p className="text-end text-base text-almostwhite">
-                            {allMyData.data?.configurations[2]?.firstAccount}
+                            {allMyData.data?.configurations[2]?.firstAccount !=
+                              null &&
+                              allMyData.data?.configurations[2]?.firstAccount +
+                                1}
                           </p>
                           <p className="w-max text-subtext">Последний: </p>
                           <p className="text-end text-base text-almostwhite">
-                            {allMyData.data?.configurations[2]?.lastAccount}
+                            {allMyData.data?.configurations[2]?.lastAccount &&
+                              allMyData.data?.configurations[2]?.lastAccount +
+                                1}
                           </p>
                           <p className="w-max text-subtext">Исключения: </p>
                           <p className="text-end text-base text-almostwhite">
-                            {
-                              allMyData.data?.configurations[2]?.exceptions?.split(
-                                ","
-                              ).length
-                            }
+                            {allMyData.data?.configurations[2].exceptions
+                              ? allMyData.data?.configurations[2]?.exceptions?.split(
+                                  ","
+                                ).length
+                              : 0}
                           </p>
                         </div>
                       </>
@@ -439,19 +476,24 @@ const Settings = () => {
                         <div className="mt-6 grid grid-cols-[100px_auto] items-center justify-between text-xs sm:gap-x-2 sm:gap-y-2">
                           <p className="w-max text-subtext">Начальный: </p>
                           <p className="text-end text-base text-almostwhite">
-                            {allMyData.data?.configurations[3]?.firstAccount}
+                            {allMyData.data?.configurations[3]?.firstAccount !=
+                              null &&
+                              allMyData.data?.configurations[3]?.firstAccount +
+                                1}
                           </p>
                           <p className="w-max text-subtext">Последний: </p>
                           <p className="text-end text-base text-almostwhite">
-                            {allMyData.data?.configurations[3]?.lastAccount}
+                            {allMyData.data?.configurations[3]?.lastAccount &&
+                              allMyData.data?.configurations[3]?.lastAccount +
+                                1}
                           </p>
                           <p className="w-max text-subtext">Исключения: </p>
                           <p className="text-end text-base text-almostwhite">
-                            {
-                              allMyData.data?.configurations[3]?.exceptions?.split(
-                                ","
-                              ).length
-                            }
+                            {allMyData.data?.configurations[3].exceptions
+                              ? allMyData.data?.configurations[3]?.exceptions?.split(
+                                  ","
+                                ).length
+                              : 0}
                           </p>
                         </div>
                       </>
@@ -505,6 +547,11 @@ const Settings = () => {
         discordId={allMyData.data?.discordId}
         sessionToken={allMyData.data?.sessionToken}
         refetchFunction={refetchFunction}
+        showNotification={() => setOnLoadNotificationShow(true)}
+      />
+      <OnLoadNotification
+        show={onLoadNotificationShow}
+        closeFunction={() => setOnLoadNotificationShow(false)}
       />
     </SidebarLayout>
   );

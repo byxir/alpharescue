@@ -1,13 +1,14 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable @typescript-eslint/no-misused-promises */
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { KeyIcon } from "@heroicons/react/24/outline";
 import localFont from "next/font/local";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { api } from "~/utils/api";
 import { useSession } from "next-auth/react";
+import Spinner from "../spinner/Spinner";
 
 const montserrat = localFont({
   src: [
@@ -39,7 +40,6 @@ export default function CaptchaModal({
   sessionToken: string | undefined;
   refetchFunction: () => Promise<void>;
 }) {
-  const [captchaKeyString, setCaptchaKeyString] = useState("");
   const { data, status } = useSession();
 
   const captchaMutation = useMutation({
@@ -60,6 +60,45 @@ export default function CaptchaModal({
     },
     onSuccess: async () => await refetchFunction(),
   });
+
+  const myCaptchaKey = useQuery<{
+    captchaKey: string;
+    message: string;
+    status: string;
+  }>(
+    ["captchaKey"],
+    async () => {
+      const res = await axios.get(
+        `https://alpharescue.online/getCaptchaKey?discordId=${String(
+          discordId
+        )}&userId=${String(data?.user.id)}`,
+        {
+          headers: {
+            Authorization: `Bearer ${String(sessionToken)}`,
+          },
+        }
+      );
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      setCaptchaKeyString(String(res.data.captchaKey));
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+      return res.data;
+    },
+    {
+      enabled: false,
+      staleTime: Infinity,
+      cacheTime: Infinity,
+    }
+  );
+
+  const [captchaKeyString, setCaptchaKeyString] = useState<string | undefined>(
+    myCaptchaKey.data?.captchaKey
+  );
+
+  useEffect(() => {
+    if (data?.user.id && discordId && sessionToken) {
+      void myCaptchaKey.refetch();
+    }
+  }, [discordId, sessionToken, data?.user.id]);
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -93,36 +132,46 @@ export default function CaptchaModal({
             >
               <Dialog.Panel className="relative overflow-hidden rounded-xl bg-sidebarBg px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-2xl sm:p-6">
                 <div className="flex w-full space-x-4 font-montserratBold">
-                  <div className="flex w-full items-center space-x-4 rounded-xl bg-element py-4 pl-6 pr-2 text-subtext shadow-md">
-                    <div className="h-6 w-6">
-                      <KeyIcon />
+                  {!myCaptchaKey.data ? (
+                    <div className="grid w-full justify-items-center">
+                      <Spinner />
                     </div>
-                    <div className="h-6 w-full">
-                      <input
-                        type="text"
-                        value={captchaKeyString}
-                        onChange={(e) => setCaptchaKeyString(e.target.value)}
-                        className="h-6 w-full bg-transparent font-montserratRegular text-lg placeholder-subtext outline-none"
-                        placeholder="Вставьте ключ от капчи"
-                      />
-                    </div>
-                  </div>
-                  <button
-                    onClick={() => {
-                      if (
-                        discordId &&
-                        sessionToken &&
-                        data?.user &&
-                        status === "authenticated"
-                      ) {
-                        captchaMutation.mutate();
-                      }
-                      closeFunction();
-                    }}
-                    className="rounded-xl bg-element px-6 py-4 font-montserratBold text-lg shadow-md transition-all hover:bg-opacity-60"
-                  >
-                    Сохранить
-                  </button>
+                  ) : (
+                    <>
+                      <div className="flex w-full items-center space-x-4 rounded-xl bg-element py-4 pl-6 pr-2 text-subtext shadow-md">
+                        <div className="h-6 w-6">
+                          <KeyIcon />
+                        </div>
+                        <div className="h-6 w-full">
+                          <input
+                            type="text"
+                            value={captchaKeyString}
+                            onChange={(e) =>
+                              setCaptchaKeyString(e.target.value)
+                            }
+                            className="h-6 w-full bg-transparent font-montserratRegular text-lg placeholder-subtext outline-none"
+                            placeholder="Вставьте ключ от капчи"
+                          />
+                        </div>
+                      </div>
+                      <button
+                        onClick={() => {
+                          if (
+                            discordId &&
+                            sessionToken &&
+                            data?.user &&
+                            status === "authenticated"
+                          ) {
+                            captchaMutation.mutate();
+                          }
+                          closeFunction();
+                        }}
+                        className="rounded-xl bg-element px-6 py-4 font-montserratBold text-lg shadow-md transition-all hover:bg-opacity-60"
+                      >
+                        Сохранить
+                      </button>
+                    </>
+                  )}
                 </div>
               </Dialog.Panel>
             </Transition.Child>

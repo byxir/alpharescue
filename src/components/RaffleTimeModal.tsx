@@ -36,6 +36,8 @@ export default function RaffleTimeModal({
   _exceptions,
   _firstAcc,
   _lastAcc,
+  remainingRaffles,
+  showNotification,
 }: {
   open: boolean;
   closeFunction: () => void;
@@ -43,6 +45,8 @@ export default function RaffleTimeModal({
   _exceptions: string[] | null | undefined;
   _firstAcc: number | undefined;
   _lastAcc: number | undefined;
+  remainingRaffles: number;
+  showNotification: () => void;
 }) {
   const [value, setValue] = useState(180);
   const handleChange = (event: Event, newValue: number | number[]) => {
@@ -60,6 +64,12 @@ export default function RaffleTimeModal({
   const startRaffleMutation = useMutation(
     ["startRaffle"],
     () => {
+      if (remainingRaffles <= 0) {
+        showNotification();
+        closeFunction();
+        return Promise.reject(new Error("No raffles left"));
+      }
+
       return axios.post(
         `https://alpharescue.online/startraffle`,
         {
@@ -167,7 +177,9 @@ export default function RaffleTimeModal({
                   <div
                     onClick={() => setValue(60)}
                     className={`grid w-36 cursor-pointer items-center justify-items-center rounded-xl bg-element p-6 text-xl shadow-md transition-all hover:bg-opacity-60 ${
-                      value === 60 ? "border-2 border-almostwhite" : ""
+                      value >= 60 && value < 64
+                        ? "border-2 border-almostwhite"
+                        : ""
                     }`}
                   >
                     1 час
@@ -175,7 +187,9 @@ export default function RaffleTimeModal({
                   <div
                     onClick={() => setValue(120)}
                     className={`grid w-36 cursor-pointer items-center justify-items-center rounded-xl bg-element p-6 text-xl shadow-md transition-all hover:bg-opacity-60 ${
-                      value === 120 ? " border-2 border-almostwhite" : ""
+                      value >= 120 && value < 124
+                        ? " border-2 border-almostwhite"
+                        : ""
                     }`}
                   >
                     2 часа
@@ -184,7 +198,9 @@ export default function RaffleTimeModal({
                     onClick={() => setValue(180)}
                     autoFocus
                     className={`grid w-36 cursor-pointer items-center justify-items-center rounded-xl bg-element p-6 text-xl shadow-md transition-all hover:bg-opacity-60 ${
-                      value === 180 ? " border-2 border-almostwhite" : ""
+                      value >= 180 && value < 184
+                        ? " border-2 border-almostwhite"
+                        : ""
                     }`}
                   >
                     3 часа
@@ -192,7 +208,9 @@ export default function RaffleTimeModal({
                   <div
                     onClick={() => setValue(360)}
                     className={`grid w-36 cursor-pointer items-center justify-items-center rounded-xl bg-element p-6 text-xl shadow-md transition-all hover:bg-opacity-60 ${
-                      value === 360 ? "border-2 border-almostwhite" : ""
+                      value >= 360 && value < 364
+                        ? "border-2 border-almostwhite"
+                        : ""
                     }`}
                   >
                     6 часов
@@ -200,7 +218,9 @@ export default function RaffleTimeModal({
                   <div
                     onClick={() => setValue(720)}
                     className={`grid w-36 cursor-pointer items-center justify-items-center rounded-xl bg-element p-6 text-xl shadow-md transition-all hover:bg-opacity-60 ${
-                      value === 720 ? " border-2 border-almostwhite" : ""
+                      value >= 720 && value < 724
+                        ? " border-2 border-almostwhite"
+                        : ""
                     }`}
                   >
                     12 часов

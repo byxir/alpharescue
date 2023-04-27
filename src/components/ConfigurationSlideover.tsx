@@ -63,23 +63,34 @@ export default function ConfigurationSlideover({
       await refetchConfigurations();
     },
   });
+  const deleteConfigurationMutation = api.user.deleteConfiguration.useMutation({
+    onSuccess: async () => {
+      await refetchConfigurations();
+    },
+  });
 
-  const handleConfigurationProcedure = () => {
+  const handleConfigurationProcedure = (action: "update" | "delete") => {
     if (rangeValue[0] != undefined && rangeValue[1] != undefined) {
       if (chosenConfiguration === null) {
         addConfigurationMutation.mutate({
           firstAccount: rangeValue[0] - 1,
           lastAccount: rangeValue[1] - 1,
-          exceptions: exceptions ? exceptions : [],
+          exceptions: exceptions ? exceptions : null,
+        });
+        closeFunction();
+      } else if (action === "update") {
+        updateConfigurationMutation.mutate({
+          firstAccount: rangeValue[0] - 1,
+          lastAccount: rangeValue[1] - 1,
+          configurationId: configurationId,
+          exceptions: exceptions ? exceptions : null,
         });
         closeFunction();
       } else {
-        updateConfigurationMutation.mutate({
-          firstAccount: rangeValue[0],
-          lastAccount: rangeValue[1],
+        deleteConfigurationMutation.mutate({
           configurationId: configurationId,
-          exceptions: exceptions ? exceptions : [],
         });
+        closeFunction();
       }
     }
   };
@@ -347,8 +358,27 @@ export default function ConfigurationSlideover({
                                   4
                                 </button>
                               ) : null}
-                              {configurations.length &&
-                              configurations.length < 4 ? (
+                              {configurations.length < 4 ? (
+                                <button
+                                  onClick={() => {
+                                    setChosenConfiguration(null);
+                                    setExceptions([]);
+                                    setRangeValue([
+                                      1,
+                                      Number(myAccounts.data?.length),
+                                    ]);
+                                  }}
+                                  className={`txt-center grid h-20 w-20 cursor-pointer items-center justify-items-center rounded-xl bg-element text-xs text-subtext shadow-md transition-all hover:bg-opacity-60 ${
+                                    chosenConfiguration === null
+                                      ? "border-2 border-white"
+                                      : ""
+                                  }`}
+                                >
+                                  <div className="w-12">
+                                    <PlusIcon />
+                                  </div>
+                                </button>
+                              ) : !configurations.length ? (
                                 <button
                                   onClick={() => {
                                     setChosenConfiguration(null);
@@ -497,25 +527,38 @@ export default function ConfigurationSlideover({
 
                     {/* Action buttons */}
                     <div className="flex-shrink-0 border-t-2 border-subline px-4 py-5 sm:px-6">
-                      <div className="flex justify-end space-x-3 font-montserratBold">
+                      <div className="flex justify-between font-montserratBold">
                         <button
                           type="button"
-                          className="bg rounded-md bg-element px-3 py-2 text-sm font-semibold text-almostwhite shadow-sm focus:outline-none"
+                          className="bg justify-self-start rounded-md border border-red-600 bg-transparent px-3 py-2 text-sm font-semibold text-red-600 shadow-sm focus:outline-none"
                           onClick={() => {
-                            setChosenConfiguration(null);
-                            closeFunction();
+                            handleConfigurationProcedure("delete");
                           }}
                         >
-                          Отмена
+                          Удалить конфигурацию
                         </button>
-                        <button
-                          onClick={handleConfigurationProcedure}
-                          className="inline-flex justify-center rounded-md bg-accent px-3 py-2 text-sm font-semibold text-bg shadow-sm transition-all hover:bg-opacity-60"
-                        >
-                          {chosenConfiguration === null
-                            ? "Добавить"
-                            : "Сохранить"}
-                        </button>
+                        <div className="flex space-x-3">
+                          <button
+                            type="button"
+                            className="bg rounded-md bg-element px-3 py-2 text-sm font-semibold text-almostwhite shadow-sm focus:outline-none"
+                            onClick={() => {
+                              setChosenConfiguration(null);
+                              closeFunction();
+                            }}
+                          >
+                            Отмена
+                          </button>
+                          <button
+                            onClick={() => {
+                              handleConfigurationProcedure("update");
+                            }}
+                            className="inline-flex justify-center rounded-md bg-accent px-3 py-2 text-sm font-semibold text-bg shadow-sm transition-all hover:bg-opacity-60"
+                          >
+                            {chosenConfiguration === null
+                              ? "Добавить"
+                              : "Сохранить"}
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>

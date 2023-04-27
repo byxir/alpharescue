@@ -96,11 +96,22 @@ export const userRouter = createTRPCRouter({
       z.object({
         firstAccount: z.number(),
         lastAccount: z.number(),
-        exceptions: z.array(z.string()),
+        exceptions: z.array(z.string()).nullish(),
       })
     )
     .mutation(({ input, ctx }) => {
-      const exceptionsString = input.exceptions?.join(",");
+      let exceptionsString = undefined;
+      console.log(
+        "EXCEPTIONS STRING --------------------------------> ",
+        typeof exceptionsString
+      );
+      if (input.exceptions != null && input.exceptions.length > 0) {
+        exceptionsString = input.exceptions.join(",");
+      }
+      console.log(
+        "EXCEPTIONS STRING AFTER --------------------------------> ",
+        typeof exceptionsString
+      );
       return ctx.prisma.configuration.create({
         data: {
           firstAccount: input.firstAccount,
@@ -120,12 +131,14 @@ export const userRouter = createTRPCRouter({
       z.object({
         firstAccount: z.number(),
         lastAccount: z.number(),
-        exceptions: z.array(z.string()),
+        exceptions: z.array(z.string()).nullish(),
         configurationId: z.string(),
       })
     )
     .mutation(({ input, ctx }) => {
-      const exceptionsString = input.exceptions?.join(",");
+      const exceptionsString = input.exceptions
+        ? input.exceptions.join(",")
+        : null;
       return ctx.prisma.configuration.update({
         where: {
           id: input.configurationId,
@@ -137,4 +150,35 @@ export const userRouter = createTRPCRouter({
         },
       });
     }),
+
+  deleteConfiguration: protectedProcedure
+    .input(
+      z.object({
+        configurationId: z.string(),
+      })
+    )
+    .mutation(({ input, ctx }) => {
+      return ctx.prisma.configuration.delete({
+        where: {
+          id: input.configurationId,
+        },
+      });
+    }),
+
+  reduceRemainingRaffles: protectedProcedure.mutation(({ ctx }) => {
+    return ctx.prisma.user.update({
+      where: {
+        id: ctx.session.user.id,
+      },
+      data: {
+        RaffleBotSubscription: {
+          update: {
+            rafflesLeft: {
+              decrement: 1,
+            },
+          },
+        },
+      },
+    });
+  }),
 });

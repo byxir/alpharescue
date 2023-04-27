@@ -12,6 +12,7 @@ import Spinner from "~/components/spinner/Spinner";
 import { api } from "~/utils/api";
 import { type IAccount } from "../settings";
 import RaffleTimeModal from "~/components/RaffleTimeModal";
+import OnNoRafflesNotification from "~/components/notifications/OnNoRafflesNotification";
 
 export type IRaffle = {
   banner: string;
@@ -38,6 +39,8 @@ const Raffle = () => {
   const router = useRouter();
   const [timeModalOpen, setTimeModalOpen] = useState(false);
   const [exceptions, setExceptions] = useState<string[] | undefined | null>([]);
+  const [showNoRafflesNotification, setShowNoRafflesNotification] =
+    useState(false);
 
   const raffle: UseQueryResult<IRaffle> = useQuery<IRaffle>(
     ["raffle", router.query],
@@ -553,7 +556,7 @@ const Raffle = () => {
               </div>
             </div>
             <div className="mt-12 block w-full overflow-x-scroll">
-              <div className="grid min-w-[682px] grid-cols-[auto_40px] gap-2">
+              <div className="grid grid-cols-[auto_40px] gap-2">
                 <div className="mb-6 grid grid-cols-[5%_17%_18%_20%_20%_20%] rounded-xl border-2 border-subtext bg-element px-4 py-4 font-montserratBold text-xs text-subtext sm:text-base">
                   <span>#</span>
                   <span>Twitter</span>
@@ -588,7 +591,7 @@ const Raffle = () => {
                         key={a.name}
                       >
                         <div className="mb-4 grid w-full grid-cols-[5%_17%_18%_20%_20%_20%] items-center rounded-xl border border-subline px-4 py-4 text-subtext">
-                          <span>{a.name}</span>
+                          <span>{Number(a.name) + 1}</span>
                           <span>{a.TwitterCsrf?.slice(0, 8)}...</span>
                           <span>{a.DiscordToken?.slice(0, 8)}...</span>
                           <span>{a.MetaMaskAddress?.slice(0, 8)}...</span>
@@ -641,6 +644,14 @@ const Raffle = () => {
         _exceptions={exceptions}
         _firstAcc={Number(rangeValue[0]) - 1}
         _lastAcc={Number(rangeValue[1]) - 1}
+        remainingRaffles={Number(
+          allMyData.data?.RaffleBotSubscription?.rafflesLeft
+        )}
+        showNotification={() => setShowNoRafflesNotification(true)}
+      />
+      <OnNoRafflesNotification
+        show={showNoRafflesNotification}
+        closeFunction={() => setShowNoRafflesNotification(false)}
       />
     </SidebarLayout>
   );

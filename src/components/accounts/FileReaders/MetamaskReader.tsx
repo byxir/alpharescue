@@ -17,11 +17,13 @@ const MetamaskReader = ({
   discordId,
   sessionToken,
   refetchFunction,
+  showNotification,
 }: {
   raffleBotUser: boolean;
   discordId: string | undefined;
   sessionToken: string | undefined;
   refetchFunction: () => Promise<void>;
+  showNotification: () => void;
 }) => {
   const [files, setFiles] = useState<FileObject[]>([]);
 
@@ -65,6 +67,7 @@ const MetamaskReader = ({
         files[0]?.content.split("\n").forEach((s) => s.split(":"))
       );
       setFiles([]);
+      showNotification();
       await refetchFunction();
     },
     onError: () => {

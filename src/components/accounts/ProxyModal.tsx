@@ -38,6 +38,7 @@ export default function ProxyModal({
   discordId,
   sessionToken,
   refetchFunction,
+  showNotification,
 }: {
   open: boolean;
   closeFunction: () => void;
@@ -45,6 +46,7 @@ export default function ProxyModal({
   discordId: string | undefined;
   sessionToken: string | undefined;
   refetchFunction: () => Promise<void>;
+  showNotification: () => void;
 }) {
   const { data, status } = useSession();
   const [files, setFiles] = useState<FileObject[]>([]);
@@ -67,7 +69,7 @@ export default function ProxyModal({
       );
     },
     onSuccess: async () => {
-      console.log("discords are uploaded successfully");
+      console.log("proxies are uploaded successfully");
       console.log(
         discordId,
         data?.user.id,
@@ -75,10 +77,12 @@ export default function ProxyModal({
         files[0]?.content.split("\n")
       );
       setFiles([]);
+      showNotification();
       await refetchFunction();
+      closeFunction();
     },
     onError: () => {
-      console.error("discords are not uploaded");
+      console.error("proxies are not uploaded");
       console.log(
         discordId,
         data?.user.id,

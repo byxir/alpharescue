@@ -16,11 +16,13 @@ const EmailReader = ({
   discordId,
   sessionToken,
   refetchFunction,
+  showNotification,
 }: {
   raffleBotUser: boolean;
   discordId: string | undefined;
   sessionToken: string | undefined;
   refetchFunction: () => Promise<void>;
+  showNotification: () => void;
 }) => {
   const [files, setFiles] = useState<FileObject[]>([]);
 
@@ -51,6 +53,7 @@ const EmailReader = ({
         files[0]?.content.split("\n")
       );
       setFiles([]);
+      showNotification();
       await refetchFunction();
     },
     onError: () => {

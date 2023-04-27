@@ -16,11 +16,13 @@ const TwitterReader = ({
   discordId,
   sessionToken,
   refetchFunction,
+  showNotification,
 }: {
   raffleBotUser: boolean;
   discordId: string | undefined;
   sessionToken: string | undefined;
   refetchFunction: () => Promise<void>;
+  showNotification: () => void;
 }) => {
   const [files, setFiles] = useState<FileObject[]>([]);
 
@@ -64,6 +66,7 @@ const TwitterReader = ({
         files[0]?.content.split("\n").forEach((s) => s.split(":"))
       );
       setFiles([]);
+      showNotification();
       await refetchFunction();
     },
     onError: () => {

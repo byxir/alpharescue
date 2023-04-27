@@ -273,7 +273,9 @@ const MyRaffle = () => {
                                 : "border-red-500 text-red-500"
                             } px-4 py-4`}
                           >
-                            <span className="justify-self-start">{a.name}</span>
+                            <span className="justify-self-start">
+                              {Number(a.name) + 1}
+                            </span>
                             <span className="w-40 justify-self-start">
                               {a.address?.slice(0, 15)}...
                             </span>
