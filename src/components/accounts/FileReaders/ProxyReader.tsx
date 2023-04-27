@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import { DocumentTextIcon } from "@heroicons/react/24/outline";
+import { useQueryClient } from "@tanstack/react-query";
 import { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 

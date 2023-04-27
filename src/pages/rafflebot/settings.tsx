@@ -21,12 +21,14 @@ import MetamaskReader from "~/components/accounts/FileReaders/MetamaskReader";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import OnLoadNotification from "~/components/notifications/OnLoadNotification";
+import RootReader from "~/components/accounts/FileReaders/RootReader";
 
 export type IAccount = {
   DiscordStatus?: string;
   DiscordToken?: string;
   Email?: string;
   MetaMaskAddress?: string;
+  MetaMaskPrivateKey?: string;
   ProxyData?: string;
   ProxyStatus?: string;
   ProxyType?: string;
@@ -68,7 +70,7 @@ const Settings = () => {
   };
 
   const refetchFunction = async () => {
-    await queryClient.refetchQueries(["myraffles"]);
+    await queryClient.refetchQueries(["accounts"]);
   };
 
   useEffect(() => {
@@ -228,32 +230,32 @@ const Settings = () => {
             </div>
           </div>
           <div className="grid grid-cols-2 grid-rows-[repeat(4,_max-content)] gap-6 text-center text-sm text-subtext">
-            <TwitterReader
+            <RootReader
               raffleBotUser={
                 data?.user.raffleBotUser ? data?.user.raffleBotUser : false
               }
               discordId={allMyData.data?.discordId}
               sessionToken={allMyData.data?.sessionToken}
-              refetchFunction={refetchFunction}
               showNotification={() => setOnLoadNotificationShow(true)}
+              readerType="twitter"
             />
-            <DiscordReader
+            <RootReader
               raffleBotUser={
                 data?.user.raffleBotUser ? data?.user.raffleBotUser : false
               }
               discordId={allMyData.data?.discordId}
               sessionToken={allMyData.data?.sessionToken}
-              refetchFunction={refetchFunction}
               showNotification={() => setOnLoadNotificationShow(true)}
+              readerType="discord"
             />
-            <MetamaskReader
+            <RootReader
               raffleBotUser={
                 data?.user.raffleBotUser ? data?.user.raffleBotUser : false
               }
               discordId={allMyData.data?.discordId}
               sessionToken={allMyData.data?.sessionToken}
-              refetchFunction={refetchFunction}
               showNotification={() => setOnLoadNotificationShow(true)}
+              readerType="metamask"
             />
             <button
               onClick={() => {
@@ -319,14 +321,14 @@ const Settings = () => {
                 <div className="text-xs">Файл не выбран</div>
               </div>
             </button>
-            <EmailReader
+            <RootReader
               raffleBotUser={
                 data?.user.raffleBotUser ? data?.user.raffleBotUser : false
               }
               discordId={allMyData.data?.discordId}
               sessionToken={allMyData.data?.sessionToken}
-              refetchFunction={refetchFunction}
               showNotification={() => setOnLoadNotificationShow(true)}
+              readerType="email"
             />
             <div
               className={`col-span-2 grid h-32 items-center justify-items-center rounded-xl bg-element p-4 text-2xl text-almostwhite transition-colors ${

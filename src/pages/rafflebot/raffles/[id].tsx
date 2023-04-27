@@ -71,6 +71,8 @@ const Raffle = () => {
           },
         }
       );
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      if (res.data) setRangeValue([1, Number(res.data.length)]);
       // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       return res.data;
     },
@@ -80,10 +82,10 @@ const Raffle = () => {
   );
 
   useEffect(() => {
-    if (allMyData.data && !myAccounts.data) {
+    if (allMyData.data && (!myAccounts.data || myAccounts.isStale)) {
       void myAccounts.refetch();
     }
-  }, [allMyData.data]);
+  }, [allMyData.data, myAccounts.data, myAccounts.isStale]);
 
   useEffect(() => {
     if (router.isReady) {
@@ -91,9 +93,11 @@ const Raffle = () => {
     }
   }, [router.isReady, router.query.id]);
 
-  const [rangeValue, setRangeValue] = useState<number[]>([1, 100]);
+  const [rangeValue, setRangeValue] = useState<number[]>([
+    1,
+    myAccounts.data?.length || 1,
+  ]);
   const [chosenConfiguration, setChosenConfiguration] = useState(0);
-  const [configurationId, setConfigurationId] = useState("");
 
   const { data, status } = useSession();
 
@@ -238,7 +242,11 @@ const Raffle = () => {
                 <div
                   className={`mt-6 cursor-pointer font-benzin text-4xl hover:underline`}
                 >
-                  <Link href={String(raffle.data?.platformLink)}>
+                  <Link
+                    href={String(raffle.data?.platformLink)}
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
                     {raffle.data?.name}
                   </Link>
                 </div>
@@ -353,12 +361,6 @@ const Raffle = () => {
                         <div
                           onClick={() => {
                             setChosenConfiguration(1);
-                            setConfigurationId(
-                              String(
-                                allMyData.data?.configurations &&
-                                  allMyData.data.configurations[0]?.id
-                              )
-                            );
                             const newRangeValues: number[] = [];
                             allMyData.data?.configurations &&
                             allMyData.data.configurations[1]?.firstAccount
@@ -397,12 +399,6 @@ const Raffle = () => {
                         <div
                           onClick={() => {
                             setChosenConfiguration(2);
-                            setConfigurationId(
-                              String(
-                                allMyData.data?.configurations &&
-                                  allMyData.data.configurations[1]?.id
-                              )
-                            );
                             const newRangeValues: number[] = [];
                             allMyData.data?.configurations &&
                             allMyData.data.configurations[1]?.firstAccount
@@ -439,12 +435,6 @@ const Raffle = () => {
                         <div
                           onClick={() => {
                             setChosenConfiguration(3);
-                            setConfigurationId(
-                              String(
-                                allMyData.data?.configurations &&
-                                  allMyData.data.configurations[2]?.id
-                              )
-                            );
                             const newRangeValues: number[] = [];
                             allMyData.data?.configurations &&
                             allMyData.data.configurations[2]?.firstAccount
@@ -481,12 +471,6 @@ const Raffle = () => {
                         <div
                           onClick={() => {
                             setChosenConfiguration(4);
-                            setConfigurationId(
-                              String(
-                                allMyData.data?.configurations &&
-                                  allMyData.data.configurations[3]?.id
-                              )
-                            );
                             const newRangeValues: number[] = [];
                             allMyData.data?.configurations &&
                             allMyData.data.configurations[3]?.firstAccount
@@ -546,8 +530,8 @@ const Raffle = () => {
                       value={rangeValue}
                       onChange={handleChangeRange}
                       valueLabelDisplay="auto"
-                      min={0}
-                      max={100}
+                      min={1}
+                      max={myAccounts.data?.length || 1}
                       step={1}
                     />
                     <div className="ml-5">All</div>
@@ -570,7 +554,6 @@ const Raffle = () => {
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
                     viewBox="0 0 24 24"
-                    stroke-width="1.5"
                     stroke="currentColor"
                     className="h-full w-full text-subtext"
                   >
@@ -585,31 +568,49 @@ const Raffle = () => {
               {data?.user.raffleBotUser && status === "authenticated" ? (
                 <div className="h-auto font-montserratRegular">
                   {myAccounts.data ? (
-                    myAccounts.data.map((a) => (
-                      <div
-                        className="grid w-full grid-cols-[auto_40px] gap-2 overflow-scroll"
-                        key={a.name}
-                      >
-                        <div className="mb-4 grid w-full grid-cols-[5%_17%_18%_20%_20%_20%] items-center rounded-xl border border-subline px-4 py-4 text-subtext">
-                          <span>{Number(a.name) + 1}</span>
-                          <span>{a.TwitterCsrf?.slice(0, 8)}...</span>
-                          <span>{a.DiscordToken?.slice(0, 8)}...</span>
-                          <span>{a.MetaMaskAddress?.slice(0, 8)}...</span>
-                          <span>{a.ProxyData?.slice(7, 17)}...</span>
-                          <span>{a.Email?.slice(0, 12)}...</span>
-                        </div>
+                    myAccounts.data
+                      .filter((a) => {
+                        if (
+                          a.DiscordStatus ||
+                          a.DiscordToken ||
+                          a.Email ||
+                          a.MetaMaskAddress ||
+                          a.MetaMaskPrivateKey ||
+                          a.ProxyData ||
+                          a.ProxyStatus ||
+                          a.ProxyType ||
+                          a.TwitterAuthToken ||
+                          a.TwitterCsrf ||
+                          a.TwitterStatus
+                        ) {
+                          return a;
+                        }
+                      })
+                      .map((a) => (
                         <div
-                          onClick={() => handleExceptions(a.name)}
-                          className="mb-4 h-10 cursor-pointer self-center rounded-lg border border-subline p-2.5"
+                          className="grid w-full grid-cols-[auto_40px] gap-2 overflow-scroll"
+                          key={a.name}
                         >
-                          {!exceptions?.includes(a.name) &&
-                          Number(a.name) >= Number(rangeValue[0]) - 1 &&
-                          Number(a.name) <= Number(rangeValue[1]) - 1 ? (
-                            <div className="h-full w-full rounded-md bg-accent"></div>
-                          ) : null}
+                          <div className="mb-4 grid w-full grid-cols-[5%_17%_18%_20%_20%_20%] items-center rounded-xl border border-subline px-4 py-4 text-subtext">
+                            <span>{Number(a.name) + 1}</span>
+                            <span>{a.TwitterCsrf?.slice(0, 8)}...</span>
+                            <span>{a.DiscordToken?.slice(0, 8)}...</span>
+                            <span>{a.MetaMaskAddress?.slice(0, 8)}...</span>
+                            <span>{a.ProxyData?.slice(7, 17)}...</span>
+                            <span>{a.Email?.slice(0, 12)}...</span>
+                          </div>
+                          <div
+                            onClick={() => handleExceptions(a.name)}
+                            className="mb-4 h-10 cursor-pointer self-center rounded-lg border border-subline p-2.5"
+                          >
+                            {!exceptions?.includes(a.name) &&
+                            Number(a.name) >= Number(rangeValue[0]) - 1 &&
+                            Number(a.name) <= Number(rangeValue[1]) - 1 ? (
+                              <div className="h-full w-full rounded-md bg-accent"></div>
+                            ) : null}
+                          </div>
                         </div>
-                      </div>
-                    ))
+                      ))
                   ) : (
                     <div className="mt-36 grid w-full justify-items-center">
                       <Spinner />

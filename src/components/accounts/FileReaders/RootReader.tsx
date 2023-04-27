@@ -1,5 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
-import { DocumentTextIcon } from "@heroicons/react/24/outline";
+import {
+  AtSymbolIcon,
+  DocumentTextIcon,
+  ServerStackIcon,
+} from "@heroicons/react/24/outline";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { useSession } from "next-auth/react";
@@ -12,61 +16,62 @@ interface FileObject {
   content: string;
 }
 
-const DiscordReader = ({
+const RootReader = ({
   raffleBotUser,
   discordId,
   sessionToken,
-  refetchFunction,
   showNotification,
+  readerType,
 }: {
   raffleBotUser: boolean;
   discordId: string | undefined;
   sessionToken: string | undefined;
-  refetchFunction: () => Promise<void>;
   showNotification: () => void;
+  readerType: "discord" | "twitter" | "metamask" | "proxy" | "email";
 }) => {
   const [files, setFiles] = useState<FileObject[]>([]);
+
   const queryClient = useQueryClient();
+
+  function splitStringInto2DArray(str: string): string[][] {
+    const rows = str.split("\n");
+    const result: string[][] = [];
+
+    for (const row of rows) {
+      result.push(row.split(":"));
+    }
+
+    return result;
+  }
 
   const { data, status } = useSession();
 
-  const discordMutation = useMutation({
+  const addAccountsMutation = useMutation({
     mutationFn: () => {
+      showNotification();
       return axios.post(
         "https://alpharescue.online/accounts",
         {
           discordId: discordId,
           userId: data?.user.id,
-          type: "discord",
+          type: readerType,
           proxyType: "",
-          accounts: files[0]?.content.split("\n"),
+          accounts:
+            readerType === "metamask" || readerType === "twitter"
+              ? splitStringInto2DArray(files[0] ? files[0].content : "notFound")
+              : files[0]?.content.split("\n"),
         },
         {
           headers: { Authorization: `Bearer ${String(sessionToken)}` },
         }
       );
     },
-    onSuccess: async () => {
-      showNotification();
-      queryClient.removeQueries(["accounts"]);
-      await refetchFunction();
-      console.log("discords are uploaded successfully");
-      console.log(
-        discordId,
-        data?.user.id,
-        sessionToken,
-        files[0]?.content.split("\n")
-      );
+    onSuccess: () => {
+      void queryClient.invalidateQueries(["accounts"]);
       setFiles([]);
     },
     onError: () => {
-      console.error("discords are not uploaded");
-      console.log(
-        discordId,
-        data?.user.id,
-        sessionToken,
-        files[0]?.content.split("\n")
-      );
+      console.error("wallets are not uploaded");
       setFiles([]);
     },
   });
@@ -91,7 +96,7 @@ const DiscordReader = ({
   useEffect(() => {
     if (raffleBotUser) {
       if (files.length > 0) {
-        discordMutation.mutate();
+        addAccountsMutation.mutate();
       }
     } else {
       //error message not authenticated
@@ -102,7 +107,7 @@ const DiscordReader = ({
     <button
       {...getRootProps()}
       className={`grid h-52 justify-items-center rounded-xl border-2 border-dashed border-subline p-4 transition-colors ${
-        raffleBotUser
+        data?.user.raffleBotUser && status === "authenticated"
           ? "cursor-pointer hover:bg-neutral-900"
           : "cursor-not-allowed"
       }`}
@@ -110,14 +115,24 @@ const DiscordReader = ({
     >
       <input {...getInputProps()} />
       <div className="mb-2 grid h-16 w-16 items-center">
-        <img src="../../../discord.png" alt="" className="w-16" />
+        {(readerType === "twitter" ||
+          readerType === "metamask" ||
+          readerType === "discord") && (
+          <img src={`../../../${readerType}.png`} alt="" className="w-16" />
+        )}
+        {readerType === "proxy" && <ServerStackIcon />}
+        {readerType === "email" && <AtSymbolIcon />}
       </div>
       <p className="">Загрузить</p>
-      <p className="">дискорд</p>
+      {readerType === "twitter" && <p className="">твиттеры</p>}
+      {readerType === "discord" && <p className="">дискорды</p>}
+      {readerType === "metamask" && <p className="">кошельки</p>}
+      {readerType === "proxy" && <p className="">прокси</p>}
+      {readerType === "email" && <p className="">почты</p>}
       <div className="mt-4 flex items-center space-x-1 text-subline">
         {isDragActive ? (
           <>
-            <div className="text-xs">Дропайте дискорды сюда</div>
+            <div className="text-xs">Дропайте кошельки сюда</div>
           </>
         ) : (
           <>
@@ -132,4 +147,4 @@ const DiscordReader = ({
   );
 };
 
-export default DiscordReader;
+export default RootReader;

@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Fragment, useState, useEffect } from "react";
 import { Transition } from "@headlessui/react";
 import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/outline";
 import { XMarkIcon } from "@heroicons/react/20/solid";
@@ -10,6 +10,13 @@ export default function OnNoRafflesNotification({
   show: boolean;
   closeFunction: () => void;
 }) {
+  useEffect(() => {
+    if (show) {
+      setTimeout(() => {
+        closeFunction();
+      }, 6000);
+    }
+  }, [show]);
   return (
     <>
       {/* Global notification live region, render this permanently at the end of the document */}

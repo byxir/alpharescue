@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Transition } from "@headlessui/react";
 import { CheckCircleIcon } from "@heroicons/react/24/outline";
 import { XMarkIcon } from "@heroicons/react/20/solid";
@@ -10,6 +10,14 @@ export default function OnLoadNotification({
   show: boolean;
   closeFunction: () => void;
 }) {
+  useEffect(() => {
+    if (show) {
+      setTimeout(() => {
+        closeFunction();
+      }, 6000);
+    }
+  }, [show]);
+
   return (
     <>
       {/* Global notification live region, render this permanently at the end of the document */}

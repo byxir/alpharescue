@@ -106,6 +106,8 @@ export default function ConfigurationSlideover({
           headers: { Authorization: `Bearer ${String(sessionToken)}` },
         }
       );
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      if (res.data) setRangeValue([1, Number(res.data.length)]);
       // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       return res.data;
     },
@@ -192,14 +194,14 @@ export default function ConfigurationSlideover({
 
   useEffect(() => {
     if (
-      !myAccounts.data &&
+      (!myAccounts.data || myAccounts.isStale) &&
       discordId != undefined &&
       sessionToken != undefined &&
       open === true
     ) {
       void myAccounts.refetch();
     }
-  }, [sessionToken, discordId, open]);
+  }, [sessionToken, discordId, open, myAccounts.data, myAccounts.isStale]);
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -427,7 +429,7 @@ export default function ConfigurationSlideover({
                             onChange={handleChangeRange}
                             valueLabelDisplay="auto"
                             min={1}
-                            max={100}
+                            max={myAccounts.data?.length || 1}
                             step={1}
                           />
                           <div className="ml-5">Все</div>
@@ -447,7 +449,6 @@ export default function ConfigurationSlideover({
                                 xmlns="http://www.w3.org/2000/svg"
                                 fill="none"
                                 viewBox="0 0 24 24"
-                                stroke-width="1.5"
                                 stroke="currentColor"
                                 className="h-full w-full text-subtext"
                               >
@@ -463,41 +464,59 @@ export default function ConfigurationSlideover({
                           status === "authenticated" ? (
                             <div className="h-auto font-montserratRegular 2xl:overflow-auto">
                               {myAccounts.data ? (
-                                myAccounts.data.map((a) => (
-                                  <div
-                                    className="grid w-full grid-cols-[auto_40px] gap-2"
-                                    key={a.name}
-                                  >
-                                    <div className="mb-4 grid h-14 w-full grid-cols-[5%_17%_18%_20%_20%_20%] items-center rounded-xl border border-subline px-4 py-4 text-subtext">
-                                      <span>{Number(a.name) + 1}</span>
-                                      <span>
-                                        {a.TwitterCsrf?.slice(0, 8)}...
-                                      </span>
-                                      <span>
-                                        {a.DiscordToken?.slice(0, 8)}...
-                                      </span>
-                                      <span>
-                                        {a.MetaMaskAddress?.slice(0, 8)}...
-                                      </span>
-                                      <span>
-                                        {a.ProxyData?.slice(7, 17)}...
-                                      </span>
-                                      <span>{a.Email?.slice(0, 12)}...</span>
-                                    </div>
+                                myAccounts.data
+                                  .filter((a) => {
+                                    if (
+                                      a.DiscordStatus ||
+                                      a.DiscordToken ||
+                                      a.Email ||
+                                      a.MetaMaskAddress ||
+                                      a.MetaMaskPrivateKey ||
+                                      a.ProxyData ||
+                                      a.ProxyStatus ||
+                                      a.ProxyType ||
+                                      a.TwitterAuthToken ||
+                                      a.TwitterCsrf ||
+                                      a.TwitterStatus
+                                    ) {
+                                      return a;
+                                    }
+                                  })
+                                  .map((a) => (
                                     <div
-                                      onClick={() => handleExceptions(a.name)}
-                                      className="mb-4 h-10 cursor-pointer self-center rounded-lg border border-subline p-2.5"
+                                      className="grid w-full grid-cols-[auto_40px] gap-2"
+                                      key={a.name}
                                     >
-                                      {!exceptions?.includes(a.name) &&
-                                      Number(a.name) >=
-                                        Number(rangeValue[0]) - 1 &&
-                                      Number(a.name) <=
-                                        Number(rangeValue[1]) - 1 ? (
-                                        <div className="h-full w-full rounded-md bg-accent"></div>
-                                      ) : null}
+                                      <div className="mb-4 grid h-14 w-full grid-cols-[5%_17%_18%_20%_20%_20%] items-center rounded-xl border border-subline px-4 py-4 text-subtext">
+                                        <span>{Number(a.name) + 1}</span>
+                                        <span>
+                                          {a.TwitterCsrf?.slice(0, 8)}...
+                                        </span>
+                                        <span>
+                                          {a.DiscordToken?.slice(0, 8)}...
+                                        </span>
+                                        <span>
+                                          {a.MetaMaskAddress?.slice(0, 8)}...
+                                        </span>
+                                        <span>
+                                          {a.ProxyData?.slice(7, 17)}...
+                                        </span>
+                                        <span>{a.Email?.slice(0, 12)}...</span>
+                                      </div>
+                                      <div
+                                        onClick={() => handleExceptions(a.name)}
+                                        className="mb-4 h-10 cursor-pointer self-center rounded-lg border border-subline p-2.5"
+                                      >
+                                        {!exceptions?.includes(a.name) &&
+                                        Number(a.name) >=
+                                          Number(rangeValue[0]) - 1 &&
+                                        Number(a.name) <=
+                                          Number(rangeValue[1]) - 1 ? (
+                                          <div className="h-full w-full rounded-md bg-accent"></div>
+                                        ) : null}
+                                      </div>
                                     </div>
-                                  </div>
-                                ))
+                                  ))
                               ) : (
                                 <div className="mt-36 grid w-full justify-items-center">
                                   <Spinner />

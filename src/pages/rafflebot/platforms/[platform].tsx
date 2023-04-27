@@ -301,6 +301,8 @@ const RaffleList = () => {
                 .map((r) => (
                   <Link
                     href={`/rafflebot/raffles/${r.id}`}
+                    rel="noopener noreferrer"
+                    target="_blank"
                     className="min-w-104 relative grid grid-rows-[112px_auto] rounded-xl bg-element shadow-md"
                     key={r.id}
                   >

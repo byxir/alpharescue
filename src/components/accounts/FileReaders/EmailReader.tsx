@@ -1,5 +1,5 @@
 import { AtSymbolIcon, DocumentTextIcon } from "@heroicons/react/24/outline";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import { useCallback, useEffect, useState } from "react";
@@ -25,7 +25,7 @@ const EmailReader = ({
   showNotification: () => void;
 }) => {
   const [files, setFiles] = useState<FileObject[]>([]);
-
+  const queryClient = useQueryClient();
   const { data, status } = useSession();
 
   const emailMutation = useMutation({
@@ -45,25 +45,13 @@ const EmailReader = ({
       );
     },
     onSuccess: async () => {
-      console.log("emails are uploaded successfully");
-      console.log(
-        discordId,
-        data?.user.id,
-        sessionToken,
-        files[0]?.content.split("\n")
-      );
-      setFiles([]);
       showNotification();
+      queryClient.removeQueries(["accounts"]);
       await refetchFunction();
+      setFiles([]);
     },
     onError: () => {
       console.error("emails are not uploaded");
-      console.log(
-        discordId,
-        data?.user.id,
-        sessionToken,
-        files[0]?.content.split("\n")
-      );
       setFiles([]);
     },
   });

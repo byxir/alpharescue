@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import { DocumentTextIcon } from "@heroicons/react/24/outline";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import { useCallback, useEffect, useState } from "react";
@@ -24,6 +24,7 @@ const TwitterReader = ({
   refetchFunction: () => Promise<void>;
   showNotification: () => void;
 }) => {
+  const queryClient = useQueryClient();
   const [files, setFiles] = useState<FileObject[]>([]);
 
   function splitStringInto2DArray(str: string): string[][] {
@@ -58,6 +59,9 @@ const TwitterReader = ({
       );
     },
     onSuccess: async () => {
+      showNotification();
+      queryClient.removeQueries(["accounts"]);
+      await refetchFunction();
       console.log("twitters are uploaded successfully");
       console.log(
         discordId,
@@ -66,8 +70,6 @@ const TwitterReader = ({
         files[0]?.content.split("\n").forEach((s) => s.split(":"))
       );
       setFiles([]);
-      showNotification();
-      await refetchFunction();
     },
     onError: () => {
       console.error("twitters are not uploaded");

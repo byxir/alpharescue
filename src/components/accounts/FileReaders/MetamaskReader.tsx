@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import { DocumentTextIcon } from "@heroicons/react/24/outline";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import { useCallback, useEffect, useState } from "react";
@@ -26,6 +26,7 @@ const MetamaskReader = ({
   showNotification: () => void;
 }) => {
   const [files, setFiles] = useState<FileObject[]>([]);
+  const queryClient = useQueryClient();
 
   function splitStringInto2DArray(str: string): string[][] {
     const rows = str.split("\n");
@@ -42,6 +43,7 @@ const MetamaskReader = ({
 
   const twitterMutation = useMutation({
     mutationFn: () => {
+      showNotification();
       return axios.post(
         "https://alpharescue.online/accounts",
         {
@@ -59,25 +61,12 @@ const MetamaskReader = ({
       );
     },
     onSuccess: async () => {
-      console.log("wallets are uploaded successfully");
-      console.log(
-        discordId,
-        data?.user.id,
-        sessionToken,
-        files[0]?.content.split("\n").forEach((s) => s.split(":"))
-      );
-      setFiles([]);
-      showNotification();
+      queryClient.removeQueries(["accounts"]);
       await refetchFunction();
+      setFiles([]);
     },
     onError: () => {
       console.error("wallets are not uploaded");
-      console.log(
-        discordId,
-        data?.user.id,
-        sessionToken,
-        files[0]?.content.split("\n").forEach((s) => s.split(":"))
-      );
       setFiles([]);
     },
   });
