@@ -5,17 +5,17 @@ import { CheckIcon } from "@heroicons/react/20/solid";
 const tiers = [
   {
     available: true,
-    name: "Community pass",
+    name: "Community Pass",
     id: "tier-community",
     href: "#",
-    price: [15, 144],
+    price: [59, 149],
     description:
       "Стартовая точка участника нашего сообщества. Дает доступ к зеркалам, дискорд-комьюнити, и другому.",
     features: [
-      "5 products",
-      "Up to 1,000 subscribers",
-      "Basic analytics",
-      "48-hour support response time",
+      "Доступ в Discord",
+      "Зеркала западных альфа групп",
+      "Различные инструменты и софт",
+      "Система оповещений",
     ],
     bg: "bg-community",
     ring: "ring-community",
@@ -25,15 +25,14 @@ const tiers = [
     name: "Raffle Bot",
     id: "tier-startup",
     href: "#",
-    price: [30, 288],
+    price: [119, 319],
     description:
       "Доступ к лучшему боту для мультиаккинга в NFT-раффлах. Поддержка Premint, Alphabot, Superfull, FreeNFT.",
     features: [
-      "25 products",
-      "Up to 10,000 subscribers",
-      "Advanced analytics",
-      "24-hour support response time",
-      "Marketing automations",
+      "Community Pass",
+      "Доступ к Raffle Bot",
+      "Эксклюзивные гивы",
+      "Техническая поддержка 24/7",
     ],
     new: true,
     bg: "bg-premint",
@@ -44,19 +43,18 @@ const tiers = [
     name: "Speed Mint Bot",
     id: "tier-enterprise",
     href: "#",
-    price: [60, 576],
+    price: [119, 319],
     description:
       "Доступ к боту, который поможет вам добиться успеха и забрать NFT на важном минте. Поддержка ETH и SOL минтов.",
     features: [
-      "Unlimited products",
-      "Unlimited subscribers",
-      "Advanced analytics",
-      "1-hour, dedicated support response time",
-      "Marketing automations",
-      "Custom reporting tools",
+      "Community Pass",
+      "SOL Mint Bot",
+      "ETH Mint Bot",
+      "Доступ к каналу с рекомендациями",
     ],
     bg: "bg-speedMint",
     ring: "ring-speedMint",
+    comingSoon: true,
   },
 ];
 
@@ -99,7 +97,7 @@ export default function Subscriptions() {
                 frequency === 1 ? "bg-almostwhite text-element" : "text-subtext"
               } cursor-pointer rounded-full px-2.5 py-1 font-montserratBold`}
             >
-              <span>Ежегодно</span>
+              <span>По кварталам</span>
             </button>
           </RadioGroup>
         </div>
@@ -121,13 +119,24 @@ export default function Subscriptions() {
                     Новое
                   </p>
                 ) : null}
+                {tier.comingSoon ? (
+                  <p className="rounded-full bg-almostwhite/10 px-2.5 py-1 text-xs font-semibold leading-5 text-red-500">
+                    Скоро
+                  </p>
+                ) : null}
               </div>
               <p className="mt-4 w-64 text-sm leading-6 text-subtext">
                 {tier.description}
               </p>
               <p className="mt-6 flex items-baseline gap-x-1">
                 <span className="font-montserratBold text-4xl  text-almostwhite">
-                  от ${tier.price[frequency]}
+                  {tier.name === "Community Pass" && (
+                    <span>${tier.price[frequency]}</span>
+                  )}
+                  {tier.name === "Raffle Bot" && (
+                    <span>от ${tier.price[frequency]}</span>
+                  )}
+                  {tier.name === "Speed Mint Bot" && <span>TBD</span>}
                 </span>
                 <span className="font-montserratBold text-sm leading-6 text-subtext">
                   {frequency === 0 ? "/месяц" : "/год"}
@@ -146,15 +155,28 @@ export default function Subscriptions() {
                 role="list"
                 className="mt-8 space-y-3 text-sm leading-6 text-subtext xl:mt-10"
               >
+                {/* {tier.name !== "Speed Mint Bot" && ( */}
+                {/* <div className=""> */}
                 {tier.features.map((feature) => (
-                  <li key={feature} className="flex gap-x-3">
+                  <li
+                    key={feature}
+                    className={`flex gap-x-3 ${
+                      feature === "Community Pass" ? "text-green-400" : ""
+                    }`}
+                  >
                     <CheckIcon
-                      className="h-6 w-5 flex-none text-almostwhite"
+                      className={`h-6 w-5 flex-none ${
+                        feature === "Community Pass"
+                          ? "text-green-400"
+                          : " text-almostwhite"
+                      }`}
                       aria-hidden="true"
                     />
                     {feature}
                   </li>
                 ))}
+                {/* </div> */}
+                {/* )} */}
               </ul>
             </div>
           ))}

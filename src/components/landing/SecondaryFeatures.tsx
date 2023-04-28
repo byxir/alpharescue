@@ -4,40 +4,40 @@ import { Container } from "./Container";
 
 const features = [
   {
-    name: "Invest any amount",
+    name: "Инструменты для мультиаккинга",
     description:
-      "Whether it’s $1 or $1,000,000, we can put your money to work for you.",
-    icon: DeviceArrowIcon,
+      "Регулярный и актуальный софт для абуза различных событий, включая тестнеты, формы, минты и другие активности.",
+    icon: "../../../toolbox.svg",
   },
   {
-    name: "Build a balanced portfolio",
+    name: "Розыгрыши WL и бонусы",
     description:
-      "Invest in different industries to find the most opportunities to win huge.",
-    icon: DeviceCardsIcon,
+      "Мы часто проводим розыгрыши на WL в различные проекты, устраиваем ивенты с призовым пулом, начиная от базовых активностей, заканчивая игровыми турнирами.",
+    icon: "../../../gift.svg",
   },
   {
-    name: "Trade in real-time",
+    name: "Разнообразный контент",
     description:
-      "Get insider tips on big stock moves and act on them within seconds.",
-    icon: DeviceClockIcon,
+      "Наша основная деятельность NFT, но кроме контента по NFT вы можете найти у нас информацию по трейдингу, ретро дропам, обучающие статьи и АМА, софт для работы с щиткоинами",
+    icon: "../../../book.svg",
   },
   {
-    name: "Profit from your network",
+    name: "Сильное сообщество",
     description:
-      "Invite new insiders to get tips faster and beat even other Pocket users.",
-    icon: DeviceListIcon,
+      "В чате можно встретить кодеров, абузеров, NFT трейдеров, ребят, которые выбивают WL в проекты, Исходя из этого вы найдете ответы практически на все вопросы",
+    icon: "../../../friends.svg",
   },
   {
-    name: "Encrypted and anonymized",
+    name: "Боты для комфортной работы",
     description:
-      "Cutting-edge security technology that even the NSA doesn’t know about keeps you hidden.",
-    icon: DeviceLockIcon,
+      "Перевод контента из зеркал в один клик, получение только нужных уведомлений из дискорда прямо в телеграм. Максимальное удобство благодаря нашим ботам.",
+    icon: "../../../robot.svg",
   },
   {
-    name: "Portfolio tracking",
+    name: "Поддержка от команды",
     description:
-      "Watch your investments grow exponentially, leaving other investors in the dust.",
-    icon: DeviceChartIcon,
+      "Наша команда горит своим делом и постоянно находится в чате дискорда, готовая помочь вам настроить софт или решить иные вопросы связанные с сообществом.",
+    icon: "../../../support.svg",
   },
 ];
 
@@ -208,7 +208,9 @@ export function SecondaryFeatures() {
               key={feature.name}
               className="rounded-2xl border border-subline p-8"
             >
-              <feature.icon className="h-8 w-8" />
+              <div className="h-8 w-8">
+                <img src={feature.icon} className="h-8 w-8" />
+              </div>
               <h3 className="mt-6 font-montserratBold font-semibold text-almostwhite">
                 {feature.name}
               </h3>

@@ -299,21 +299,31 @@ function Tabs({
   const [activeTab, setActiveTab] = useState(0);
   return (
     <div className="w-full max-w-2xl">
-      <div className="sm:hidden">
+      <div className="grid justify-items-center sm:hidden">
         <label htmlFor="tabs" className="sr-only">
           Select a tab
         </label>
         {/* Use an "onChange" listener to redirect the user to the selected tab URL. */}
-        <select
-          id="tabs"
-          name="tabs"
-          className="block w-full rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
-          defaultValue={temptabs[0]?.name}
-        >
+        <div className="grid w-2/3  grid-rows-1 gap-2 ">
           {temptabs.map((tab) => (
-            <option key={tab.name}>{tab.name}</option>
+            <button
+              className={`relative cursor-pointer rounded-xl bg-element py-2 transition-all hover:bg-opacity-60 ${
+                activeTab === tab.id ? "border border-accent" : ""
+              }`}
+              onClick={() => {
+                setActiveTab(tab.id);
+                if (tab.id === 0) {
+                  choosePosts1();
+                } else {
+                  choosePosts2();
+                }
+              }}
+              key={tab.name}
+            >
+              <span>{tab.name}</span>
+            </button>
           ))}
-        </select>
+        </div>
       </div>
       <div className="hidden sm:block">
         <nav
