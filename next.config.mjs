@@ -20,5 +20,33 @@ const config = {
     locales: ["en"],
     defaultLocale: "en",
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "s3-redwood-labs.premint.xyz",
+        port: "",
+        pathname: "/premint/uploads/images/**",
+      },
+      {
+        protocol: "https",
+        hostname: "pbs.twimg.com",
+        port: "",
+        pathname: "/profile_banners/**",
+      },
+      {
+        protocol: "https",
+        hostname: "superful-assets-prod.s3.amazonaws.com",
+        port: "",
+        pathname: "/images/**",
+      },
+      {
+        protocol: "https",
+        hostname: "hosting.photobucket.com",
+        port: "",
+        pathname: "/images/i/lucas71/**",
+      },
+    ],
+  },
 };
 export default config;

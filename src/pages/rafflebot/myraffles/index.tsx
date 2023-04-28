@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { type ChangeEvent, useState } from "react";
@@ -10,6 +10,7 @@ import Spinner from "~/components/spinner/Spinner";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import { api } from "~/utils/api";
+import { XCircleIcon, XMarkIcon } from "@heroicons/react/24/outline";
 
 type IMyRaffle = {
   banner: string;
@@ -36,6 +37,7 @@ const RaffleList = () => {
   const router = useRouter();
   const { data } = useSession();
   const [searchText, setSearchText] = useState("");
+  const queryClient = useQueryClient();
 
   const protectionData = api.user.getMyProtectionData.useQuery();
 
@@ -58,6 +60,41 @@ const RaffleList = () => {
   };
   const queryFn = async (): Promise<IMyRaffle[] | null> => {
     return fetchMyRaffles();
+  };
+
+  const deleteMyRaffleMutation = useMutation(
+    ["deleteMyRaffle"],
+    async (_id: string) => {
+      const res = await axios.post(
+        `https://alpharescue.online/deleteMyRaffle`,
+        {
+          userId: String(data?.user.id),
+          discordId: String(protectionData.data?.discordId),
+          raffleId: _id,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${String(
+              protectionData.data?.sessionToken
+            )}`,
+          },
+        }
+      );
+      if (res.status != 200) {
+        throw new Error("network error, try again later");
+      }
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+      return res.data;
+    },
+    {
+      onSuccess: () => {
+        void queryClient.invalidateQueries(["myraffles"]);
+      },
+    }
+  );
+
+  const handleDeleteMyRaffle = (id: string) => {
+    deleteMyRaffleMutation.mutate(id);
   };
 
   const myraffles = useQuery<IMyRaffle[] | null>(["myraffles"], queryFn, {
@@ -120,98 +157,105 @@ const RaffleList = () => {
                     r.name.toLowerCase().includes(searchText.toLowerCase())
                   )
                   .map((r) => (
-                    <Link
-                      href={`/rafflebot/myraffles/${r.id}`}
-                      className="min-w-104 relative grid grid-rows-[112px_auto] rounded-xl bg-element shadow-md"
-                      key={r.id}
-                    >
-                      <div className="relative h-28">
-                        <img
-                          src={r.banner ? r.banner : "../../../../herobg.png"}
-                          className="h-full w-full rounded-t-xl object-cover"
-                          alt=""
-                        />
-                        {!r.banner && (
-                          <div className="absolute right-8 top-1/3 flex space-x-3 font-benzin text-2xl text-bg 2xl:text-3xl">
-                            ALPHA RESCUE
-                          </div>
-                        )}
-                      </div>
-                      <div className="mt-3 grid px-6 pb-6">
-                        <div
-                          className={`justify ml-24`}
-                          style={{ color: determineColor(r.platform) }}
-                        >
-                          {r.platform}
+                    <div className="relative" key={r.id}>
+                      <button
+                        onClick={() => handleDeleteMyRaffle(r.id)}
+                        className="absolute right-0 top-0 z-20 h-10 w-10 text-element"
+                      >
+                        <XCircleIcon />
+                      </button>
+                      <Link
+                        href={`/rafflebot/myraffles/${r.id}`}
+                        className="min-w-104 relative grid grid-rows-[112px_auto] rounded-xl bg-element shadow-md"
+                      >
+                        <div className="relative h-28">
+                          <img
+                            src={r.banner ? r.banner : "../../../../herobg.png"}
+                            className="h-full w-full rounded-t-xl object-cover"
+                            alt=""
+                          />
+                          {!r.banner && (
+                            <div className="absolute right-8 top-1/3 flex space-x-3 font-benzin text-2xl text-bg 2xl:text-3xl">
+                              ALPHA RESCUE
+                            </div>
+                          )}
                         </div>
-                        <div className="grid grid-cols-[auto_48px] items-center justify-between">
-                          <div className="mt-3 h-max overflow-hidden break-words font-benzin text-2xl">
-                            {r.name}
-                            <div className="absolute top-18 grid h-20 w-20 items-center justify-items-center rounded-full bg-element">
-                              <img
-                                src={r.profilePicture}
-                                className="h-16 w-16 rounded-full"
-                                alt=""
-                              />
-                            </div>
+                        <div className="mt-3 grid px-6 pb-6">
+                          <div
+                            className={`justify ml-24`}
+                            style={{ color: determineColor(r.platform) }}
+                          >
+                            {r.platform}
                           </div>
-                        </div>
-                        <div className="mt-2 text-sm font-semibold text-subtext">
-                          Дедлайн - {r.deadline ? r.deadline : "Не указано"}
-                        </div>
-                        <div className="mt-8 grid grid-cols-[max-content_max-content] grid-rows-[max-content_max-content] justify-start gap-6 self-end sm:grid-cols-[repeat(4,_max-content)] md:grid-cols-[max-content_max-content] md:grid-rows-[max-content_max-content] 2xls:grid-cols-[max-content_max-content_max-content_auto] 2xls:grid-rows-1 2xls:justify-evenly">
-                          <div className="">
-                            <div className="text-lg font-bold text-almostwhite">
-                              {r.hold ? r.hold : 0} ETH
-                            </div>
-                            <div className="text-xs font-semibold text-subtext">
-                              <p>Сумма холда</p>
-                            </div>
-                          </div>
-                          <div className="ml-8 2xls:ml-0">
-                            <div className="text-lg font-bold text-almostwhite">
-                              {r.subscribers ? r.subscribers : "Не указано"}
-                            </div>
-                            <div className="text-xs font-semibold text-subtext">
-                              <p>Подписчики</p>
-                              <p>в Twitter</p>
-                            </div>
-                          </div>
-                          <div className="">
-                            <div className="text-lg font-bold text-almostwhite">
-                              {r.NumberOfWinners
-                                ? r.NumberOfWinners
-                                : "Не указано"}
-                            </div>
-                            <div className="text-xs font-semibold text-subtext">
-                              <p>Количество</p>
-                              <p>Победителей</p>
-                            </div>
-                          </div>
-                          <div className="ml-7 grid grid-cols-2 grid-rows-2 gap-1 2xls:ml-0">
-                            {r.requirements.filter(
-                              (rq) => rq.platform === "Twitter"
-                            ).length > 0 ? (
-                              <div className="grid h-8 w-8 items-center justify-items-center">
-                                <img src="../../../../twitter.png" alt="" />
+                          <div className="grid grid-cols-[auto_48px] items-center justify-between">
+                            <div className="mt-3 h-max overflow-hidden break-words font-benzin text-2xl">
+                              {r.name}
+                              <div className="absolute top-18 grid h-20 w-20 items-center justify-items-center rounded-full bg-element">
+                                <img
+                                  src={r.profilePicture}
+                                  className="h-16 w-16 rounded-full"
+                                  alt=""
+                                />
                               </div>
-                            ) : null}
-                            {r.requirements.filter(
-                              (rq) => rq.platform === "Discord"
-                            ).length > 0 ? (
-                              <div className="grid h-8 w-8 items-center justify-items-center">
-                                <img src="../../../../discord.png" alt="" />
+                            </div>
+                          </div>
+                          <div className="mt-2 text-sm font-semibold text-subtext">
+                            Дедлайн - {r.deadline ? r.deadline : "Не указано"}
+                          </div>
+                          <div className="mt-8 grid grid-cols-[max-content_max-content] grid-rows-[max-content_max-content] justify-start gap-6 self-end sm:grid-cols-[repeat(4,_max-content)] md:grid-cols-[max-content_max-content] md:grid-rows-[max-content_max-content] 2xls:grid-cols-[max-content_max-content_max-content_auto] 2xls:grid-rows-1 2xls:justify-evenly">
+                            <div className="">
+                              <div className="text-lg font-bold text-almostwhite">
+                                {r.hold ? r.hold : 0} ETH
                               </div>
-                            ) : null}
-                            {r.hold && r.hold != 0 ? (
-                              <div className="grid h-8 w-8 items-center justify-items-center">
-                                <img src="../../../../metamask.png" alt="" />
+                              <div className="text-xs font-semibold text-subtext">
+                                <p>Сумма холда</p>
                               </div>
-                            ) : null}
+                            </div>
+                            <div className="ml-8 2xls:ml-0">
+                              <div className="text-lg font-bold text-almostwhite">
+                                {r.subscribers ? r.subscribers : "Не указано"}
+                              </div>
+                              <div className="text-xs font-semibold text-subtext">
+                                <p>Подписчики</p>
+                                <p>в Twitter</p>
+                              </div>
+                            </div>
+                            <div className="">
+                              <div className="text-lg font-bold text-almostwhite">
+                                {r.NumberOfWinners
+                                  ? r.NumberOfWinners
+                                  : "Не указано"}
+                              </div>
+                              <div className="text-xs font-semibold text-subtext">
+                                <p>Количество</p>
+                                <p>Победителей</p>
+                              </div>
+                            </div>
+                            <div className="ml-7 grid grid-cols-2 grid-rows-2 gap-1 2xls:ml-0">
+                              {r.requirements.filter(
+                                (rq) => rq.platform === "Twitter"
+                              ).length > 0 ? (
+                                <div className="grid h-8 w-8 items-center justify-items-center">
+                                  <img src="../../../../twitter.png" alt="" />
+                                </div>
+                              ) : null}
+                              {r.requirements.filter(
+                                (rq) => rq.platform === "Discord"
+                              ).length > 0 ? (
+                                <div className="grid h-8 w-8 items-center justify-items-center">
+                                  <img src="../../../../discord.png" alt="" />
+                                </div>
+                              ) : null}
+                              {r.hold && r.hold != 0 ? (
+                                <div className="grid h-8 w-8 items-center justify-items-center">
+                                  <img src="../../../../metamask.png" alt="" />
+                                </div>
+                              ) : null}
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </Link>
+                      </Link>
+                    </div>
                   ))}
             </div>
           )}
@@ -222,7 +266,3 @@ const RaffleList = () => {
 };
 
 export default RaffleList;
-
-// 460719167738347520
-// clg5dzhmq0000mj08pkwqftop
-// 30fccbe9-cbde-4200-b8de-da2e5567cc97

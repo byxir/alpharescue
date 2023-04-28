@@ -15,6 +15,7 @@ import axios from "axios";
 import { useSession } from "next-auth/react";
 import { type RouterOutputs, api } from "~/utils/api";
 import React from "react";
+import Image from "next/image";
 
 type meType = RouterOutputs["user"]["getMeWithFavoriteRaffles"] | undefined;
 
@@ -183,6 +184,10 @@ const RaffleList = () => {
     }
   }, [data?.user.id]);
 
+  useEffect(() => {
+    if (router.query.platform) void raffles.refetch();
+  }, [category]);
+
   const updateQuery = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value);
   };
@@ -334,11 +339,6 @@ const RaffleList = () => {
               />
             </div>
           </div>
-          {raffles.isFetchingNextPage && (
-            <div className="mt-24 grid justify-items-center">
-              <Spinner />
-            </div>
-          )}
           <div className="grid grid-flow-row grid-cols-1 gap-7 md:grid-cols-2 xl:grid-cols-3">
             {sortingMethod === "" && (
               <>
@@ -478,17 +478,25 @@ const MemorizedRaffle: React.FC<{
   return (
     <Link
       href={`/rafflebot/raffles/${r.id}`}
-      rel="noopener noreferrer"
-      target="_blank"
       className="min-w-104 relative grid grid-rows-[112px_auto] rounded-xl bg-element shadow-md"
       key={r.id}
     >
       <div className="relative h-28">
-        <img
-          src={r.banner ? r.banner : "../../../../herobg.png"}
-          className="h-full w-full rounded-t-xl object-cover"
-          alt=""
-        />
+        {!r.banner && (
+          <img
+            src="/../../../../herobg.png"
+            alt=""
+            className="h-full w-full rounded-t-xl object-cover"
+          />
+        )}
+        {r.banner && (
+          <Image
+            src={r.banner}
+            className="h-full w-full rounded-t-xl object-cover"
+            alt=""
+            fill
+          />
+        )}
         {!r.banner && (
           <div className="absolute right-8 top-1/3 flex space-x-3 font-benzin text-2xl text-bg 2xl:text-3xl">
             ALPHA RESCUE
