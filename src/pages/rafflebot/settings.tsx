@@ -19,9 +19,10 @@ import ProxyModal from "~/components/accounts/ProxyModal";
 import TwitterReader from "~/components/accounts/FileReaders/TwitterReader";
 import MetamaskReader from "~/components/accounts/FileReaders/MetamaskReader";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
-import axios from "axios";
+import axios, { all } from "axios";
 import OnLoadNotification from "~/components/notifications/OnLoadNotification";
 import RootReader from "~/components/accounts/FileReaders/RootReader";
+import XLSXExporter from "~/components/XLSXExporter";
 
 export type IAccount = {
   DiscordStatus?: string;
@@ -49,9 +50,41 @@ const Settings = () => {
 
   const queryClient = useQueryClient();
 
+  const myAccounts = useQuery<IAccount[]>(
+    ["accounts"],
+    async () => {
+      const res = await axios.get(
+        `https://alpharescue.online/get_all_accounts?discordId=${String(
+          allMyData.data?.discordId
+        )}&userId=${String(data?.user.id)}`,
+        {
+          headers: {
+            Authorization: `Bearer ${String(allMyData.data?.sessionToken)}`,
+          },
+        }
+      );
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+      return res.data;
+    },
+    {
+      enabled: false,
+    }
+  );
+
   const allMyData = api.user.getAllMyData.useQuery(undefined, {
     enabled: false,
   });
+
+  useEffect(() => {
+    if (
+      allMyData.data?.discordId &&
+      allMyData.data?.sessionToken &&
+      data?.user.id
+    ) {
+      void myAccounts.refetch();
+    }
+  }, [data?.user.id, allMyData.data?.discordId, allMyData.data?.sessionToken]);
 
   const handleDiscordSignIn = async () => {
     await signIn("discord", {
@@ -330,15 +363,11 @@ const Settings = () => {
               showNotification={() => setOnLoadNotificationShow(true)}
               readerType="email"
             />
-            <div
-              className={`col-span-2 grid h-32 items-center justify-items-center rounded-xl bg-element p-4 text-2xl text-almostwhite transition-colors ${
-                data?.user.raffleBotUser && status === "authenticated"
-                  ? "cursor-pointer hover:bg-opacity-60"
-                  : "cursor-not-allowed"
-              }`}
-            >
-              Выгрузить базу аккаунтов
-            </div>
+            <XLSXExporter
+              discordId={allMyData.data?.discordId}
+              sessionToken={allMyData.data?.sessionToken}
+              accounts={myAccounts.data}
+            />
           </div>
           <div className="grid h-full w-full grid-rows-[max-content_max-content] content-between justify-self-center">
             <div className="h-max rounded-xl border-2 border-subline px-8 pb-8 pt-8">

@@ -29,9 +29,12 @@
     "@trpc/next": "^10.9.0",
     "@trpc/react-query": "^10.9.0",
     "@trpc/server": "^10.9.0",
+    "@types/file-saver": "^2.0.5",
+    "@types/xlsx": "^0.0.36",
     "axios": "^1.3.4",
     "crypto-js": "^4.1.1",
     "event-source-polyfill": "^1.0.31",
+    "file-saver": "^2.0.5",
     "framer-motion": "^10.6.0",
     "fs": "^0.0.1-security",
     "lodash.debounce": "^4.0.8",
@@ -45,6 +48,7 @@
     "rsuite": "^5.28.1",
     "superjson": "1.9.1",
     "use-debounce": "^9.0.3",
+    "xlsx": "^0.18.5",
     "zod": "^3.20.6"
   },
   "devDependencies": {
