@@ -1,5 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
-import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
+import {
+  useQuery,
+  useInfiniteQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { type ChangeEvent, useEffect, useMemo, useState, useRef } from "react";
@@ -16,6 +20,7 @@ import { useSession } from "next-auth/react";
 import { type RouterOutputs, api } from "~/utils/api";
 import React from "react";
 import Image from "next/image";
+import { QueryClient } from "@tanstack/react-query";
 
 type meType = RouterOutputs["user"]["getMeWithFavoriteRaffles"] | undefined;
 
@@ -59,6 +64,8 @@ const RaffleList = () => {
     enabled: false,
   });
 
+  const queryClient = useQueryClient();
+
   const fetchRaffles = async ({
     _platform,
     _category,
@@ -77,7 +84,7 @@ const RaffleList = () => {
         _platform
       )}&category=${
         _platform === "Premint" ? _category : "selection"
-      }&page=${_page}`
+      }&page=${_page}&search=${searchText}`
     );
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const data: fetchRafflesResponse = await res.data;
@@ -103,10 +110,7 @@ const RaffleList = () => {
       staleTime: Infinity,
       cacheTime: Infinity,
       enabled: !!router.query.platform,
-      getNextPageParam: (
-        lastPage: fetchRafflesResponse,
-        allPages: fetchRafflesResponse[]
-      ) => {
+      getNextPageParam: (lastPage: fetchRafflesResponse) => {
         return lastPage.nextPage;
       },
     }
@@ -184,16 +188,19 @@ const RaffleList = () => {
     }
   }, [data?.user.id]);
 
-  useEffect(() => {
-    if (router.query.platform) void raffles.refetch();
-  }, [category]);
-
   const updateQuery = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value);
   };
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
-  const debouncedUpdate = debounce(updateQuery, 350);
+  const debouncedUpdate = debounce(updateQuery, 450);
+
+  useEffect(() => {
+    if (router.query.platform) {
+      void queryClient.removeQueries(["raffles"]);
+      void raffles.refetch();
+    }
+  }, [category, searchText]);
 
   const sentinelRef = useRef<HTMLDivElement | null>(null);
   const [observer, setObserver] = useState<IntersectionObserver | null>(null);
@@ -342,81 +349,65 @@ const RaffleList = () => {
           <div className="grid grid-flow-row grid-cols-1 gap-7 md:grid-cols-2 xl:grid-cols-3">
             {sortingMethod === "" && (
               <>
-                {allData
-                  .filter((r) =>
-                    r.name.toLowerCase().includes(searchText.toLowerCase())
-                  )
-                  .map((r) => (
-                    <MemorizedRaffle
-                      key={r.id}
-                      r={r}
-                      me={me.data}
-                      _platform={String(router.query.platform)}
-                      handleAddFavorites={handleAddFavorites}
-                      favoriteRafflesCopy={favoriteRafflesCopy}
-                      deletedRafflesCopy={deletedRafflesCopy}
-                    />
-                  ))}
+                {allData.map((r) => (
+                  <MemorizedRaffle
+                    key={r.id}
+                    r={r}
+                    me={me.data}
+                    _platform={String(router.query.platform)}
+                    handleAddFavorites={handleAddFavorites}
+                    favoriteRafflesCopy={favoriteRafflesCopy}
+                    deletedRafflesCopy={deletedRafflesCopy}
+                  />
+                ))}
               </>
             )}
 
             {sortingMethod === "hold" && (
               <>
-                {noHoldData()
-                  .filter((r) =>
-                    r.name.toLowerCase().includes(searchText.toLowerCase())
-                  )
-                  .map((r) => (
-                    <MemorizedRaffle
-                      r={r}
-                      key={r.id}
-                      me={me.data}
-                      _platform={String(router.query.platform)}
-                      handleAddFavorites={handleAddFavorites}
-                      favoriteRafflesCopy={favoriteRafflesCopy}
-                      deletedRafflesCopy={deletedRafflesCopy}
-                    />
-                  ))}
+                {noHoldData().map((r) => (
+                  <MemorizedRaffle
+                    r={r}
+                    key={r.id}
+                    me={me.data}
+                    _platform={String(router.query.platform)}
+                    handleAddFavorites={handleAddFavorites}
+                    favoriteRafflesCopy={favoriteRafflesCopy}
+                    deletedRafflesCopy={deletedRafflesCopy}
+                  />
+                ))}
               </>
             )}
 
             {sortingMethod === "subscribers" && (
               <>
-                {sortedBySubscribers()
-                  .filter((r) =>
-                    r.name.toLowerCase().includes(searchText.toLowerCase())
-                  )
-                  .map((r) => (
-                    <MemorizedRaffle
-                      r={r}
-                      key={r.id}
-                      me={me.data}
-                      _platform={String(router.query.platform)}
-                      handleAddFavorites={handleAddFavorites}
-                      favoriteRafflesCopy={favoriteRafflesCopy}
-                      deletedRafflesCopy={deletedRafflesCopy}
-                    />
-                  ))}
+                {sortedBySubscribers().map((r) => (
+                  <MemorizedRaffle
+                    r={r}
+                    key={r.id}
+                    me={me.data}
+                    _platform={String(router.query.platform)}
+                    handleAddFavorites={handleAddFavorites}
+                    favoriteRafflesCopy={favoriteRafflesCopy}
+                    deletedRafflesCopy={deletedRafflesCopy}
+                  />
+                ))}
               </>
             )}
 
             {sortingMethod === "favorites" && (
               <>
-                {favoriteData()
-                  .filter((r) =>
-                    r.name.toLowerCase().includes(searchText.toLowerCase())
-                  )
-                  .map((r) => (
-                    <MemorizedRaffle
-                      r={r}
-                      key={r.id}
-                      me={me.data}
-                      _platform={String(router.query.platform)}
-                      handleAddFavorites={handleAddFavorites}
-                      favoriteRafflesCopy={favoriteRafflesCopy}
-                      deletedRafflesCopy={deletedRafflesCopy}
-                    />
-                  ))}
+                {favoriteData().map((r) => (
+                  <MemorizedRaffle
+                    r={r}
+                    key={r.id}
+                    me={me.data}
+                    _platform={String(router.query.platform)}
+                    handleAddFavorites={handleAddFavorites}
+                    favoriteRafflesCopy={favoriteRafflesCopy}
+                    deletedRafflesCopy={deletedRafflesCopy}
+                  />
+                ))}
               </>
             )}
           </div>
