@@ -3,6 +3,7 @@ import { type Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import localFont from "next/font/local";
 import "../styles/globals.css";
+import { Analytics } from "@vercel/analytics/react";
 
 export const benzin = localFont({
   src: [
@@ -105,6 +106,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
               refetchMyRaffles={() => refetchFunction()}
             />
             <Component {...pageProps} />
+            <Analytics />
             <ReactQueryDevtools
               initialIsOpen={false}
               position={"bottom-right"}

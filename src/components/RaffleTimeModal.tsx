@@ -48,7 +48,7 @@ export default function RaffleTimeModal({
   remainingRaffles: number;
   showNotification: () => void;
 }) {
-  const [value, setValue] = useState(180);
+  const [value, setValue] = useState(120);
   const handleChange = (event: Event, newValue: number | number[]) => {
     setValue(newValue as number);
   };

@@ -106,7 +106,7 @@ export default function Example() {
                     <img
                       src={post.imageUrl}
                       alt=""
-                      className="w-full rounded-2xl bg-gray-100 object-cover"
+                      className="w-full rounded-2xl bg-gray-100 object-cover shadow-equal"
                     />
                   </div>
                 </article>

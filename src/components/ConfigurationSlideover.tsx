@@ -7,7 +7,7 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { type Configuration } from "@prisma/client";
 import { api } from "~/utils/api";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { type IAccount } from "~/pages/rafflebot/settings";
 import Spinner from "./spinner/Spinner";
@@ -202,6 +202,8 @@ export default function ConfigurationSlideover({
       void myAccounts.refetch();
     }
   }, [sessionToken, discordId, open, myAccounts.data, myAccounts.isStale]);
+
+  console.log(myAccounts.data);
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -489,16 +491,40 @@ export default function ConfigurationSlideover({
                                     >
                                       <div className="mb-4 grid h-14 w-full grid-cols-[5%_17%_18%_20%_20%_20%] items-center rounded-xl border border-subline px-4 py-4 text-subtext">
                                         <span>{Number(a.name) + 1}</span>
-                                        <span>
+                                        <span
+                                          className={`${
+                                            a.TwitterStatus === "ACTIVE"
+                                              ? "text-green-500"
+                                              : a.TwitterStatus === "BAN"
+                                              ? "text-red-600"
+                                              : ""
+                                          }`}
+                                        >
                                           {a.TwitterCsrf?.slice(0, 8)}...
                                         </span>
-                                        <span>
+                                        <span
+                                          className={`${
+                                            a.DiscordStatus === "ACTIVE"
+                                              ? "text-green-500"
+                                              : a.DiscordStatus === "BAN"
+                                              ? "text-red-600"
+                                              : ""
+                                          }`}
+                                        >
                                           {a.DiscordToken?.slice(0, 8)}...
                                         </span>
                                         <span>
                                           {a.MetaMaskAddress?.slice(0, 8)}...
                                         </span>
-                                        <span>
+                                        <span
+                                          className={`${
+                                            a.ProxyStatus === "ACTIVE"
+                                              ? "text-green-500"
+                                              : a.ProxyStatus === "BAN"
+                                              ? "text-red-600"
+                                              : ""
+                                          }`}
+                                        >
                                           {a.ProxyData?.slice(7, 17)}...
                                         </span>
                                         <span>{a.Email?.slice(0, 12)}...</span>

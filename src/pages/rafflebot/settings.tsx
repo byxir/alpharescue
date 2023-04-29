@@ -23,6 +23,7 @@ import axios, { all } from "axios";
 import OnLoadNotification from "~/components/notifications/OnLoadNotification";
 import RootReader from "~/components/accounts/FileReaders/RootReader";
 import XLSXExporter from "~/components/XLSXExporter";
+import ReplaceBannedModal from "~/components/accounts/ReplaceBannedModal";
 
 export type IAccount = {
   DiscordStatus?: string;
@@ -43,7 +44,7 @@ export type IAccount = {
 const Settings = () => {
   const { data, status } = useSession();
   const [slideoverOpen, setSlideoverOpen] = useState(false);
-
+  const [replaceBannedModalOpen, setReplaceBannedModalOpen] = useState(false);
   const [captchaModalOpen, setCaptchaModalOpen] = useState(false);
   const [proxyModalOpen, setProxyModalOpen] = useState(false);
   const [onLoadNotificationShow, setOnLoadNotificationShow] = useState(false);
@@ -369,7 +370,7 @@ const Settings = () => {
               accounts={myAccounts.data}
             />
           </div>
-          <div className="grid h-full w-full grid-rows-[max-content_max-content] content-between justify-self-center">
+          <div className="grid h-full w-full grid-rows-[max-content_max-content] justify-self-center">
             <div className="h-max rounded-xl border-2 border-subline px-8 pb-8 pt-8">
               <p className="mb-10 text-xl">Конфигурации</p>
               {allMyData.data?.configurations ? (
@@ -551,6 +552,9 @@ const Settings = () => {
                 Настроить
               </button>
             </div>
+            <button className="mt-9 w-full cursor-pointer rounded-xl bg-element px-6 py-12 text-2xl shadow-md transition-all hover:bg-opacity-60">
+              Заменить забаненные аккаунты
+            </button>
           </div>
         </div>
       </div>
@@ -584,6 +588,7 @@ const Settings = () => {
         show={onLoadNotificationShow}
         closeFunction={() => setOnLoadNotificationShow(false)}
       />
+      {/* <ReplaceBannedModal /> */}
     </SidebarLayout>
   );
 };

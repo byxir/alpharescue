@@ -139,7 +139,7 @@ export default function Subscriptions() {
                   {tier.name === "Speed Mint Bot" && <span>TBD</span>}
                 </span>
                 <span className="font-montserratBold text-sm leading-6 text-subtext">
-                  {frequency === 0 ? "/месяц" : "/год"}
+                  {frequency === 0 ? "/месяц" : "/3 мес"}
                 </span>
               </p>
               <a

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { Fragment, useEffect, useState } from "react";
@@ -79,7 +80,7 @@ export default function CaptchaModal({
         }
       );
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      setCaptchaKeyString(String(res.data.captchaKey));
+      setCaptchaKeyString(res.data.captchaKey);
       // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       return res.data;
     },
@@ -90,9 +91,9 @@ export default function CaptchaModal({
     }
   );
 
-  const [captchaKeyString, setCaptchaKeyString] = useState<string | undefined>(
-    myCaptchaKey.data?.captchaKey
-  );
+  const [captchaKeyString, setCaptchaKeyString] = useState<
+    string | undefined | null
+  >(myCaptchaKey.data?.captchaKey);
 
   useEffect(() => {
     if (data?.user.id && discordId && sessionToken) {
@@ -145,7 +146,7 @@ export default function CaptchaModal({
                         <div className="h-6 w-full">
                           <input
                             type="text"
-                            value={captchaKeyString}
+                            value={captchaKeyString ? captchaKeyString : ""}
                             onChange={(e) =>
                               setCaptchaKeyString(e.target.value)
                             }
