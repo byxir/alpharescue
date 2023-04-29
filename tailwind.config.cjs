@@ -69,6 +69,9 @@ const config = {
       minWidth: {
         lg: "512px",
       },
+      boxShadow: {
+        equal: "0px 0px 20px 0px rgba(226, 186, 187, 0.2)",
+      },
     },
   },
   plugins: [require("@tailwindcss/line-clamp")],

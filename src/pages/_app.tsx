@@ -50,9 +50,22 @@ export interface IToggleEventStreamContext {
   toggleEventStream: () => void;
 }
 
+export interface IEventStreamStatusContext {
+  isEventStreamOpen: boolean;
+  closeIsEventStreamOpen: () => void;
+  openIsEventStreamOpen: () => void;
+}
+
 export const ToggleEventStreamContext =
   React.createContext<IToggleEventStreamContext>({
     toggleEventStream: () => void 0,
+  });
+
+export const EventStreamStatusContext =
+  React.createContext<IEventStreamStatusContext>({
+    isEventStreamOpen: false,
+    closeIsEventStreamOpen: () => void 0,
+    openIsEventStreamOpen: () => void 0,
   });
 
 const MyApp: AppType<{ session: Session | null }> = ({
@@ -66,24 +79,38 @@ const MyApp: AppType<{ session: Session | null }> = ({
     await queryClient.refetchQueries(["myraffles"]);
   };
 
+  const [isEventStreamOpen, setIsEventStreamOpen] = useState(false);
+
   return (
     <main
       lang="en"
       className={`${benzin.variable} ${montserratRegular.variable} ${abibas.variable} ${montserrat.variable} font-sans`}
     >
       <SessionProvider session={session}>
-        <ToggleEventStreamContext.Provider
+        <EventStreamStatusContext.Provider
           value={{
-            toggleEventStream: () => setEventStreamTrigger(!eventStreamTrigger),
+            isEventStreamOpen: isEventStreamOpen,
+            closeIsEventStreamOpen: () => setIsEventStreamOpen(false),
+            openIsEventStreamOpen: () => setIsEventStreamOpen(true),
           }}
         >
-          <Banner
-            openEventStream={eventStreamTrigger}
-            refetchMyRaffles={() => refetchFunction()}
-          />
-          <Component {...pageProps} />
-          <ReactQueryDevtools initialIsOpen={false} position={"bottom-right"} />
-        </ToggleEventStreamContext.Provider>
+          <ToggleEventStreamContext.Provider
+            value={{
+              toggleEventStream: () =>
+                setEventStreamTrigger(!eventStreamTrigger),
+            }}
+          >
+            <Banner
+              openEventStream={eventStreamTrigger}
+              refetchMyRaffles={() => refetchFunction()}
+            />
+            <Component {...pageProps} />
+            <ReactQueryDevtools
+              initialIsOpen={false}
+              position={"bottom-right"}
+            />
+          </ToggleEventStreamContext.Provider>
+        </EventStreamStatusContext.Provider>
       </SessionProvider>
     </main>
   );

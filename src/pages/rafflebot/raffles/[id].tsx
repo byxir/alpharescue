@@ -1,18 +1,23 @@
 /* eslint-disable @next/next/no-img-element */
 import LaunchButton from "~/components/LaunchButton/LaunchButton";
 import SidebarLayout from "~/components/SidebarLayout";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { RangeSlider } from "~/components/RangeSlider";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useQuery, type UseQueryResult } from "@tanstack/react-query";
+import {
+  useMutation,
+  useQuery,
+  type UseQueryResult,
+} from "@tanstack/react-query";
 import axios from "axios";
 import Spinner from "~/components/spinner/Spinner";
 import { api } from "~/utils/api";
 import { type IAccount } from "../settings";
 import RaffleTimeModal from "~/components/RaffleTimeModal";
 import OnNoRafflesNotification from "~/components/notifications/OnNoRafflesNotification";
+import { EventStreamStatusContext } from "~/pages/_app";
 
 export type IRaffle = {
   banner: string;
@@ -57,6 +62,8 @@ const Raffle = () => {
     }
   );
 
+  const { isEventStreamOpen } = useContext(EventStreamStatusContext);
+
   const allMyData = api.user.getAllMyData.useQuery();
 
   const myAccounts = useQuery<IAccount[]>(
@@ -81,6 +88,31 @@ const Raffle = () => {
       enabled: false,
     }
   );
+
+  const stopRaffleMutation = useMutation(["stopRaffle"], async () => {
+    return axios.post(
+      "https://alpharescue.online/stopraffle",
+      {
+        discordId: allMyData.data?.discordId,
+        userId: data?.user.id,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${String(allMyData.data?.sessionToken)}`,
+        },
+      }
+    );
+  });
+
+  const stopRaffle = () => {
+    if (
+      data?.user.id &&
+      allMyData.data?.discordId &&
+      allMyData.data?.sessionToken
+    ) {
+      stopRaffleMutation.mutate();
+    }
+  };
 
   useEffect(() => {
     if (
@@ -505,15 +537,29 @@ const Raffle = () => {
                   ) : null}
                 </div>
               </div>
-              <LaunchButton
-                authorized={
-                  data?.user.raffleBotUser && status === "authenticated"
-                }
-                openModal={() => setTimeModalOpen(true)}
-              >
-                <p className="text-2xl">Запустить</p>
-                <p className="text-2xl">абуз</p>
-              </LaunchButton>
+              {!isEventStreamOpen && (
+                <LaunchButton
+                  authorized={
+                    data?.user.raffleBotUser && status === "authenticated"
+                  }
+                  openModal={() => setTimeModalOpen(true)}
+                >
+                  <p className="text-2xl">Запустить</p>
+                  <p className="text-2xl">абуз</p>
+                </LaunchButton>
+              )}
+
+              {isEventStreamOpen && (
+                <LaunchButton
+                  authorized={
+                    data?.user.raffleBotUser && status === "authenticated"
+                  }
+                  executeScript={stopRaffle}
+                >
+                  <p className="text-2xl">Отменить</p>
+                  <p className="text-2xl">заход</p>
+                </LaunchButton>
+              )}
             </div>
             <div className="mt-16 grid justify-items-center text-center">
               <div className="grid w-5/6 grid-cols-1 items-center justify-center md:w-full md:grid-cols-[max-content_300px] md:justify-between">

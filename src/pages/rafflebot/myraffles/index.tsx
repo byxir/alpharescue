@@ -87,21 +87,21 @@ const RaffleList = () => {
       return res.data;
     },
     {
-      onSuccess: () => {
-        void queryClient.invalidateQueries(["myraffles"]);
+      onSuccess: async () => {
+        await myraffles.refetch();
       },
     }
   );
-
-  const handleDeleteMyRaffle = (id: string) => {
-    deleteMyRaffleMutation.mutate(id);
-  };
 
   const myraffles = useQuery<IMyRaffle[] | null>(["myraffles"], queryFn, {
     staleTime: Infinity,
     cacheTime: Infinity,
     enabled: !!protectionData.data && !!data?.user.id,
   });
+
+  const handleDeleteMyRaffle = (id: string) => {
+    deleteMyRaffleMutation.mutate(id);
+  };
 
   const updateQuery = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value);

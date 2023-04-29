@@ -46,7 +46,27 @@ const config = {
         port: "",
         pathname: "/images/i/lucas71/**",
       },
+      {
+        protocol: "https",
+        hostname: "i.seadn.io",
+        port: "",
+        pathname: "/gcs/files/**",
+      },
+      {
+        protocol: "https",
+        hostname: "i.seadn.io",
+        port: "",
+        pathname: "/gae/**",
+      },
+      {
+        protocol: "https",
+        hostname: "openseauserdata.com",
+        port: "",
+        pathname: "/files/**",
+      },
     ],
   },
 };
 export default config;
+
+//https://openseauserdata.com/files/62bfb40708648a12ca0097f29332c2f6.jpg
