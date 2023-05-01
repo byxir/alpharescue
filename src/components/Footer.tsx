@@ -15,7 +15,7 @@ const navigation = {
   ],
   company: [
     { name: "Создание фермы", href: "/services#farm" },
-    { name: "Прогрев аккаунтов", href: "/services#warmup" },
+    { name: "Прогрев аккаунтов", href: "/services#accounts" },
     { name: "Софт под заказ", href: "/services#software" },
     { name: "Абуз под фермы", href: "/services#abuse" },
   ],
