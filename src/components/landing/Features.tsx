@@ -24,14 +24,14 @@ const features = [
   {
     name: "Зеркала западных альфа групп",
     description:
-      "Get a push notification every time we find out something that’s going to lower the share price on your holdings so you can sell before the information hits the public markets.",
+      "Обширная база зеркал западных альфа групп с контентом по рынку криптовалюты и NFT, включая сигналы на NFT, фьючерсы, и спот.",
     icon: Moneybag,
     screen: "mirrors",
   },
   {
     name: "Договорные услуги",
     description:
-      "We hide your stock purchases behind thousands of anonymous trading accounts, so suspicious activity can never be traced back to you.",
+      "Софт под заказ, помощь с мультиаккиногм, создание и прогрев ферм, консультация.",
     icon: Handshake,
     screen: "services",
   },
