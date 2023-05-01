@@ -1,3 +1,4 @@
+import Link from "next/link";
 import Footer from "~/components/Footer";
 import Header from "~/components/Header";
 
@@ -47,7 +48,12 @@ export default function Farm() {
         <br></br>
         <br></br>
 
-        <div className="md:px-6">разметка для заказа</div>
+        <Link
+          href="https://t.me/rescue_manager"
+          className="text-accent underline md:px-6"
+        >
+          Связаться с менеджером
+        </Link>
       </div>
       <Footer />
     </div>
