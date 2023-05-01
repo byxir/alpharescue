@@ -105,7 +105,7 @@ function FeaturesDesktop() {
           }`}
         >
           <div className="max-w-lg">
-            <img src="../../../tempterminal.png" alt="" className="" />
+            <img src="../../../herogif.gif" alt="" className="rounded-lg" />
           </div>
           <div className="mt-12">
             <LaunchButton>
