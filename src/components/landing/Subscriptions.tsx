@@ -130,13 +130,13 @@ export default function Subscriptions() {
               </p>
               <p className="mt-6 flex items-baseline gap-x-1">
                 <span className="font-montserratBold text-4xl  text-almostwhite">
-                  {tier.name === "Community Pass" && (
+                  {/* {tier.name === "Community Pass" && (
                     <span>${tier.price[frequency]}</span>
                   )}
                   {tier.name === "Raffle Bot" && (
                     <span>от ${tier.price[frequency]}</span>
-                  )}
-                  {tier.name === "Speed Mint Bot" && <span>TBD</span>}
+                  )} */}
+                  <span>TBD</span>
                 </span>
                 <span className="font-montserratBold text-sm leading-6 text-subtext">
                   {frequency === 0 ? "/месяц" : "/3 мес"}
