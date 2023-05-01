@@ -5,7 +5,8 @@ const faqs = [
   {
     question: "Сколько сделок в каналах убыточные?",
     answer:
-      "Мы ведем подробную стастику по каждому каналу, следовательно включаем в неё как прибыльные, так и убыточные сделки. Стастику вы найдете по этой ссылке.",
+      "Мы ведем подробную стастику по каждому каналу, следовательно включаем в неё как прибыльные, так и убыточные сделки. Стастистику вы найдете по ",
+    link: "https://alpharescue.notion.site/Alpha-Rescue-58a5a2bfc2ca4c259f629c0dad8085db",
   },
   {
     question: "Как пользоваться софтом для абуза?",
@@ -65,7 +66,12 @@ export default function FAQ() {
                     </dt>
                     <Disclosure.Panel as="dd" className="mt-2 pr-12">
                       <p className="text-base leading-7 text-subtext">
-                        {faq.answer}
+                        {faq.answer}{" "}
+                        {faq.link ? (
+                          <a className="text-accent underline" href={faq.link}>
+                            этой ссылке.
+                          </a>
+                        ) : null}
                       </p>
                     </Disclosure.Panel>
                   </>
