@@ -33,9 +33,8 @@ export default function Example() {
             ALPHA <span className="text-bg">RESCUE</span>
           </h1>
           <p className="mt-6 text-lg leading-8 text-element xl:text-almostwhite">
-            Anim aute id magna aliqua ad ad non deserunt sunt. Qui irure qui
-            lorem cupidatat commodo. Elit sunt amet fugiat veniam occaecat
-            fugiat aliqua.
+            Упростим вашу работу в крипте. Вы забудете об абузе событий руками и
+            ресерче информации.
           </p>
           <div className="mt-10 flex items-center gap-x-6">
             <Link
