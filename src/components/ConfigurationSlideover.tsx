@@ -500,7 +500,11 @@ export default function ConfigurationSlideover({
                                               : ""
                                           }`}
                                         >
-                                          {a.TwitterCsrf?.slice(0, 8)}...
+                                          {a.TwitterCsrf ? (
+                                            <span>
+                                              {a.TwitterCsrf?.slice(0, 8)}...
+                                            </span>
+                                          ) : null}
                                         </span>
                                         <span
                                           className={`${
@@ -511,10 +515,19 @@ export default function ConfigurationSlideover({
                                               : ""
                                           }`}
                                         >
-                                          {a.DiscordToken?.slice(0, 8)}...
+                                          {a.DiscordToken ? (
+                                            <span>
+                                              {a.DiscordToken?.slice(0, 8)}...
+                                            </span>
+                                          ) : null}
                                         </span>
                                         <span>
-                                          {a.MetaMaskAddress?.slice(0, 8)}...
+                                          {a.MetaMaskAddress ? (
+                                            <span>
+                                              {a.MetaMaskAddress?.slice(0, 8)}
+                                              ...
+                                            </span>
+                                          ) : null}
                                         </span>
                                         <span
                                           className={`${
@@ -525,9 +538,19 @@ export default function ConfigurationSlideover({
                                               : ""
                                           }`}
                                         >
-                                          {a.ProxyData?.slice(7, 17)}...
+                                          {a.ProxyData ? (
+                                            <span>
+                                              {a.ProxyData?.slice(7, 17)}...
+                                            </span>
+                                          ) : null}
                                         </span>
-                                        <span>{a.Email?.slice(0, 12)}...</span>
+                                        <span>
+                                          {a.Email ? (
+                                            <span>
+                                              {a.Email?.slice(0, 12)}...
+                                            </span>
+                                          ) : null}
+                                        </span>
                                       </div>
                                       <div
                                         onClick={() => handleExceptions(a.name)}

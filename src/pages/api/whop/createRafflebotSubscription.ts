@@ -28,45 +28,51 @@ const userByIdHandler = async (req: NextApiRequest, res: NextApiResponse) => {
       },
     });
 
-    if (currentUser && !currentUser.user.RaffleBotSubscription) {
-      const newFlags = await prisma.account.update({
-        where: {
-          id: currentUser?.id,
-        },
-        data: {
-          user: {
-            update: {
-              raffleBotUser: true,
-              communityMember: true,
+    if (currentUser) {
+      if (!currentUser.user.RaffleBotSubscription) {
+        const newFlags = await prisma.account.update({
+          where: {
+            id: currentUser?.id,
+          },
+          data: {
+            user: {
+              update: {
+                raffleBotUser: true,
+                communityMember: true,
+              },
             },
           },
-        },
-      });
+        });
 
-      const currentDate = new Date();
-      const expiresDate = new Date(
-        currentDate.getTime() + 8 * 24 * 60 * 60 * 1000
-      );
+        const currentDate = new Date();
+        const expiresDate = new Date(
+          currentDate.getTime() + 8 * 24 * 60 * 60 * 1000
+        );
 
-      const newSubscription = await prisma.raffleBotSubscription.create({
-        data: {
-          expires: expiresDate,
-          rafflesLeft: 5,
-          rafflesPerDay: 5,
-          maxNumAccounts: 50,
-          user: {
-            connect: {
-              id: currentUser?.userId,
+        const newSubscription = await prisma.raffleBotSubscription.create({
+          data: {
+            expires: expiresDate,
+            rafflesLeft: 5,
+            rafflesPerDay: 5,
+            maxNumAccounts: 50,
+            user: {
+              connect: {
+                id: currentUser?.userId,
+              },
             },
           },
-        },
+        });
+      }
+
+      return res.status(200).json({
+        message: "good",
       });
     }
-
-    return res.status(200).json({
-      message: "good",
-    });
   }
+  // else {
+  //   const newUser = await prisma.account.create({
+
+  // }
 };
 
 export default userByIdHandler;

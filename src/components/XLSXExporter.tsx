@@ -54,7 +54,7 @@ const XLSXExporter: React.FC<IXLSXExporter> = ({
         !discordId
       }
     >
-      Выгрузить аккаунты
+      Экспорт аккаунтов
     </button>
   );
 };
