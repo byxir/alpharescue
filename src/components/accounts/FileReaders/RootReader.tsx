@@ -106,7 +106,7 @@ const RootReader = ({
   return (
     <button
       {...getRootProps()}
-      className={`grid h-52 justify-items-center rounded-xl border-2 border-dashed border-subline p-4 transition-colors ${
+      className={`grid h-52 w-44 justify-items-center rounded-xl border-2 border-dashed border-subline p-4 transition-colors ${
         data?.user.raffleBotUser && status === "authenticated"
           ? "cursor-pointer hover:bg-neutral-900"
           : "cursor-not-allowed"

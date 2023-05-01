@@ -353,7 +353,9 @@ const Settings = () => {
               <p className="">Загрузить</p>
               <p className="">прокси</p>
               <div className="mt-4 flex items-center space-x-1 text-subline">
-                <DocumentTextIcon />
+                <div className="h-6 w-6">
+                  <DocumentTextIcon />
+                </div>
                 <div className="text-xs">.txt файл</div>
               </div>
             </button>
