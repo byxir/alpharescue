@@ -352,7 +352,7 @@ const Settings = () => {
               <p className="">прокси</p>
               <div className="mt-4 flex items-center space-x-1 text-subline">
                 <Forbidden />
-                <div className="text-xs">Файл не выбран</div>
+                <div className="text-xs">.txt файл</div>
               </div>
             </button>
             <RootReader

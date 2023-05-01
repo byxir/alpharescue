@@ -136,6 +136,7 @@ export default function Subscriptions() {
                   {tier.name === "Raffle Bot" && (
                     <span>от ${tier.price[frequency]}</span>
                   )} */}
+                  ``
                   <span>TBD</span>
                 </span>
                 <span className="font-montserratBold text-sm leading-6 text-subtext">
