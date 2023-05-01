@@ -18,6 +18,7 @@ import { type IAccount } from "../settings";
 import RaffleTimeModal from "~/components/RaffleTimeModal";
 import OnNoRafflesNotification from "~/components/notifications/OnNoRafflesNotification";
 import { EventStreamStatusContext } from "~/pages/_app";
+import Image from "next/image";
 
 export type IRaffle = {
   banner: string;
@@ -236,7 +237,7 @@ const Raffle = () => {
           <div className="border-subline 2xl:border-r-2">
             <div className="grid border-b-2 border-subline pb-12">
               <div className="relative h-32 w-full md:h-44">
-                <img
+                <Image
                   src={
                     raffle.data?.banner
                       ? raffle.data?.banner
@@ -244,6 +245,7 @@ const Raffle = () => {
                   }
                   alt=""
                   className="h-full w-full object-cover"
+                  fill
                 />
                 {!raffle.data?.banner && (
                   <div className="absolute right-8 top-1/3 flex space-x-3 font-benzin text-4xl text-bg 2xl:text-5xl">
@@ -261,10 +263,12 @@ const Raffle = () => {
                   {raffle.data?.platform}
                 </div>
                 <div className="absolute -top-12 grid h-24 w-24 items-center justify-items-center rounded-full bg-bg md:-top-16 md:h-28 md:w-28">
-                  <img
+                  <Image
                     src={raffle.data?.profilePicture}
                     alt=""
-                    className="h-20 w-20 rounded-full md:h-24 md:w-24"
+                    className="rounded-full md:h-24 md:w-24"
+                    width={80}
+                    height={80}
                   />
                 </div>
               </div>
