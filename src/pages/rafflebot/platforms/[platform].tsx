@@ -435,7 +435,7 @@ const MemorizedRaffle: React.FC<{
   ) => void;
   favoriteRafflesCopy: string[];
   deletedRafflesCopy: string[];
-}> = React.memo(function InlineRaffle({
+}> = ({
   r,
   me,
   _platform,
@@ -452,7 +452,7 @@ const MemorizedRaffle: React.FC<{
   ) => void;
   favoriteRafflesCopy: string[];
   deletedRafflesCopy: string[];
-}) {
+}) => {
   const determineColor = (_platform: string) => {
     if (_platform === "Premint") {
       return "#2CBBDB";
@@ -505,10 +505,12 @@ const MemorizedRaffle: React.FC<{
           <div className="mt-3 h-max overflow-hidden break-words font-benzin text-2xl">
             {r.name}
             <div className="absolute top-18 grid h-20 w-20 items-center justify-items-center rounded-full bg-element">
-              <img
+              <Image
                 src={r.profilePicture}
-                className="h-16 w-16 rounded-full"
+                className="rounded-full"
                 alt=""
+                height={64}
+                width={64}
               />
             </div>
           </div>
@@ -588,4 +590,4 @@ const MemorizedRaffle: React.FC<{
       </div>
     </Link>
   );
-});
+};

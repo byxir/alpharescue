@@ -30,6 +30,18 @@ const config = {
       },
       {
         protocol: "https",
+        hostname: "images.premint.xyz",
+        port: "",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "pbs.twimg.com",
+        port: "",
+        pathname: "/profile_images/**",
+      },
+      {
+        protocol: "https",
         hostname: "pbs.twimg.com",
         port: "",
         pathname: "/profile_banners/**",
