@@ -1,5 +1,7 @@
 import {
   AtSymbolIcon,
+  DocumentIcon,
+  DocumentTextIcon,
   KeyIcon,
   NoSymbolIcon,
   ServerStackIcon,
@@ -351,7 +353,7 @@ const Settings = () => {
               <p className="">Загрузить</p>
               <p className="">прокси</p>
               <div className="mt-4 flex items-center space-x-1 text-subline">
-                <Forbidden />
+                <DocumentTextIcon />
                 <div className="text-xs">.txt файл</div>
               </div>
             </button>
