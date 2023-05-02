@@ -48,7 +48,7 @@ export default function Services() {
                   если ферма большая. Наша команда сэкономит ваше время и силы.
                   Мы сделаем вам ферму под ваши задачи, поможем с выбором
                   аккаунтов и быстро создадим ферму"
-                link="/services/warmup"
+                link="/services/accounts"
               >
                 <UserCircleIcon />
               </ServiceBox>

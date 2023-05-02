@@ -506,7 +506,11 @@ const MemorizedRaffle: React.FC<{
             {r.name}
             <div className="absolute top-18 grid h-20 w-20 items-center justify-items-center rounded-full bg-element">
               <Image
-                src={r.profilePicture}
+                src={
+                  r.profilePicture
+                    ? r.profilePicture
+                    : "/../../../../herobg.jpg"
+                }
                 className="rounded-full"
                 alt=""
                 height={64}
