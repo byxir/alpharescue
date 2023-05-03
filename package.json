@@ -49,6 +49,7 @@
     "rsuite": "^5.28.1",
     "superjson": "1.9.1",
     "use-debounce": "^9.0.3",
+    "uuid": "^9.0.0",
     "xlsx": "^0.18.5",
     "zod": "^3.20.6"
   },
@@ -60,6 +61,7 @@
     "@types/prettier": "^2.7.2",
     "@types/react": "^18.0.38",
     "@types/react-dom": "^18.0.11",
+    "@types/uuid": "^9.0.1",
     "@typescript-eslint/eslint-plugin": "^5.53.0",
     "@typescript-eslint/parser": "^5.53.0",
     "autoprefixer": "^10.4.7",

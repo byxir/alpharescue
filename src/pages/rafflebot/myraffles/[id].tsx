@@ -137,7 +137,11 @@ const MyRaffle = () => {
                 <div
                   className={`mt-6 cursor-pointer font-benzin text-4xl hover:underline`}
                 >
-                  <Link href={String(myRaffle.data?.platformLink)}>
+                  <Link
+                    rel="noopener noreferrer"
+                    target="_blank"
+                    href={String(myRaffle.data?.platformLink)}
+                  >
                     {myRaffle.data?.name}
                   </Link>
                 </div>

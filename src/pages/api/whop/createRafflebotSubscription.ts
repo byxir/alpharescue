@@ -1,15 +1,29 @@
 import { type NextApiRequest, type NextApiResponse } from "next";
 import { prisma } from "../../../server/db";
+import { v4 as uuidv4 } from "uuid";
 
 const userByIdHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "GET") return res.status(200).json({ success: true });
 
   let id;
+  let username;
+  let useremail;
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   if (req.body.data.user.social_accounts[0].id) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
     id = req.body.data.user.social_accounts[0].id;
+  }
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+  if (req.body.data.user.name) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+    username = req.body.data.user.name;
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+  if (req.body.data.user.email) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+    useremail = req.body.data.user.email;
   }
 
   if (!id || typeof id != "string") {
@@ -67,12 +81,49 @@ const userByIdHandler = async (req: NextApiRequest, res: NextApiResponse) => {
       return res.status(200).json({
         message: "good",
       });
+    } else {
+      if (typeof username === "string" && typeof useremail === "string") {
+        const currentDate = new Date();
+        const newSessionExpiresDate = new Date(
+          currentDate.getTime() + 28 * 24 * 60 * 60 * 1000
+        );
+        const newSubscriptionExpiresDate = new Date(
+          currentDate.getTime() + 28 * 24 * 60 * 60 * 1000
+        );
+
+        const newUser = await prisma.user.create({
+          data: {
+            name: username,
+            email: useremail,
+            communityMember: true,
+            raffleBotUser: true,
+            accounts: {
+              create: {
+                type: "oauth",
+                provider: "discord",
+                providerAccountId: id,
+              },
+            },
+            sessions: {
+              create: {
+                expires: newSessionExpiresDate,
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+                sessionToken: String(uuidv4()),
+              },
+            },
+            RaffleBotSubscription: {
+              create: {
+                expires: newSubscriptionExpiresDate,
+                rafflesLeft: 5,
+                rafflesPerDay: 5,
+                maxNumAccounts: 50,
+              },
+            },
+          },
+        });
+      }
     }
   }
-  // else {
-  //   const newUser = await prisma.account.create({
-
-  // }
 };
 
 export default userByIdHandler;
