@@ -51,11 +51,13 @@ export const userRouter = createTRPCRouter({
       },
       include: {
         favoriteRaffles: true,
+        sessions: true,
       },
     });
 
     return {
       favoriteRaffles: response?.favoriteRaffles,
+      sessionToken: response?.sessions.at(0)?.sessionToken,
     };
   }),
 

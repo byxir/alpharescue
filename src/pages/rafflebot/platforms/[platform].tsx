@@ -3,6 +3,7 @@ import {
   useQuery,
   useInfiniteQuery,
   useQueryClient,
+  useMutation,
 } from "@tanstack/react-query";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -21,6 +22,7 @@ import { type RouterOutputs, api } from "~/utils/api";
 import React from "react";
 import Image from "next/image";
 import { QueryClient } from "@tanstack/react-query";
+import { EyeIcon, XCircleIcon } from "@heroicons/react/24/outline";
 
 type meType = RouterOutputs["user"]["getMeWithFavoriteRaffles"] | undefined;
 
@@ -466,132 +468,203 @@ const MemorizedRaffle: React.FC<{
     return "";
   };
 
+  const { data, status } = useSession();
+  const queryClient = useQueryClient();
+
+  const deleteRaffleMutation = useMutation(
+    ["deleteRaffle"],
+    async () => {
+      if (data?.user.role != "ADMIN") return;
+      const res = await axios.post(
+        "https://alpharescue.online/deleteRaffle",
+        {
+          userId: data?.user.id,
+          raffleId: r.id,
+        },
+        {
+          headers: {
+            Authorization: me?.sessionToken,
+          },
+        }
+      );
+    },
+    {
+      onSuccess: async () => {
+        await queryClient.invalidateQueries(["raffles", r.platform]);
+        await queryClient.refetchQueries(["raffles", r.platform]);
+      },
+    }
+  );
+
+  const hideRaffleMutation = useMutation(
+    ["hideRaffle"],
+    async () => {
+      if (data?.user.role != "ADMIN") return;
+      const res = await axios.post(
+        "https://alpharescue.online/hideRaffle",
+        {
+          userId: data?.user.id,
+          raffleId: r.id,
+        },
+        {
+          headers: {
+            Authorization: me?.sessionToken,
+          },
+        }
+      );
+    },
+    {
+      onSuccess: async () => {
+        await queryClient.invalidateQueries(["raffles", r.platform]);
+        await queryClient.refetchQueries(["raffles", r.platform]);
+      },
+    }
+  );
+
   return (
-    <Link
-      href={`/rafflebot/raffles/${r.id}`}
-      className="min-w-104 relative grid grid-rows-[112px_auto] rounded-xl bg-element shadow-md"
-      key={r.id}
-    >
-      <div className="relative h-28">
-        {!r.banner && (
-          <img
-            src="/../../../../herobg.png"
-            alt=""
-            className="h-full w-full rounded-t-xl object-cover"
-          />
-        )}
-        {r.banner && (
-          <Image
-            src={r.banner}
-            className="h-full w-full rounded-t-xl object-cover"
-            alt=""
-            fill
-          />
-        )}
-        {!r.banner && (
-          <div className="absolute right-8 top-1/3 flex space-x-3 font-benzin text-2xl text-bg 2xl:text-3xl">
-            ALPHA RESCUE
-          </div>
-        )}
-      </div>
-      <div className="mt-3 grid px-6 pb-6">
-        <div
-          className={`justify ml-24`}
-          style={{ color: determineColor(r.platform) }}
+    <div className="relative h-auto w-auto">
+      {data?.user.role === "ADMIN" && (
+        <button
+          onClick={() => deleteRaffleMutation.mutate()}
+          className="absolute right-0 top-0 z-20 h-8 w-8 text-element"
         >
-          {r.platform}
-        </div>
-        <div className="grid grid-cols-[auto_48px] items-center justify-between">
-          <div className="mt-3 h-max overflow-hidden break-words font-benzin text-2xl">
-            {r.name}
-            <div className="absolute top-18 grid h-20 w-20 items-center justify-items-center rounded-full bg-element">
-              <Image
-                src={
-                  r.profilePicture
-                    ? r.profilePicture
-                    : "/../../../../herobg.jpg"
-                }
-                className="rounded-full"
-                alt=""
-                height={64}
-                width={64}
-              />
+          <XCircleIcon />
+        </button>
+      )}
+      {data?.user.role === "ADMIN" && (
+        <button
+          onClick={() => hideRaffleMutation.mutate()}
+          className="absolute right-8 top-0 z-20 h-8 w-8 text-element"
+        >
+          <EyeIcon />
+        </button>
+      )}
+      <Link
+        href={`/rafflebot/raffles/${r.id}`}
+        className="min-w-104 relative grid grid-rows-[112px_auto] rounded-xl bg-element shadow-md"
+        key={r.id}
+      >
+        <div className="relative h-28">
+          {!r.banner && (
+            <img
+              src="/../../../../herobg.png"
+              alt=""
+              className="h-full w-full rounded-t-xl object-cover"
+            />
+          )}
+          {r.banner && (
+            <Image
+              src={r.banner}
+              className="h-full w-full rounded-t-xl object-cover"
+              alt=""
+              fill
+            />
+          )}
+          {!r.banner && (
+            <div className="absolute right-8 top-1/3 flex space-x-3 font-benzin text-2xl text-bg 2xl:text-3xl">
+              ALPHA RESCUE
             </div>
-          </div>
-          <button
-            // eslint-disable-next-line @typescript-eslint/no-misused-promises
-            onClick={(e) => handleAddFavorites(e, r.id)}
-            className="z-10 mt-3 grid h-max w-12 cursor-pointer justify-items-center rounded-xl py-2 transition-colors hover:bg-sidebarBg"
+          )}
+        </div>
+        <div className="mt-3 grid px-6 pb-6">
+          <div
+            className={`justify ml-24`}
+            style={{ color: determineColor(r.platform) }}
           >
-            {((me &&
-              me.favoriteRaffles &&
-              me.favoriteRaffles.filter((rr) => r.id === rr.trueRaffleId)
-                .length > 0) ||
-              favoriteRafflesCopy.includes(r.id)) &&
-            !deletedRafflesCopy.includes(r.id) ? (
-              <div className="grid h-6 w-6 items-center justify-items-center">
-                <img
-                  src="../../../starYellow.png"
-                  alt="star icon"
-                  className="h-6 w-6"
+            {r.platform}
+          </div>
+          <div className="grid grid-cols-[auto_48px] items-center justify-between">
+            <div className="mt-3 h-max overflow-hidden break-words font-benzin text-2xl">
+              {r.name}
+              <div className="absolute top-18 grid h-20 w-20 items-center justify-items-center rounded-full bg-element">
+                <Image
+                  src={
+                    r.profilePicture
+                      ? r.profilePicture
+                      : "/../../../../herobg.jpg"
+                  }
+                  className="rounded-full"
+                  alt=""
+                  height={64}
+                  width={64}
                 />
               </div>
-            ) : (
-              <Star />
-            )}
-          </button>
-        </div>
-        <div className="mt-2 text-sm font-semibold text-subtext">
-          Дедлайн - {r.deadline ? r.deadline : "Не указано"}
-        </div>
-        <div className="mt-8 grid grid-cols-[max-content_max-content] grid-rows-[max-content_max-content] justify-start gap-6 self-end sm:grid-cols-[repeat(4,_max-content)] md:grid-cols-[max-content_max-content] md:grid-rows-[max-content_max-content] 2xls:grid-cols-[max-content_max-content_max-content_auto] 2xls:grid-rows-1 2xls:justify-evenly">
-          <div className="">
-            <div className="text-lg font-bold text-almostwhite">
-              {r.hold ? r.hold : 0} ETH
             </div>
-            <div className="text-xs font-semibold text-subtext">
-              <p>Сумма холда</p>
-            </div>
+            <button
+              // eslint-disable-next-line @typescript-eslint/no-misused-promises
+              onClick={(e) => handleAddFavorites(e, r.id)}
+              className="z-10 mt-3 grid h-max w-12 cursor-pointer justify-items-center rounded-xl py-2 transition-colors hover:bg-sidebarBg"
+            >
+              {((me &&
+                me.favoriteRaffles &&
+                me.favoriteRaffles.filter((rr) => r.id === rr.trueRaffleId)
+                  .length > 0) ||
+                favoriteRafflesCopy.includes(r.id)) &&
+              !deletedRafflesCopy.includes(r.id) ? (
+                <div className="grid h-6 w-6 items-center justify-items-center">
+                  <img
+                    src="../../../starYellow.png"
+                    alt="star icon"
+                    className="h-6 w-6"
+                  />
+                </div>
+              ) : (
+                <Star />
+              )}
+            </button>
           </div>
-          <div className="ml-8 2xls:ml-0">
-            <div className="text-lg font-bold text-almostwhite">
-              {r.subscribers ? r.subscribers : "Не указано"}
-            </div>
-            <div className="text-xs font-semibold text-subtext">
-              <p>Подписчики</p>
-              <p>в Twitter</p>
-            </div>
+          <div className="mt-2 text-sm font-semibold text-subtext">
+            Дедлайн - {r.deadline ? r.deadline : "Не указано"}
           </div>
-          <div className="">
-            <div className="text-lg font-bold text-almostwhite">
-              {r.NumberOfWinners ? r.NumberOfWinners : "Не указано"}
-            </div>
-            <div className="text-xs font-semibold text-subtext">
-              <p>Количество</p>
-              <p>Победителей</p>
-            </div>
-          </div>
-          <div className="ml-7 grid grid-cols-2 grid-rows-2 gap-1 2xls:ml-0">
-            {r.requirements.filter((rq) => rq.platform === "Twitter").length >
-            0 ? (
-              <div className="grid h-8 w-8 items-center justify-items-center">
-                <img src="../../../../twitter.png" alt="" />
+          <div className="mt-8 grid grid-cols-[max-content_max-content] grid-rows-[max-content_max-content] justify-start gap-6 self-end sm:grid-cols-[repeat(4,_max-content)] md:grid-cols-[max-content_max-content] md:grid-rows-[max-content_max-content] 2xls:grid-cols-[max-content_max-content_max-content_auto] 2xls:grid-rows-1 2xls:justify-evenly">
+            <div className="">
+              <div className="text-lg font-bold text-almostwhite">
+                {r.hold ? r.hold : 0} ETH
               </div>
-            ) : null}
-            {r.requirements.filter((rq) => rq.platform === "Discord").length >
-            0 ? (
-              <div className="grid h-8 w-8 items-center justify-items-center">
-                <img src="../../../../discord.png" alt="" />
+              <div className="text-xs font-semibold text-subtext">
+                <p>Сумма холда</p>
               </div>
-            ) : null}
-            {r.hold && r.hold != 0 ? (
-              <div className="grid h-8 w-8 items-center justify-items-center">
-                <img src="../../../../metamask.png" alt="" />
+            </div>
+            <div className="ml-8 2xls:ml-0">
+              <div className="text-lg font-bold text-almostwhite">
+                {r.subscribers ? r.subscribers : "Не указано"}
               </div>
-            ) : null}
+              <div className="text-xs font-semibold text-subtext">
+                <p>Подписчики</p>
+                <p>в Twitter</p>
+              </div>
+            </div>
+            <div className="">
+              <div className="text-lg font-bold text-almostwhite">
+                {r.NumberOfWinners ? r.NumberOfWinners : "Не указано"}
+              </div>
+              <div className="text-xs font-semibold text-subtext">
+                <p>Количество</p>
+                <p>Победителей</p>
+              </div>
+            </div>
+            <div className="ml-7 grid grid-cols-2 grid-rows-2 gap-1 2xls:ml-0">
+              {r.requirements.filter((rq) => rq.platform === "Twitter").length >
+              0 ? (
+                <div className="grid h-8 w-8 items-center justify-items-center">
+                  <img src="../../../../twitter.png" alt="" />
+                </div>
+              ) : null}
+              {r.requirements.filter((rq) => rq.platform === "Discord").length >
+              0 ? (
+                <div className="grid h-8 w-8 items-center justify-items-center">
+                  <img src="../../../../discord.png" alt="" />
+                </div>
+              ) : null}
+              {r.hold && r.hold != 0 ? (
+                <div className="grid h-8 w-8 items-center justify-items-center">
+                  <img src="../../../../metamask.png" alt="" />
+                </div>
+              ) : null}
+            </div>
           </div>
         </div>
-      </div>
-    </Link>
+      </Link>
+    </div>
   );
 };

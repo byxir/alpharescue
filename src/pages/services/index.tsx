@@ -58,10 +58,10 @@ export default function Services() {
                 <div className="absolute bottom-2 left-2  z-0 h-10 w-10 text-element">
                   <ArrowDownLeftIcon />
                 </div>
-                <div className="absolute bottom-2 right-2  z-0 h-10 w-10 text-element">
+                <div className="absolute bottom-2 right-2 z-0 h-10 w-10 text-element">
                   <ArrowDownRightIcon />
                 </div>
-                <div className="absolute right-2 top-2  z-0 h-10 w-10 text-element">
+                <div className="absolute right-2 top-2 z-0 h-10 w-10 text-element">
                   <ArrowUpRightIcon />
                 </div>
                 <div className="absolute left-2 top-2  z-0 h-10 w-10 text-element">
