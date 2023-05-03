@@ -522,7 +522,7 @@ const MemorizedRaffle: React.FC<{
   );
 
   return (
-    <div className="relative h-auto w-auto">
+    <div className="relative h-full w-auto">
       {data?.user.role === "ADMIN" && (
         <button
           onClick={() => deleteRaffleMutation.mutate()}
@@ -541,7 +541,7 @@ const MemorizedRaffle: React.FC<{
       )}
       <Link
         href={`/rafflebot/raffles/${r.id}`}
-        className="min-w-104 relative grid grid-rows-[112px_auto] rounded-xl bg-element shadow-md"
+        className="min-w-104 relative grid h-full grid-rows-[112px_auto] rounded-xl bg-element shadow-md"
         key={r.id}
       >
         <div className="relative h-28">

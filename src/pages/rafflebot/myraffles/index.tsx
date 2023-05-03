@@ -157,7 +157,7 @@ const RaffleList = () => {
                     r.name.toLowerCase().includes(searchText.toLowerCase())
                   )
                   .map((r) => (
-                    <div className="relative" key={r.id}>
+                    <div className="relative h-full" key={r.id}>
                       <button
                         onClick={() => handleDeleteMyRaffle(r.id)}
                         className="absolute right-0 top-0 z-20 h-10 w-10 text-element"
@@ -166,7 +166,7 @@ const RaffleList = () => {
                       </button>
                       <Link
                         href={`/rafflebot/myraffles/${r.id}`}
-                        className="min-w-104 relative grid grid-rows-[112px_auto] rounded-xl bg-element shadow-md"
+                        className="min-w-104 relative grid h-full grid-rows-[112px_auto] rounded-xl bg-element shadow-md"
                       >
                         <div className="relative h-28">
                           <img
