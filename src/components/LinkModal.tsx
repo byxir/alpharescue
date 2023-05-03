@@ -103,7 +103,10 @@ export default function LinkModal({
       <Dialog
         as="div"
         className={`relative z-10 ${montserratRegular.variable} ${benzin.variable} ${montserrat.variable}`}
-        onClose={closeFunction}
+        onClose={() => {
+          closeFunction();
+          setUserLink("");
+        }}
       >
         <Transition.Child
           as={Fragment}
