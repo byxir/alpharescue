@@ -60,7 +60,7 @@ const userByIdHandler = async (req: NextApiRequest, res: NextApiResponse) => {
 
         const currentDate = new Date();
         const expiresDate = new Date(
-          currentDate.getTime() + 8 * 24 * 60 * 60 * 1000
+          currentDate.getTime() + 5 * 24 * 60 * 60 * 1000
         );
 
         const newSubscription = await prisma.raffleBotSubscription.create({
@@ -88,7 +88,7 @@ const userByIdHandler = async (req: NextApiRequest, res: NextApiResponse) => {
           currentDate.getTime() + 28 * 24 * 60 * 60 * 1000
         );
         const newSubscriptionExpiresDate = new Date(
-          currentDate.getTime() + 28 * 24 * 60 * 60 * 1000
+          currentDate.getTime() + 5 * 24 * 60 * 60 * 1000
         );
 
         const newUser = await prisma.user.create({
