@@ -15,9 +15,9 @@ const userByIdHandler = async (req: NextApiRequest, res: NextApiResponse) => {
     id = req.body.data.user.social_accounts[0].id;
   }
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-  if (req.body.data.user.name) {
+  if (req.body.data.user.social_accounts[0].username) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-    username = req.body.data.user.name;
+    username = req.body.data.user.social_accounts[0].username;
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
@@ -121,7 +121,17 @@ const userByIdHandler = async (req: NextApiRequest, res: NextApiResponse) => {
             },
           },
         });
+        return res.status(200).json({
+          message: "good",
+        });
       }
+      return res.status(500).json({
+        message: "bad request",
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        username: username,
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        useremail: useremail,
+      });
     }
   }
 };
