@@ -56,10 +56,7 @@ const RootReader = ({
           userId: data?.user.id,
           type: readerType,
           proxyType: "",
-          accounts:
-            readerType === "metamask" || readerType === "twitter"
-              ? splitStringInto2DArray(files[0] ? files[0].content : "notFound")
-              : files[0]?.content.split("\n"),
+          accounts: files[0]?.content.split("\n"),
         },
         {
           headers: { Authorization: `Bearer ${String(sessionToken)}` },
