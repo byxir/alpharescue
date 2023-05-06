@@ -110,7 +110,9 @@ export default function SidebarLayout({ children }: { children: ReactNode }) {
               <div className="fixed inset-0 bg-black bg-opacity-75" />
             </Transition.Child>
 
-            <div className="fixed inset-0 z-40 flex">
+            <div
+              className={`fixed inset-0 z-40 flex ${benzin.variable} ${abibas.variable} ${montserrat.variable} font-sans`}
+            >
               <Transition.Child
                 as={Fragment}
                 enter="transition ease-in-out duration-300 transform"
@@ -160,30 +162,56 @@ export default function SidebarLayout({ children }: { children: ReactNode }) {
                       </div>
                     </Link>
                     <nav className="mt-20 grid h-max auto-rows-max gap-2 px-6 font-montserratBold">
-                      {navigation.map((item) => (
-                        <Link
-                          onClick={() => setSidebarOpen(false)}
-                          href={item.noScale ? `${item.pathname}` : ""}
-                          key={item.name}
-                          className={classNames(
-                            `/rafflebot/platforms/${current}` === item.pathname
-                              ? "bg-bg text-white"
-                              : "text-almostwhite hover:bg-bg hover:bg-opacity-75",
-                            "group flex h-max items-center rounded-xl px-3 py-3 text-lg font-bold transition-colors"
-                          )}
-                        >
-                          <img
-                            src={item.icon}
-                            className={`mr-4 w-9 rounded-sm ${
-                              item.noScale
-                                ? "h-4 w-9 self-start rounded-sm"
-                                : "h-9"
-                            } `}
-                            alt="platform icon"
-                          />
-                          {item.name}
-                        </Link>
-                      ))}
+                      {navigation.map((item) =>
+                        !item.noScale ? (
+                          <Link
+                            onClick={() => setSidebarOpen(false)}
+                            href={item.pathname}
+                            key={item.name}
+                            className={classNames(
+                              `/rafflebot/platforms/${current}` ===
+                                item.pathname
+                                ? "bg-bg text-white"
+                                : "text-almostwhite hover:bg-bg hover:bg-opacity-75",
+                              "group flex h-max items-center rounded-xl px-3 py-3 font-montserratBold text-lg transition-colors"
+                            )}
+                          >
+                            <img
+                              src={item.icon}
+                              className={`mr-4 w-9 rounded-sm ${
+                                item.noScale
+                                  ? "h-4 w-9 self-start rounded-sm"
+                                  : "h-9"
+                              } `}
+                              alt="platform icon"
+                            />
+                            {item.name}
+                          </Link>
+                        ) : (
+                          <button
+                            onClick={() => setSidebarOpen(false)}
+                            key={item.name}
+                            className={classNames(
+                              `/rafflebot/platforms/${current}` ===
+                                item.pathname
+                                ? "bg-bg text-white"
+                                : "text-almostwhite hover:bg-bg hover:bg-opacity-75",
+                              "group flex h-max items-center rounded-xl px-3 py-3 text-lg font-bold transition-colors"
+                            )}
+                          >
+                            <img
+                              src={item.icon}
+                              className={`mr-4 w-9 rounded-sm ${
+                                item.noScale
+                                  ? "h-4 w-9 self-start rounded-sm"
+                                  : "h-9"
+                              } `}
+                              alt="platform icon"
+                            />
+                            {item.name}
+                          </button>
+                        )
+                      )}
                     </nav>
                   </div>
                   <Link
@@ -193,17 +221,17 @@ export default function SidebarLayout({ children }: { children: ReactNode }) {
                     <div className="h-6 w-6">
                       <ClipboardDocumentCheckIcon />
                     </div>
-                    <div className="font-mon font-bold text-almostwhite">
+                    <div className=" font-montserratBold text-almostwhite">
                       Мои раффлы
                     </div>
                   </Link>
                   <Link
                     href="/rafflebot/settings"
                     onClick={() => setSidebarOpen(false)}
-                    className="grid cursor-pointer grid-cols-[repeat(2,_max-content)] justify-center space-x-2 p-4 font-montserratBold transition-colors hover:bg-bg"
+                    className="grid cursor-pointer grid-cols-[repeat(2,_max-content)] justify-center space-x-2 p-4 transition-colors hover:bg-bg"
                   >
                     <Settings />
-                    <div className="font-mon font-bold text-almostwhite">
+                    <div className="font-montserratBold text-almostwhite">
                       Настройки
                     </div>
                   </Link>
@@ -230,7 +258,7 @@ export default function SidebarLayout({ children }: { children: ReactNode }) {
                 <div className="flex justify-center font-abibas text-9xl text-accent">
                   AR
                 </div>
-                <div className="flex justify-center text-3xl font-bold text-almostwhite">
+                <div className="flex justify-center text-3xl text-almostwhite">
                   Raffle Bot
                 </div>
               </Link>
@@ -244,7 +272,7 @@ export default function SidebarLayout({ children }: { children: ReactNode }) {
                         current === item.pathname
                           ? "bg-bg text-white"
                           : "text-almostwhite hover:bg-bg hover:bg-opacity-75",
-                        "group flex h-max items-center rounded-xl px-3 py-3 text-lg font-bold transition-colors"
+                        "group flex h-max items-center rounded-xl px-3 py-3 font-montserratBold text-lg transition-colors"
                       )}
                     >
                       <img
@@ -263,7 +291,7 @@ export default function SidebarLayout({ children }: { children: ReactNode }) {
                         current === item.pathname
                           ? "bg-bg text-white"
                           : "text-almostwhite hover:bg-bg hover:bg-opacity-75",
-                        "group flex h-max items-center rounded-xl px-3 py-3 text-lg font-bold transition-colors"
+                        "group flex h-max items-center rounded-xl px-3 py-3 font-montserratBold text-lg transition-colors"
                       )}
                     >
                       <img
@@ -286,7 +314,7 @@ export default function SidebarLayout({ children }: { children: ReactNode }) {
               <div className="h-6 w-6">
                 <ClipboardDocumentCheckIcon />
               </div>
-              <div className="font-mon font-bold text-almostwhite">
+              <div className="font-montserratBold text-almostwhite">
                 Мои раффлы
               </div>
             </Link>
@@ -295,7 +323,7 @@ export default function SidebarLayout({ children }: { children: ReactNode }) {
               className="grid cursor-pointer grid-cols-[repeat(2,_max-content)] justify-center space-x-2  p-4 transition-colors hover:bg-bg"
             >
               <Settings />
-              <div className="font-mon font-bold text-almostwhite">
+              <div className="font-montserratBold text-almostwhite">
                 Настройки
               </div>
             </Link>

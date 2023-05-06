@@ -226,7 +226,7 @@ const Banner: React.FC<EventStreamComponentProps> = ({
                 )}
                 {isCancelled && <span>Заход отменен</span>}
               </div>
-              {!isCancelled && (
+              {!isCancelled && isEventStreamOpen && (
                 <button
                   onClick={stopRaffle}
                   className="cursor-pointer rounded-xl bg-red-600 px-4 py-1 font-montserratBold text-almostwhite shadow-md transition-colors hover:bg-red-700"

@@ -593,7 +593,8 @@ const Raffle = () => {
                   <span>#</span>
                   <span>Twitter</span>
                   <span>Discord</span>
-                  <span>Metamask</span>
+                  <span className="hidden sm:block">Metamask</span>
+                  <span className="block sm:hidden">M-Mask</span>
                   <span>Прокси</span>
                   <span>Почты</span>
                 </div>
@@ -639,7 +640,7 @@ const Raffle = () => {
                           className="grid w-full grid-cols-[auto_40px] gap-2 overflow-scroll"
                           key={a.name}
                         >
-                          <div className="mb-4 grid w-full grid-cols-[5%_17%_18%_20%_20%_20%] items-center rounded-xl border border-subline px-4 py-4 text-subtext">
+                          <div className="mb-4 grid w-full grid-cols-[5%_17%_18%_20%_20%_20%] items-center rounded-xl border border-subline px-4 py-4 text-xs text-subtext sm:text-base">
                             <span>{Number(a.name) + 1}</span>
                             <span>{a.TwitterCsrf?.slice(0, 8)}...</span>
                             <span>{a.DiscordToken?.slice(0, 8)}...</span>
