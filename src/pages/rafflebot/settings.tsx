@@ -411,13 +411,13 @@ const Settings = () => {
                     ) : (
                       <div
                         onClick={() => setSlideoverOpen(true)}
-                        className="grid h-full w-full items-center justify-items-center"
+                        className="grid h-full w-full cursor-pointer items-center justify-items-center"
                       >
                         <div className="grid h-max justify-items-center gap-3 text-center text-subtext">
                           <div className="h-12 w-12">
                             <NoSymbolIcon />
                           </div>
-                          <div className="text-sm">Add configuration</div>
+                          <div className="text-sm">Нет конфигурации</div>
                         </div>
                       </div>
                     )}
@@ -453,13 +453,13 @@ const Settings = () => {
                     ) : (
                       <div
                         onClick={() => setSlideoverOpen(true)}
-                        className="grid h-full w-full items-center justify-items-center"
+                        className="grid h-full w-full cursor-pointer items-center justify-items-center"
                       >
                         <div className="grid h-max justify-items-center gap-3 text-center text-subtext">
                           <div className="h-12 w-12">
                             <NoSymbolIcon />
                           </div>
-                          <div className="text-sm">Add configuration</div>
+                          <div className="text-sm">Нет конфигурации</div>
                         </div>
                       </div>
                     )}
@@ -495,13 +495,13 @@ const Settings = () => {
                     ) : (
                       <div
                         onClick={() => setSlideoverOpen(true)}
-                        className="grid h-full w-full items-center justify-items-center"
+                        className="grid h-full w-full cursor-pointer items-center justify-items-center"
                       >
                         <div className="grid h-max justify-items-center gap-3 text-center text-subtext">
                           <div className="h-12 w-12">
                             <NoSymbolIcon />
                           </div>
-                          <div className="text-sm">Add configuration</div>
+                          <div className="text-sm">Нет конфигурации</div>
                         </div>
                       </div>
                     )}
@@ -535,7 +535,10 @@ const Settings = () => {
                         </div>
                       </>
                     ) : (
-                      <div className="grid h-full w-full items-center justify-items-center">
+                      <div
+                        onClick={() => setSlideoverOpen(true)}
+                        className="grid h-full w-full cursor-pointer items-center justify-items-center"
+                      >
                         <div className="grid h-max justify-items-center gap-3 text-center text-subtext">
                           <div className="w-12">
                             <NoSymbolIcon />
