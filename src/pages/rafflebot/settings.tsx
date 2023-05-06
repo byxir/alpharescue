@@ -26,6 +26,7 @@ import OnLoadNotification from "~/components/notifications/OnLoadNotification";
 import RootReader from "~/components/accounts/FileReaders/RootReader";
 import XLSXExporter from "~/components/XLSXExporter";
 import ReplaceBannedModal from "~/components/accounts/ReplaceBannedModal";
+import Link from "next/link";
 
 export type IAccount = {
   DiscordStatus?: string;
@@ -231,38 +232,38 @@ const Settings = () => {
                 )}
               </div>
             </div>
-            <div className="mt-16 text-sm xl:text-base">
+            <div className="mt-16 grid text-sm xl:text-base">
               <div className="text-xl">Инструкции</div>
-              <div className="mt-8">
+              <Link href="/rafflebot#howToUse" className="mt-8">
                 <div className="grid cursor-pointer grid-cols-[repeat(2,_max-content)] justify-between rounded-xl border-2 border-subline bg-bg px-8 py-4 text-subtext shadow-md transition-all hover:bg-neutral-900">
                   <p className="mr-3">Как использовать бота?</p>
                   <Plus />
                 </div>
-              </div>
-              <div className="mt-3 space-x-2">
+              </Link>
+              <Link href="/rafflebot#loadAccounts" className="mt-3 space-x-2">
                 <div className="grid cursor-pointer grid-cols-[repeat(2,_max-content)] justify-between rounded-xl border-2 border-subline bg-bg px-8 py-4 text-subtext shadow-md transition-all hover:bg-neutral-900">
                   <p className="mr-3">Как загрузить аккаунты?</p>
                   <Plus />
                 </div>
-              </div>
-              <div className="mt-3 space-x-2">
-                <div className="grid cursor-pointer grid-cols-[repeat(2,_max-content)] justify-between rounded-xl border-2 border-subline bg-bg px-8 py-4 text-subtext shadow-md transition-all hover:bg-neutral-900">
-                  <p className="mr-3">Как загрузить ключ от капчи?</p>
-                  <Plus />
-                </div>
-              </div>
-              <div className="mt-3 space-x-2">
+              </Link>
+              <Link href="/rafflebot#buyAccounts" className="mt-3 space-x-2">
                 <div className="grid cursor-pointer grid-cols-[repeat(2,_max-content)] justify-between rounded-xl border-2 border-subline bg-bg px-8 py-4 text-subtext shadow-md transition-all hover:bg-neutral-900">
                   <p className="mr-3">Где купить аккаунты?</p>
                   <Plus />
                 </div>
-              </div>
-              <div className="mt-3 space-x-2">
+              </Link>
+              <Link href="/rafflebot#captchaKey" className="mt-3 space-x-2">
                 <div className="grid cursor-pointer grid-cols-[repeat(2,_max-content)] justify-between rounded-xl border-2 border-subline bg-bg px-8 py-4 text-subtext shadow-md transition-all hover:bg-neutral-900">
-                  <p className="mr-3">Как настраивать конфигурации?</p>
+                  <p className="mr-3">Ключ CapMonster</p>
                   <Plus />
                 </div>
-              </div>
+              </Link>
+              <Link href="/rafflebot#errors" className="mt-3 space-x-2">
+                <div className="grid cursor-pointer grid-cols-[repeat(2,_max-content)] justify-between rounded-xl border-2 border-subline bg-bg px-8 py-4 text-subtext shadow-md transition-all hover:bg-neutral-900">
+                  <p className="mr-3">Справочник по ошибкам</p>
+                  <Plus />
+                </div>
+              </Link>
             </div>
           </div>
           <div className="grid grid-cols-2 grid-rows-[repeat(4,_max-content)] gap-6 text-center text-sm text-subtext">
