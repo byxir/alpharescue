@@ -3,6 +3,8 @@ import { useSession } from "next-auth/react";
 import { useContext, useEffect, useState } from "react";
 import { api } from "~/utils/api";
 import { EventStreamStatusContext } from "~/pages/_app";
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
 
 export interface EventStreamComponentProps {
   openEventStream: boolean;
@@ -121,6 +123,32 @@ const Banner: React.FC<EventStreamComponentProps> = ({
     };
   }, [openEventStream, protectionData.data]);
 
+  const stopRaffleMutation = useMutation(["stopRaffle"], async () => {
+    return axios.post(
+      "https://alpharescue.online/stopraffle",
+      {
+        discordId: protectionData.data?.discordId,
+        userId: data?.user.id,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${String(protectionData.data?.sessionToken)}`,
+        },
+      }
+    );
+  });
+
+  const stopRaffle = () => {
+    setIsCancelled(true);
+    if (
+      data?.user.id &&
+      protectionData.data?.discordId &&
+      protectionData.data?.sessionToken
+    ) {
+      stopRaffleMutation.mutate();
+    }
+  };
+
   return (
     <>
       {showLayout && eventSource != null && (
@@ -174,7 +202,7 @@ const Banner: React.FC<EventStreamComponentProps> = ({
           <div className="flex flex-wrap items-center gap-y-2 sm:gap-x-4">
             <div className="items-center space-y-3 text-sm leading-6 text-gray-900 sm:flex sm:space-x-6 sm:space-y-0">
               <strong className="font-benzin">{runningRaffleName}</strong>
-              <div className="h-5 w-64 flex-none rounded-full bg-bg p-1 text-sm font-semibold text-white shadow-sm hover:bg-gray-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900">
+              <div className="h-5 w-64 flex-none rounded-full bg-bg p-1 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900">
                 <div
                   className={`h-full rounded-full ${
                     accessedAccounts === totalAccounts &&
@@ -198,6 +226,14 @@ const Banner: React.FC<EventStreamComponentProps> = ({
                 )}
                 {isCancelled && <span>Заход отменен</span>}
               </div>
+              {!isCancelled && (
+                <button
+                  onClick={stopRaffle}
+                  className="cursor-pointer rounded-xl bg-red-600 px-4 py-1 font-montserratBold text-almostwhite shadow-md transition-colors hover:bg-red-700"
+                >
+                  Отменить заход
+                </button>
+              )}
             </div>
           </div>
           <div className="flex flex-1 justify-end">
