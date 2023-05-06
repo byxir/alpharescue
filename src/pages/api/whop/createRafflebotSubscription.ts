@@ -93,7 +93,7 @@ const userByIdHandler = async (req: NextApiRequest, res: NextApiResponse) => {
 
         const newUser = await prisma.user.create({
           data: {
-            name: username,
+            name: username.split('#')[0],
             email: useremail,
             communityMember: true,
             raffleBotUser: true,

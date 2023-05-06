@@ -194,11 +194,14 @@ const Settings = () => {
                             </button>
                           </div>
                         </div>
-                        <div className="grid w-full items-center justify-items-center">
+                        <div className="mt-4 flex w-full content-center items-center justify-between">
+                          <div className="ml-4 grid h-full items-center text-lg">
+                            {data.user.name}
+                          </div>
                           <button
                             // eslint-disable-next-line @typescript-eslint/no-misused-promises
                             onClick={() => signOut()}
-                            className="mt-4 cursor-pointer rounded-xl bg-red-600 p-3 shadow-md transition-all hover:bg-opacity-60"
+                            className="cursor-pointer rounded-xl bg-red-600 p-3 shadow-md transition-all hover:bg-opacity-60"
                           >
                             Выйти из аккаунта
                           </button>
