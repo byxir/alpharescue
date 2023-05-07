@@ -13,14 +13,15 @@ export default function InstructionsPage() {
               Инструкция к Raffle Bot
             </h1>
             <p className="mt-4">
-              Наша услуга с оформлением и прогревом аккаунтов подойдет как
-              людям, кто только что создал свою ферму, так и людям, которые
-              давно имеют большое количество аккаунтов.
+              Raffle Bot - это инструмент, помогающий вам без всякого труда
+              собирать информацию обо всех раффлах на поддерживаемых платформах:
+              Premint, Alphabot, Superful, FreeNFT, а так же Twitter.
             </p>
             <br></br>
             <p>
-              Мы создаем, или берем ваши, аккаунты твиттера, и делаем из них
-              максимально живые страницы на крипто-тематику.
+              Там же, вы можете выбрать раффл, и зайти на него со всех своих
+              аккаунтов. Эта инструкция объяснит вам, как это сделать, от А до
+              Я.
             </p>
           </div>
           <div className="grid h-80 w-80 items-center justify-items-center justify-self-center rounded-full border-2 border-subline p-10 font-abibas text-9xl text-accent md:col-start-1 md:row-start-1 md:h-64 md:w-64 md:text-9xl lg:h-80 lg:w-80 lg:text-10xl">
