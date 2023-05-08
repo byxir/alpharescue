@@ -5,7 +5,6 @@ import { Dialog, Transition } from "@headlessui/react";
 import localFont from "next/font/local";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
-import { api } from "~/utils/api";
 import { useSession } from "next-auth/react";
 import ProxyReader from "./FileReaders/ProxyReader";
 

@@ -5,11 +5,13 @@ const LaunchButton = ({
   authorized = false,
   openModal,
   executeScript,
+  textSize,
 }: {
   children: React.ReactNode;
   authorized?: boolean;
   openModal?: () => void;
   executeScript?: () => void;
+  textSize?: string;
 }) => {
   return (
     <div className="h-max w-max rounded-xl bg-black">
@@ -17,7 +19,11 @@ const LaunchButton = ({
         onClick={!executeScript ? openModal : executeScript}
         className={s.button}
       >
-        <span className="font-montserratBold">{children}</span>
+        <span
+          className={`font-montserratBold text-${textSize ? textSize : ""}`}
+        >
+          {children}
+        </span>
       </button>
     </div>
   );

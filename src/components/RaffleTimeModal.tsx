@@ -38,15 +38,17 @@ export default function RaffleTimeModal({
   _lastAcc,
   remainingRaffles,
   showNotification,
+  restart,
 }: {
   open: boolean;
   closeFunction: () => void;
   _raffleId: string;
-  _exceptions: string[] | null | undefined;
-  _firstAcc: number | undefined;
-  _lastAcc: number | undefined;
+  _exceptions?: string[] | null | undefined;
+  _firstAcc?: number | undefined;
+  _lastAcc?: number | undefined;
   remainingRaffles: number;
   showNotification: () => void;
+  restart?: boolean;
 }) {
   const [value, setValue] = useState(120);
   const handleChange = (event: Event, newValue: number | number[]) => {
@@ -95,18 +97,55 @@ export default function RaffleTimeModal({
     }
   );
 
-  // https://alpharescue.online/events?userId=z`clg5dzhmq0000mj08pkwqftop&sessionToken=30fccbe9-cbde-4200-b8de-da2e5567cc97&discordId=460719167738347520
+  const restartRaffleMutation = useMutation(
+    ["restartRaffle"],
+    async () => {
+      if (remainingRaffles <= 0) {
+        showNotification();
+        closeFunction();
+        return Promise.reject(new Error("No raffles left"));
+      }
+
+      return axios.post(
+        "https://alpharescue.online/startRaffleAgain",
+        {
+          discordId: allMyData.data?.discordId,
+          userId: data?.user.id,
+          raffleId: _raffleId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${String(allMyData.data?.sessionToken)}`,
+          },
+        }
+      );
+    },
+    {
+      onSuccess: () => {
+        toggleEventStream();
+      },
+    }
+  );
 
   const startRaffle = () => {
     if (
+      restart &&
       data?.user.raffleBotUser &&
       status === "authenticated" &&
-      allMyData.data &&
-      _firstAcc != undefined &&
-      _lastAcc != undefined
+      allMyData.data
     ) {
-      startRaffleMutation.mutate();
-      closeFunction();
+      restartRaffleMutation.mutate();
+    } else {
+      if (
+        data?.user.raffleBotUser &&
+        status === "authenticated" &&
+        allMyData.data &&
+        _firstAcc != undefined &&
+        _lastAcc != undefined
+      ) {
+        startRaffleMutation.mutate();
+        closeFunction();
+      }
     }
   };
 

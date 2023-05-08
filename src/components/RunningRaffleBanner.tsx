@@ -16,6 +16,7 @@ export interface RunningRaffleEventStreamData {
   currentRaffleName: string;
   totalAccountsNumber: number;
   accessedAccountsNumber: number;
+  endTime: number;
 }
 
 const Banner: React.FC<EventStreamComponentProps> = ({
@@ -30,6 +31,7 @@ const Banner: React.FC<EventStreamComponentProps> = ({
   );
   const [accessedAccounts, setAccessedAccounts] = useState<number | null>(null);
   const [totalAccounts, setTotalAccounts] = useState<number | null>(null);
+  const [timeLeft, setTimeLeft] = useState<number | null>(null);
 
   const [isCancelled, setIsCancelled] = useState(false);
 
@@ -63,11 +65,13 @@ const Banner: React.FC<EventStreamComponentProps> = ({
           setAccessedAccounts(data.accessedAccountsNumber);
           setTotalAccounts(data.totalAccountsNumber);
           openIsEventStreamOpen();
+          setTimeLeft(data.endTime);
         } else if (data.status === "success") {
           setShowLayout(true);
           setRunningRaffleName(data.currentRaffleName);
           setAccessedAccounts(data.accessedAccountsNumber);
           setTotalAccounts(data.totalAccountsNumber);
+          setTimeLeft(null);
           void refetchMyRaffles();
           source.close();
           decrementRaffles.mutate();
@@ -119,6 +123,7 @@ const Banner: React.FC<EventStreamComponentProps> = ({
         setTotalAccounts(null);
         setShowLayout(false);
         closeIsEventStreamOpen();
+        setIsCancelled(false);
       }
     };
   }, [openEventStream, protectionData.data]);
@@ -159,7 +164,7 @@ const Banner: React.FC<EventStreamComponentProps> = ({
             totalAccounts
               ? "bg-green-300"
               : "bg-almostwhite"
-          } px-6 py-2.5 sm:px-3.5 sm:before:flex-1 ${
+          } px-6 py-2.5 sm:px-3.5 sm:before:flex-1 lg:pl-48 2xl:pl-48 ${
             isCancelled ? "bg-red-600" : "bg-almostwhite"
           }`}
         >
@@ -200,7 +205,7 @@ const Banner: React.FC<EventStreamComponentProps> = ({
             />
           </div>
           <div className="flex flex-wrap items-center gap-y-2 sm:gap-x-4">
-            <div className="items-center space-y-3 text-sm leading-6 text-gray-900 sm:flex sm:space-x-6 sm:space-y-0">
+            <div className="items-center gap-y-1 space-y-3 text-sm leading-6 text-gray-900 sm:grid sm:grid-cols-[repeat(3,_max-content)] sm:grid-rows-2 sm:gap-x-6 sm:space-y-0 2xl:flex 2xl:gap-0 2xl:space-x-6">
               <strong className="font-benzin">{runningRaffleName}</strong>
               <div className="h-5 w-64 flex-none rounded-full bg-bg p-1 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900">
                 <div
@@ -219,17 +224,21 @@ const Banner: React.FC<EventStreamComponentProps> = ({
                 ></div>
               </div>
               <div className="font-montserratBold">
-                {!isCancelled && (
+                {!isCancelled && isEventStreamOpen && (
                   <span>
                     {accessedAccounts} / {totalAccounts} аккаунтов готовы.
                   </span>
                 )}
                 {isCancelled && <span>Заход отменен</span>}
               </div>
+              <div className="font-montserratBold">
+                {!isCancelled && <span>Осталось {timeLeft} мин.</span>}
+                {isCancelled && <span>Заход отменен</span>}
+              </div>
               {!isCancelled && isEventStreamOpen && (
                 <button
                   onClick={stopRaffle}
-                  className="cursor-pointer rounded-xl bg-red-600 px-4 py-1 font-montserratBold text-almostwhite shadow-md transition-colors hover:bg-red-700"
+                  className="w-max cursor-pointer justify-self-center rounded-xl bg-red-600 px-4 py-1 font-montserratBold text-almostwhite shadow-md transition-colors hover:bg-red-700"
                 >
                   Отменить заход
                 </button>

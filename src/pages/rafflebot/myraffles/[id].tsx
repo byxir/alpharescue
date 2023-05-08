@@ -2,14 +2,19 @@
 import LaunchButton from "~/components/LaunchButton/LaunchButton";
 import SidebarLayout from "~/components/SidebarLayout";
 import { useEffect, useState } from "react";
-import { RangeSlider } from "~/components/RangeSlider";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useQuery, type UseQueryResult } from "@tanstack/react-query";
+import {
+  useMutation,
+  useQuery,
+  type UseQueryResult,
+} from "@tanstack/react-query";
 import axios from "axios";
 import Spinner from "~/components/spinner/Spinner";
 import { api } from "~/utils/api";
+import RaffleTimeModal from "~/components/RaffleTimeModal";
+import OnNoRafflesNotification from "~/components/notifications/OnNoRafflesNotification";
 
 type IMyRaffle = {
   banner: string;
@@ -40,8 +45,10 @@ type IMyRaffle = {
 
 const MyRaffle = () => {
   const router = useRouter();
+  const [isRaffleModalOpen, setIsRaffleModalOpen] = useState(false);
+  const [noRafflesNotification, setNoRafflesNotification] = useState(false);
 
-  const protectionData = api.user.getMyProtectionData.useQuery();
+  const allMyData = api.user.getAllMyData.useQuery();
 
   const myRaffle: UseQueryResult<IMyRaffle> = useQuery<IMyRaffle>(
     ["myRaffle", router.query.id],
@@ -49,14 +56,12 @@ const MyRaffle = () => {
       const res = await axios.get(
         `https://alpharescue.online/myRaffle/${String(
           router.query.id
-        )}?discordId=${String(protectionData.data?.discordId)}&userId=${String(
+        )}?discordId=${String(allMyData.data?.discordId)}&userId=${String(
           data?.user.id
         )}`,
         {
           headers: {
-            Authorization: `Bearer ${String(
-              protectionData.data?.sessionToken
-            )}`,
+            Authorization: `Bearer ${String(allMyData.data?.sessionToken)}`,
           },
         }
       );
@@ -68,13 +73,28 @@ const MyRaffle = () => {
     }
   );
 
-  console.log("myRaffle -> ", myRaffle.data);
+  const restartRaffleMutation = useMutation(["restartRaffle"], async () => {
+    const res = await axios.post(
+      "https://alpharescue.online/startRaffleAgain",
+      {
+        discordId: String(allMyData.data?.discordId),
+        userId: String(data?.user.id),
+        raffleId: String(router.query.id),
+        time: Date.now(),
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${String(allMyData.data?.sessionToken)}`,
+        },
+      }
+    );
+  });
 
   useEffect(() => {
-    if (router.isReady && protectionData.data) {
+    if (router.isReady && allMyData.data) {
       void myRaffle.refetch();
     }
-  }, [router.isReady, router.query.id, protectionData.data]);
+  }, [router.isReady, router.query.id, allMyData.data]);
 
   const { data, status } = useSession();
 
@@ -251,6 +271,14 @@ const MyRaffle = () => {
                 <div className="mb-16 w-full text-xl md:mb-0 lg:text-2xl">
                   Использованные аккаунты
                 </div>
+                <div className="justify-self-center">
+                  <LaunchButton
+                    textSize="base"
+                    openModal={() => setIsRaffleModalOpen(true)}
+                  >
+                    <p className="text-xl">Перезапустить абуз</p>
+                  </LaunchButton>
+                </div>
               </div>
             </div>
             <div className="mt-12">
@@ -317,6 +345,20 @@ const MyRaffle = () => {
           </div>
         </div>
       )}
+      <RaffleTimeModal
+        open={isRaffleModalOpen}
+        closeFunction={() => setIsRaffleModalOpen(false)}
+        _raffleId={String(router.query.id)}
+        remainingRaffles={Number(
+          allMyData.data?.RaffleBotSubscription?.rafflesLeft
+        )}
+        showNotification={() => setNoRafflesNotification(true)}
+        restart={true}
+      />
+      <OnNoRafflesNotification
+        show={noRafflesNotification}
+        closeFunction={() => setNoRafflesNotification(false)}
+      />
     </SidebarLayout>
   );
 };
