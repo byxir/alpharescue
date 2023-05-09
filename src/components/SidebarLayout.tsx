@@ -58,6 +58,12 @@ const navigation = [
     pathname: "/rafflebot/platforms/FreeNFT",
     noScale: true,
   },
+  {
+    name: "Twitter",
+    icon: "../../../../twitterwhite.png",
+    pathname: "/rafflebot/twitterraffle",
+    noImageOverwrite: true,
+  },
 ];
 
 function classNames(...classes: string[]) {
@@ -178,9 +184,11 @@ export default function SidebarLayout({ children }: { children: ReactNode }) {
                           >
                             <img
                               src={item.icon}
-                              className={`mr-4 w-9 rounded-sm ${
+                              className={`mr-4 rounded-sm ${
                                 item.noScale
-                                  ? "h-4 w-9 self-start rounded-sm"
+                                  ? "h-4 self-start rounded-sm"
+                                  : item.noImageOverwrite
+                                  ? ""
                                   : "h-9"
                               } `}
                               alt="platform icon"
@@ -278,7 +286,11 @@ export default function SidebarLayout({ children }: { children: ReactNode }) {
                       <img
                         src={item.icon}
                         className={`mr-4 w-9 rounded-sm ${
-                          item.noScale ? "h-4 w-9 self-start rounded-sm" : "h-9"
+                          item.noScale
+                            ? "h-4 w-9 self-start rounded-sm"
+                            : item.noImageOverwrite
+                            ? ""
+                            : "h-9"
                         } `}
                         alt="platform icon"
                       />

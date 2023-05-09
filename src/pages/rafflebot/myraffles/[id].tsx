@@ -99,7 +99,7 @@ const MyRaffle = () => {
   const { data, status } = useSession();
 
   const determineColor = (platform: string) => {
-    if (platform === "Premint") {
+    if (platform === "Premint" || platform === "Twitter") {
       return "#2CBBDB";
     } else if (platform === "Alphabot") {
       return "#63FF1E";
@@ -121,18 +121,31 @@ const MyRaffle = () => {
           <div className="border-subline 2xl:border-r-2">
             <div className="grid border-b-2 border-subline pb-12">
               <div className="relative h-32 w-full md:h-44">
-                <img
-                  src={
-                    myRaffle.data?.banner
-                      ? myRaffle.data?.banner
-                      : "../../../herobg.png"
-                  }
-                  alt=""
-                  className="h-full w-full object-cover"
-                />
-                {!myRaffle.data?.banner && (
-                  <div className="absolute right-8 top-1/3 flex space-x-3 font-benzin text-4xl text-bg 2xl:text-5xl">
-                    ALPHA RESCUE
+                {myRaffle.data?.platform != "Twitter" && (
+                  <>
+                    <img
+                      src={
+                        myRaffle.data?.banner
+                          ? myRaffle.data?.banner
+                          : "../../../herobg.png"
+                      }
+                      alt=""
+                      className="h-full w-full object-cover"
+                    />
+                    {!myRaffle.data?.banner && (
+                      <div className="absolute right-8 top-1/3 flex space-x-3 font-benzin text-4xl text-bg 2xl:text-5xl">
+                        ALPHA RESCUE
+                      </div>
+                    )}
+                  </>
+                )}
+                {myRaffle.data?.platform === "Twitter" && (
+                  <div className="grid h-full w-full items-center justify-items-center bg-premint">
+                    <img
+                      src="../../../../twitterwhite.png"
+                      alt=""
+                      className="h-24"
+                    />
                   </div>
                 )}
               </div>
@@ -146,11 +159,22 @@ const MyRaffle = () => {
                   {myRaffle.data?.platform}
                 </div>
                 <div className="absolute -top-12 grid h-24 w-24 items-center justify-items-center rounded-full bg-bg md:-top-16 md:h-28 md:w-28">
-                  <img
-                    src={myRaffle.data?.profilePicture}
-                    alt=""
-                    className="h-20 w-20 rounded-full md:h-24 md:w-24"
-                  />
+                  {myRaffle.data?.platform != "Twitter" && (
+                    <img
+                      src={myRaffle.data?.profilePicture}
+                      alt=""
+                      className="grid h-20 w-20 items-center justify-items-center rounded-full md:h-24 md:w-24"
+                    />
+                  )}
+                  {myRaffle.data?.platform === "Twitter" && (
+                    <div className="grid h-24 w-24 items-center justify-items-center rounded-full bg-premint">
+                      <img
+                        src="../../../../twitterwhite.png"
+                        alt=""
+                        className="h-12"
+                      />
+                    </div>
+                  )}
                 </div>
               </div>
               <div className="px-4 md:px-10 ">
@@ -165,54 +189,58 @@ const MyRaffle = () => {
                     {myRaffle.data?.name}
                   </Link>
                 </div>
-                <div className="mt-3 text-subtext">
-                  Дедлайн:{" "}
-                  {myRaffle.data.deadline
-                    ? myRaffle.data.deadline
-                    : "не указано"}
-                </div>
-                <div className="mt-10 grid grid-cols-[repeat(2,_max-content)] gap-3 sm:gap-6 2xls:grid-cols-[repeat(4,_max-content)]">
-                  <div className="grid h-20 grid-rows-[repeat(2,_max-content)]">
-                    <div className="h-max text-2xl">
-                      {myRaffle.data?.hold ? myRaffle.data.hold : 0} ETH
+                {myRaffle.data?.platform != "Twitter" && (
+                  <div className="mt-3 text-subtext">
+                    Дедлайн:{" "}
+                    {myRaffle.data.deadline
+                      ? myRaffle.data.deadline
+                      : "не указано"}
+                  </div>
+                )}
+                {myRaffle.data?.platform != "Twitter" && (
+                  <div className="mt-10 grid grid-cols-[repeat(2,_max-content)] gap-3 sm:gap-6 2xls:grid-cols-[repeat(4,_max-content)]">
+                    <div className="grid h-20 grid-rows-[repeat(2,_max-content)]">
+                      <div className="h-max text-2xl">
+                        {myRaffle.data?.hold ? myRaffle.data.hold : 0} ETH
+                      </div>
+                      <div className="text-md text-sm text-subtext">
+                        Сумма холда
+                      </div>
                     </div>
-                    <div className="text-md text-sm text-subtext">
-                      Сумма холда
+                    <div className="ml-10 grid h-20 grid-rows-[repeat(2,_max-content)] 2xls:ml-0">
+                      <div className="text-2xl">
+                        {myRaffle.data?.subscribers
+                          ? myRaffle.data?.subscribers
+                          : "Не указано"}
+                      </div>
+                      <div className="text-md text-sm text-subtext">
+                        <p>Подписчики в </p>
+                        <p>Twitter</p>
+                      </div>
+                    </div>
+                    <div className="grid h-20 grid-rows-[repeat(2,_max-content)]">
+                      <div className="h-max text-2xl">
+                        {myRaffle.data?.TotalSupply
+                          ? myRaffle.data?.TotalSupply
+                          : "Не указано"}
+                      </div>
+                      <div className="text-md text-sm text-subtext">
+                        Количество NFT
+                      </div>
+                    </div>
+                    <div className="ml-10 grid h-20 grid-rows-[repeat(2,_max-content)] 2xls:ml-0">
+                      <div className="h-max text-2xl">
+                        {myRaffle.data?.NumberOfWinners
+                          ? myRaffle.data?.NumberOfWinners
+                          : "Не указано"}
+                      </div>
+                      <div className="text-md text-sm text-subtext">
+                        <div className="">Количество</div>
+                        <div className="">Победителей</div>
+                      </div>
                     </div>
                   </div>
-                  <div className="ml-10 grid h-20 grid-rows-[repeat(2,_max-content)] 2xls:ml-0">
-                    <div className="text-2xl">
-                      {myRaffle.data?.subscribers
-                        ? myRaffle.data?.subscribers
-                        : "Не указано"}
-                    </div>
-                    <div className="text-md text-sm text-subtext">
-                      <p>Подписчики в </p>
-                      <p>Twitter</p>
-                    </div>
-                  </div>
-                  <div className="grid h-20 grid-rows-[repeat(2,_max-content)]">
-                    <div className="h-max text-2xl">
-                      {myRaffle.data?.TotalSupply
-                        ? myRaffle.data?.TotalSupply
-                        : "Не указано"}
-                    </div>
-                    <div className="text-md text-sm text-subtext">
-                      Количество NFT
-                    </div>
-                  </div>
-                  <div className="ml-10 grid h-20 grid-rows-[repeat(2,_max-content)] 2xls:ml-0">
-                    <div className="h-max text-2xl">
-                      {myRaffle.data?.NumberOfWinners
-                        ? myRaffle.data?.NumberOfWinners
-                        : "Не указано"}
-                    </div>
-                    <div className="text-md text-sm text-subtext">
-                      <div className="">Количество</div>
-                      <div className="">Победителей</div>
-                    </div>
-                  </div>
-                </div>
+                )}
               </div>
             </div>
             <div className="mb-12 grid grid-rows-[max-content_max-content] px-4 md:px-10 2xl:mb-0">
@@ -253,7 +281,7 @@ const MyRaffle = () => {
                           className="text-blue-400 underline"
                         >
                           {rq.platform === "Twitter"
-                            ? "Tweet"
+                            ? "Link"
                             : rq.action === "Connect"
                             ? null
                             : "Link"}
@@ -271,21 +299,25 @@ const MyRaffle = () => {
                 <div className="mb-16 w-full text-xl md:mb-0 lg:text-2xl">
                   Использованные аккаунты
                 </div>
-                <div className="justify-self-center">
-                  <LaunchButton
-                    textSize="base"
-                    openModal={() => setIsRaffleModalOpen(true)}
-                  >
-                    <p className="text-xl">Перезапустить абуз</p>
-                  </LaunchButton>
-                </div>
+                {myRaffle.data?.platform != "Twitter" && (
+                  <div className="justify-self-center">
+                    <LaunchButton
+                      textSize="base"
+                      openModal={() => setIsRaffleModalOpen(true)}
+                    >
+                      <p className="text-xl">Перезапустить абуз</p>
+                    </LaunchButton>
+                  </div>
+                )}
               </div>
             </div>
             <div className="mt-12">
               <div className="grid grid-cols-[auto] gap-2">
-                <div className="mb-6 grid grid-cols-[20px_120px_auto] overflow-x-auto rounded-xl border-2 border-subtext bg-element px-4 py-4 font-montserratBold text-xs text-subtext sm:grid-cols-[40px_200px_auto] sm:text-base">
+                <div className="mb-6 grid grid-cols-[20px_auto] overflow-x-auto rounded-xl border-2 border-subtext bg-element px-4 py-4 font-montserratBold text-xs text-subtext sm:grid-cols-[40px_200px_auto] sm:text-base">
                   <span>#</span>
-                  <span>Metamask адрес</span>
+                  {myRaffle.data?.platform != "Twitter" && (
+                    <span>Metamask адрес</span>
+                  )}
                   <span>Результат</span>
                 </div>
               </div>
@@ -301,7 +333,7 @@ const MyRaffle = () => {
                             key={a.name}
                           >
                             <div
-                              className={`mb-4 grid w-full grid-cols-[20px_120px_auto] items-center rounded-xl border text-xs sm:grid-cols-[40px_200px_auto] sm:text-base ${
+                              className={`mb-4 grid w-full grid-cols-[20px_auto] items-center rounded-xl border text-xs sm:grid-cols-[40px_200px_auto] sm:text-base ${
                                 a.status === true
                                   ? "border-green-300 text-green-300"
                                   : "border-red-500 text-red-500"
@@ -310,9 +342,11 @@ const MyRaffle = () => {
                               <span className="justify-self-start">
                                 {Number(a.name) + 1}
                               </span>
-                              <span className="w-40 justify-self-start">
-                                {a.address?.slice(0, 15)}...
-                              </span>
+                              {myRaffle.data?.platform != "Twitter" && (
+                                <span className="w-40 justify-self-start">
+                                  {a.address?.slice(0, 15)}...
+                                </span>
+                              )}
                               <span className="w-full">{a.data}</span>
                             </div>
                           </div>

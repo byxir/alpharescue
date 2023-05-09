@@ -65,6 +65,7 @@ const Banner: React.FC<EventStreamComponentProps> = ({
           setAccessedAccounts(data.accessedAccountsNumber);
           setTotalAccounts(data.totalAccountsNumber);
           openIsEventStreamOpen();
+          setIsCancelled(false);
           setTimeLeft(data.endTime);
         } else if (data.status === "success") {
           setShowLayout(true);
@@ -75,6 +76,7 @@ const Banner: React.FC<EventStreamComponentProps> = ({
           void refetchMyRaffles();
           source.close();
           decrementRaffles.mutate();
+          setIsCancelled(false);
           closeIsEventStreamOpen();
         } else if (data.status === "cancelled") {
           setShowLayout(true);
@@ -233,7 +235,6 @@ const Banner: React.FC<EventStreamComponentProps> = ({
               </div>
               <div className="font-montserratBold">
                 {!isCancelled && <span>Осталось {timeLeft} мин.</span>}
-                {isCancelled && <span>Заход отменен</span>}
               </div>
               {!isCancelled && isEventStreamOpen && (
                 <button

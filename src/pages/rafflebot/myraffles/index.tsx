@@ -111,7 +111,7 @@ const RaffleList = () => {
   const debouncedUpdate = debounce(updateQuery, 350);
 
   const determineColor = (platform = String(router.query.platform)) => {
-    if (platform === "Premint") {
+    if (platform === "Premint" || platform === "Twitter") {
       return "#2CBBDB";
     } else if (platform === "Alphabot") {
       return "#63FF1E";
@@ -169,12 +169,24 @@ const RaffleList = () => {
                         className="min-w-104 relative grid h-full grid-rows-[112px_auto] rounded-xl bg-element shadow-md"
                       >
                         <div className="relative h-28">
-                          <img
-                            src={r.banner ? r.banner : "../../../../herobg.png"}
-                            className="h-full w-full rounded-t-xl object-cover"
-                            alt=""
-                          />
-                          {!r.banner && (
+                          {r.platform != "Twitter" && (
+                            <img
+                              src={
+                                !r.banner ? "../../../../herobg.png" : r.banner
+                              }
+                              className="h-full w-full rounded-t-xl object-cover"
+                              alt=""
+                            />
+                          )}
+                          {r.platform === "Twitter" && (
+                            <div className="relative grid h-full w-full items-center justify-items-center rounded-t-xl bg-premint">
+                              <img
+                                src="../../../../twitterwhite.png"
+                                className="w=20 h-20"
+                              />
+                            </div>
+                          )}
+                          {!r.banner && r.platform != "Twitter" && (
                             <div className="absolute right-8 top-1/3 flex space-x-3 font-benzin text-2xl text-bg 2xl:text-3xl">
                               ALPHA RESCUE
                             </div>
@@ -190,12 +202,26 @@ const RaffleList = () => {
                           <div className="grid grid-cols-[auto_48px] items-center justify-between">
                             <div className="mt-3 h-max overflow-hidden break-words font-benzin text-2xl">
                               {r.name}
-                              <div className="absolute top-18 grid h-20 w-20 items-center justify-items-center rounded-full bg-element">
-                                <img
-                                  src={r.profilePicture}
-                                  className="h-16 w-16 rounded-full"
-                                  alt=""
-                                />
+                              <div
+                                className={`absolute top-18 grid h-20 w-20 items-center justify-items-center rounded-full bg-element`}
+                              >
+                                {r.platform != "Twitter" && (
+                                  <img
+                                    src={r.profilePicture}
+                                    className="h-16 w-16 rounded-full"
+                                    alt=""
+                                  />
+                                )}
+                                {r.platform === "Twitter" && (
+                                  <div
+                                    className={`grid h-16 w-16 items-center justify-items-center rounded-full bg-premint`}
+                                  >
+                                    <img
+                                      src="../../../../twitterwhite.png"
+                                      className="h-19 w-11"
+                                    />
+                                  </div>
+                                )}
                               </div>
                             </div>
                           </div>
