@@ -68,11 +68,7 @@ const Raffle = () => {
   const [subscriptionText, setSubscriptionText] = useState("");
   const [friendsRangeValue, setFriendsRangeValue] = useState([1, 1]);
   const allMyData = api.user.getAllMyData.useQuery();
-  const [followIds, setFollowIds] = useState<string[]>([
-    "@test1",
-    "@test2",
-    "@test3",
-  ]);
+  const [followIds, setFollowIds] = useState<string[]>([]);
   const [tweetLinkError, setTweetLinkError] = useState(false);
   const [namePlaceholder, setNamePlaceholder] = useState(false);
   const [friendsName, setFriendsName] = useState<string | null>(null);
@@ -162,11 +158,6 @@ const Raffle = () => {
       content: ["test1", "test2", "test3"],
     },
   ];
-
-  if (typeof window != "undefined")
-    localStorage.setItem("friends", JSON.stringify(testfriends));
-
-  console.log("friends -> ", friends);
 
   const stopRaffleMutation = useMutation(["stopRaffle"], async () => {
     return axios.post(
@@ -349,8 +340,10 @@ const Raffle = () => {
                     </div>
                     <button
                       onClick={() => {
-                        setFollowIds((prev) => [...prev, subscriptionText]);
-                        setSubscriptionText("");
+                        if (!followIds.includes(subscriptionText)) {
+                          setFollowIds((prev) => [...prev, subscriptionText]);
+                          setSubscriptionText("");
+                        }
                       }}
                       className="h-10 w-10 cursor-pointer rounded-lg bg-accent text-2xl text-bg shadow-md transition-all hover:bg-opacity-60"
                     >
@@ -490,19 +483,21 @@ const Raffle = () => {
                         name={friendsName}
                         setName={(newname: string) => setFriendsName(newname)}
                       />
-                      <button
-                        onClick={() => {
-                          if (typeof window != "undefined") {
-                            localStorage.removeItem("friends");
-                            setFriends([]);
-                            setFriendsName(null);
-                            console.log("friends friends");
-                          }
-                        }}
-                        className="mt-4 h-12 w-12 justify-self-center text-red-500"
-                      >
-                        <XCircleIcon />
-                      </button>
+                      {friendsName && (
+                        <button
+                          onClick={() => {
+                            if (typeof window != "undefined") {
+                              localStorage.removeItem("friends");
+                              setFriends([]);
+                              setFriendsName(null);
+                              console.log("friends friends");
+                            }
+                          }}
+                          className="mt-4 h-12 w-12 justify-self-center text-red-500"
+                        >
+                          <XCircleIcon />
+                        </button>
+                      )}
                     </div>
                   )}
                   {sentenceStatus && (
@@ -518,18 +513,20 @@ const Raffle = () => {
                           setSentences(newSentences)
                         }
                       />
-                      <button
-                        onClick={() => {
-                          if (typeof window != "undefined") {
-                            localStorage.removeItem("sentences");
-                            setSentences([]);
-                            setSentencesName(null);
-                          }
-                        }}
-                        className="mt-4 h-12 w-12 justify-self-center text-red-500"
-                      >
-                        <XCircleIcon />
-                      </button>
+                      {sentencesName && (
+                        <button
+                          onClick={() => {
+                            if (typeof window != "undefined") {
+                              localStorage.removeItem("sentences");
+                              setSentences([]);
+                              setSentencesName(null);
+                            }
+                          }}
+                          className="mt-4 h-12 w-12 justify-self-center text-red-500"
+                        >
+                          <XCircleIcon />
+                        </button>
+                      )}
                     </div>
                   )}
                 </div>
