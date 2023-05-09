@@ -342,8 +342,8 @@ const Raffle = () => {
                       onClick={() => {
                         if (
                           !followIds.includes(subscriptionText) &&
-                          followIds &&
-                          followIds != ""
+                          subscriptionText &&
+                          subscriptionText != ""
                         ) {
                           setFollowIds((prev) => [...prev, subscriptionText]);
                           setSubscriptionText("");
