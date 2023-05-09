@@ -6,11 +6,7 @@ import { RangeSlider } from "~/components/RangeSlider";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import {
-  useMutation,
-  useQuery,
-  type UseQueryResult,
-} from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import Spinner from "~/components/spinner/Spinner";
 import { api } from "~/utils/api";
@@ -18,7 +14,15 @@ import { type IAccount } from "./settings";
 import RaffleTimeModal from "~/components/RaffleTimeModal";
 import OnNoRafflesNotification from "~/components/notifications/OnNoRafflesNotification";
 import { EventStreamStatusContext } from "~/pages/_app";
-import Image from "next/image";
+import TwitterRootReader from "~/components/accounts/FileReaders/twitterraffle/RootReader";
+import OnSentencesLoadNotification from "~/components/notifications/OnSentencesLoadNotification";
+import OnFriendsLoadNotification from "~/components/notifications/OnFriendsLoadNotification";
+import { XCircleIcon, XMarkIcon } from "@heroicons/react/24/outline";
+
+type localStorageData = {
+  name: string;
+  content: string[];
+};
 
 export type IRaffle = {
   banner: string;
@@ -48,27 +52,72 @@ const Raffle = () => {
   const [showNoRafflesNotification, setShowNoRafflesNotification] =
     useState(false);
   const { data, status } = useSession();
-
-  const raffle: UseQueryResult<IRaffle> = useQuery<IRaffle>(
-    ["raffle", router.query],
-    async () => {
-      const res = await axios.get(
-        `https://alpharescue.online/raffles/${String(router.query.id)}`
-      );
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-      return res.data;
-    },
-    {
-      enabled: false,
-    }
-  );
+  const [showSentencesLoadNotification, setShowSentencesLoadNotification] =
+    useState(false);
+  const [showFriendsLoadNotification, setShowFriendsLoadNotification] =
+    useState(false);
 
   const { isEventStreamOpen } = useContext(EventStreamStatusContext);
 
+  const [tweetLink, setTweetLink] = useState("");
+  const [retweetStatus, setRetweetStatus] = useState(false);
+  const [likeStatus, setLikeStatus] = useState(false);
+  const [commentStatus, setCommentStatus] = useState(true);
+  const [friendStatus, setFriendStatus] = useState(true);
+  const [sentenceStatus, setSentenceStatus] = useState(true);
+  const [subscriptionText, setSubscriptionText] = useState("");
+  const [friendsRangeValue, setFriendsRangeValue] = useState([1, 1]);
   const allMyData = api.user.getAllMyData.useQuery();
+  const [followIds, setFollowIds] = useState<string[]>([
+    "@test1",
+    "@test2",
+    "@test3",
+  ]);
+  const [tweetLinkError, setTweetLinkError] = useState(false);
+  const [namePlaceholder, setNamePlaceholder] = useState(false);
+  const [friendsName, setFriendsName] = useState<string | null>(null);
+  const [sentencesName, setSentencesName] = useState<string | null>(null);
+
+  const [friends, setFriends] = useState<string[] | null | undefined>([]);
+  const [sentences, setSentences] = useState<string[] | null | undefined>([]);
+
+  if (typeof window !== "undefined") {
+    console.log("client");
+  } else {
+    console.log("server");
+  }
+
+  function getItemFromLocalStorage(key: string): string[] | null {
+    if (typeof window === "undefined") return null;
+    const item = localStorage.getItem(key);
+
+    if (item === null) {
+      console.log("Item not found in local storage");
+      return null;
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const parsedItem: localStorageData[] = JSON.parse(item);
+
+    if (!Array.isArray(parsedItem) || parsedItem.length !== 1) {
+      console.log("Item is not an array or does not have exactly one element");
+      return null;
+    }
+
+    const obj = parsedItem[0];
+    if (!obj) return null;
+    const content = obj.content;
+
+    return content;
+  }
+
+  useEffect(() => {
+    setFriends(getItemFromLocalStorage("friends"));
+    setSentences(getItemFromLocalStorage("sentences"));
+  }, []);
 
   const myAccounts = useQuery<IAccount[]>(
-    ["accounts"],
+    ["twitterAccounts"],
     async () => {
       const res = await axios.get(
         `https://alpharescue.online/get_all_accounts?discordId=${String(
@@ -81,14 +130,43 @@ const Raffle = () => {
         }
       );
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      if (res.data) setRangeValue([1, Number(res.data.length)]);
+      if (res.data) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+        const filteredAccounts: IAccount[] = res.data.filter(
+          (account: IAccount) => {
+            if (account.TwitterAuthToken || account.TwitterCsrf) {
+              return account;
+            }
+          }
+        );
+        setRangeValue([1, Number(filteredAccounts.length)]);
+
+        return filteredAccounts;
+      }
       // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-      return res.data;
+      return [];
     },
     {
       enabled: false,
     }
   );
+
+  const validateInput = (input: string) => {
+    const regex = /^https:\/\/twitter.com\/[A-Za-z0-9_]+\/status\/[^\/]+$/;
+    return regex.test(input);
+  };
+
+  const testfriends = [
+    {
+      name: "testfriends",
+      content: ["test1", "test2", "test3"],
+    },
+  ];
+
+  if (typeof window != "undefined")
+    localStorage.setItem("friends", JSON.stringify(testfriends));
+
+  console.log("friends -> ", friends);
 
   const stopRaffleMutation = useMutation(["stopRaffle"], async () => {
     return axios.post(
@@ -126,10 +204,26 @@ const Raffle = () => {
   }, [allMyData.data, data?.user, myAccounts.data, myAccounts.isStale]);
 
   useEffect(() => {
-    if (router.isReady) {
-      void raffle.refetch();
+    const obj = localStorage.getItem("friends");
+    if (obj && typeof obj === "string") {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      const formattedObj: { name: string; content: string[] }[] =
+        JSON.parse(obj);
+      const newname = String(formattedObj[0]?.name);
+      setFriendsName(newname);
+      console.log("name name");
     }
-  }, [router.isReady, router.query.id]);
+
+    const obj2 = localStorage.getItem("sentences");
+    if (obj2 && typeof obj2 === "string") {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      const formattedObj: { name: string; content: string[] }[] =
+        JSON.parse(obj2);
+      const newname = String(formattedObj[0]?.name);
+      setSentencesName(newname);
+      console.log("name name");
+    }
+  }, []);
 
   const [rangeValue, setRangeValue] = useState<number[]>([
     1,
@@ -213,27 +307,6 @@ const Raffle = () => {
       }
     }
   };
-
-  const determineColor = (platform: string) => {
-    if (platform === "Premint") {
-      return "#2CBBDB";
-    } else if (platform === "Alphabot") {
-      return "#63FF1E";
-    } else if (platform === "Superful") {
-      return "#6767AB";
-    } else if (platform === "FreeNFT") {
-      return "#FFFFFF";
-    }
-    return "";
-  };
-
-  const [tweetLink, setTweetLink] = useState("");
-  const [retweetStatus, setRetweetStatus] = useState(false);
-  const [likeStatus, setLikeStatus] = useState(false);
-  const [commentStatus, setCommentStatus] = useState(false);
-  const [friendTag, setFriendTag] = useState(false);
-  const [phraseStatus, setPhraseStatus] = useState(false);
-  const [subscriptionText, setSubscriptionText] = useState("");
   return (
     <SidebarLayout>
       <div className="grid w-full border-subline text-almostwhite 2xl:h-screen 2xl:grid-cols-[43%_57%]">
@@ -247,22 +320,42 @@ const Raffle = () => {
               <input
                 type="text"
                 value={tweetLink}
-                onChange={(e) => setTweetLink(e.target.value)}
-                className="w-full rounded-lg bg-element py-2 pl-3 pr-1 font-montserratRegular text-lg text-almostwhite placeholder-subtext outline-none"
+                onChange={(e) => {
+                  setTweetLink(e.target.value);
+                  setTweetLinkError(false);
+                }}
+                className={`w-full rounded-lg bg-element py-2 pl-3 pr-1 font-montserratRegular text-lg text-almostwhite placeholder-subtext outline-none ${
+                  tweetLinkError ? "border-2 border-red-500" : ""
+                }`}
                 placeholder="Вставьте ссылку"
               />
+              {tweetLinkError && (
+                <div className="text-base text-red-500">Неверная ссылка</div>
+              )}
               <br></br>
               <br></br>
               <div className="flex justify-between">
-                <div className="flex items-center space-x-2">
-                  <div className="">Подписка</div>
-                  <div className="">
-                    <input
-                      onChange={(e) => setSubscriptionText(e.target.value)}
-                      value={subscriptionText}
-                      className="w-full rounded-lg bg-element py-2 pl-3 pr-1 font-montserratRegular text-lg text-almostwhite placeholder-subtext outline-none"
-                      type="text"
-                    />
+                <div className="">
+                  <div className="flex items-center space-x-2">
+                    <div className="">Подписка</div>
+                    <div className="">
+                      <input
+                        onChange={(e) => setSubscriptionText(e.target.value)}
+                        value={subscriptionText}
+                        placeholder="@username"
+                        className="w-full rounded-lg bg-element py-2 pl-3 pr-1 font-montserratRegular text-lg text-almostwhite placeholder-subtext outline-none"
+                        type="text"
+                      />
+                    </div>
+                    <button
+                      onClick={() => {
+                        setFollowIds((prev) => [...prev, subscriptionText]);
+                        setSubscriptionText("");
+                      }}
+                      className="h-10 w-10 cursor-pointer rounded-lg bg-accent text-2xl text-bg shadow-md transition-all hover:bg-opacity-60"
+                    >
+                      +
+                    </button>
                   </div>
                 </div>
                 <div className="flex space-x-4">
@@ -294,55 +387,154 @@ const Raffle = () => {
                   </div>
                 </div>
               </div>
+              <div className="mt-4 grid">
+                {followIds.map((id) => (
+                  <div
+                    key={id}
+                    className="ml-24 flex w-52 items-center justify-between space-x-2"
+                  >
+                    <span>{id}</span>
+                    <button
+                      onClick={() =>
+                        setFollowIds((prev) => prev.filter((_id) => _id != id))
+                      }
+                      className="h-6 w-6 cursor-pointer text-red-500"
+                    >
+                      <XMarkIcon />
+                    </button>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
           <div className="grid grid-rows-[max-content_max-content] px-4 pb-16 md:px-10 2xl:mb-0">
-            <div className="mb-12 mt-8 text-3xl">Настройка комментариев</div>
-            <div className="">
-              <div className="flex justify-between">
-                <div className="grid grid-cols-[repeat(2,_max-content)] grid-rows-2 gap-x-8 gap-y-4">
-                  <div className="flex items-center space-x-3">
-                    <div className="">
+            <div className="mb-6 mt-8 text-3xl">Настройка комментариев</div>
+            <div className="flex space-x-6">
+              <div className="mb-6 flex items-center space-x-2">
+                <div className="">
+                  <button
+                    onClick={() => setCommentStatus(!commentStatus)}
+                    className="grid h-10 w-10 items-center justify-items-center rounded-lg border border-subline"
+                  >
+                    {commentStatus && (
+                      <div className="h-5 w-5 rounded-md bg-accent"></div>
+                    )}
+                  </button>
+                </div>
+                <div className="">Комментарии</div>
+              </div>
+              {commentStatus && (
+                <div className="mb-6 flex items-center space-x-2">
+                  <div className="">
+                    <button
+                      onClick={() => setFriendStatus(!friendStatus)}
+                      className="grid h-10 w-10 items-center justify-items-center rounded-lg border border-subline"
+                    >
+                      {friendStatus && (
+                        <div className="h-5 w-5 rounded-md bg-accent"></div>
+                      )}
+                    </button>
+                  </div>
+                  <div className="">Тег друзей</div>
+                </div>
+              )}
+              {commentStatus && (
+                <div className="mb-6 flex items-center space-x-2">
+                  <div className="">
+                    <button
+                      onClick={() => setSentenceStatus(!sentenceStatus)}
+                      className="grid h-10 w-10 items-center justify-items-center rounded-lg border border-subline"
+                    >
+                      {sentenceStatus && (
+                        <div className="h-5 w-5 rounded-md bg-accent"></div>
+                      )}
+                    </button>
+                  </div>
+                  <div className="">Предложения</div>
+                </div>
+              )}
+            </div>
+            {commentStatus && (
+              <div className="grid">
+                {friendStatus && (
+                  <div className="w-max">
+                    <div className="mb-6 text-xl">Выберите диапазон друзей</div>
+                    <div className="mb-6 mr-5 grid w-2/3 grid-cols-[max-content_auto_max-content] items-center justify-self-center">
+                      <div className="mr-5">1</div>
+                      <RangeSlider
+                        getAriaLabel={() => "Account range"}
+                        value={friendsRangeValue}
+                        onChange={(_, newValue) => {
+                          setFriendsRangeValue(newValue as number[]);
+                        }}
+                        valueLabelDisplay="auto"
+                        min={1}
+                        max={friends?.length || 1}
+                        step={1}
+                      />
+                      <div className="ml-5">Все</div>
+                    </div>
+                  </div>
+                )}
+                <div className="flex space-x-20">
+                  {friendStatus && (
+                    <div className="grid">
+                      <TwitterRootReader
+                        readerType="friends"
+                        showNotification={() =>
+                          setShowFriendsLoadNotification(true)
+                        }
+                        setFriends={(newFriends: string[] | undefined) =>
+                          setFriends(newFriends)
+                        }
+                        name={friendsName}
+                        setName={(newname: string) => setFriendsName(newname)}
+                      />
                       <button
-                        onClick={() => setCommentStatus(!commentStatus)}
-                        className="grid h-10 w-10 items-center justify-items-center rounded-lg border border-subline"
+                        onClick={() => {
+                          if (typeof window != "undefined") {
+                            localStorage.removeItem("friends");
+                            setFriends([]);
+                            setFriendsName(null);
+                            console.log("friends friends");
+                          }
+                        }}
+                        className="mt-4 h-12 w-12 justify-self-center text-red-500"
                       >
-                        {commentStatus && (
-                          <div className="h-5 w-5 rounded-md bg-accent"></div>
-                        )}
+                        <XCircleIcon />
                       </button>
                     </div>
-                    <div className="">Писать коммент</div>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <div className="">
+                  )}
+                  {sentenceStatus && (
+                    <div className="grid">
+                      <TwitterRootReader
+                        name={sentencesName}
+                        setName={(newname: string) => setSentencesName(newname)}
+                        readerType="sentences"
+                        showNotification={() =>
+                          setShowSentencesLoadNotification(true)
+                        }
+                        setSentences={(newSentences: string[] | undefined) =>
+                          setSentences(newSentences)
+                        }
+                      />
                       <button
-                        onClick={() => setPhraseStatus(!phraseStatus)}
-                        className="grid h-10 w-10 items-center justify-items-center rounded-lg border border-subline"
+                        onClick={() => {
+                          if (typeof window != "undefined") {
+                            localStorage.removeItem("sentences");
+                            setSentences([]);
+                            setSentencesName(null);
+                          }
+                        }}
+                        className="mt-4 h-12 w-12 justify-self-center text-red-500"
                       >
-                        {phraseStatus && (
-                          <div className="h-5 w-5 rounded-md bg-accent"></div>
-                        )}
+                        <XCircleIcon />
                       </button>
                     </div>
-                    <div className="">Список фраз</div>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <div className="">
-                      <button
-                        onClick={() => setFriendTag(!friendTag)}
-                        className="grid h-10 w-10 items-center justify-items-center rounded-lg border border-subline"
-                      >
-                        {friendTag && (
-                          <div className="h-5 w-5 rounded-md bg-accent"></div>
-                        )}
-                      </button>
-                    </div>
-                    <div className="">Тег друзей</div>
-                  </div>
+                  )}
                 </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
         <div className="h-100vh border-t-2 border-subline px-4 pt-14 md:px-10 2xl:overflow-y-auto 2xl:border-none 2xl:pt-11">
@@ -508,7 +700,14 @@ const Raffle = () => {
                 authorized={
                   data?.user.raffleBotUser && status === "authenticated"
                 }
-                openModal={() => setTimeModalOpen(true)}
+                openModal={() => {
+                  if (validateInput(tweetLink)) {
+                    setTimeModalOpen(true);
+                    setTweetLinkError(false);
+                  } else {
+                    setTweetLinkError(true);
+                  }
+                }}
               >
                 <p className="text-2xl">Запустить</p>
                 <p className="text-2xl">абуз</p>
@@ -534,7 +733,7 @@ const Raffle = () => {
               </div>
               {data?.user.raffleBotUser && status === "authenticated" ? (
                 <div className="mr-5 grid w-full grid-cols-[max-content_auto_max-content] items-center">
-                  <div className="mr-5">0</div>
+                  <div className="mr-5">1</div>
                   <RangeSlider
                     getAriaLabel={() => "Account range"}
                     value={rangeValue}
@@ -544,21 +743,17 @@ const Raffle = () => {
                     max={myAccounts.data?.length || 1}
                     step={1}
                   />
-                  <div className="ml-5">All</div>
+                  <div className="ml-5">Все</div>
                 </div>
               ) : null}
             </div>
           </div>
           <div className="mt-12 block w-full overflow-x-scroll">
             <div className="grid grid-cols-[auto_40px] gap-2">
-              <div className="mb-6 grid grid-cols-[5%_17%_18%_20%_20%_20%] rounded-xl border-2 border-subtext bg-element px-4 py-4 font-montserratBold text-xs text-subtext sm:text-base">
+              <div className="mb-6 grid grid-cols-[30px_150px_200px] rounded-xl border-2 border-subtext bg-element px-4 py-4 font-montserratBold text-xs text-subtext sm:text-base">
                 <span>#</span>
-                <span>Twitter</span>
-                <span>Discord</span>
-                <span className="hidden sm:block">Metamask</span>
-                <span className="block sm:hidden">M-Mask</span>
-                <span>Прокси</span>
-                <span>Почты</span>
+                <span>TwitterCsrf</span>
+                <span>TwitterAuthToken</span>
               </div>
               <div className="mb-6 h-10 self-center rounded-lg p-1">
                 <svg
@@ -582,14 +777,6 @@ const Raffle = () => {
                   myAccounts.data
                     .filter((a) => {
                       if (
-                        a.DiscordStatus ||
-                        a.DiscordToken ||
-                        a.Email ||
-                        a.MetaMaskAddress ||
-                        a.MetaMaskPrivateKey ||
-                        a.ProxyData ||
-                        a.ProxyStatus ||
-                        a.ProxyType ||
                         a.TwitterAuthToken ||
                         a.TwitterCsrf ||
                         a.TwitterStatus
@@ -602,13 +789,10 @@ const Raffle = () => {
                         className="grid w-full grid-cols-[auto_40px] gap-2 overflow-scroll"
                         key={a.name}
                       >
-                        <div className="mb-4 grid w-full grid-cols-[5%_17%_18%_20%_20%_20%] items-center rounded-xl border border-subline px-4 py-4 text-xs text-subtext sm:text-base">
+                        <div className="mb-4 grid w-full grid-cols-[30px_150px_200px] items-center rounded-xl border border-subline px-4 py-4 text-xs text-subtext sm:text-base">
                           <span>{Number(a.name) + 1}</span>
-                          <span>{a.TwitterCsrf?.slice(0, 8)}...</span>
-                          <span>{a.DiscordToken?.slice(0, 8)}...</span>
-                          <span>{a.MetaMaskAddress?.slice(0, 8)}...</span>
-                          <span>{a.ProxyData?.slice(7, 17)}...</span>
-                          <span>{a.Email?.slice(0, 12)}...</span>
+                          <span>{a.TwitterCsrf?.slice(0, 12)}...</span>
+                          <span>{a.TwitterAuthToken?.slice(0, 16)}...</span>
                         </div>
                         <div
                           onClick={() => handleExceptions(a.name)}
@@ -651,18 +835,38 @@ const Raffle = () => {
       <RaffleTimeModal
         open={timeModalOpen}
         closeFunction={() => setTimeModalOpen(false)}
-        _raffleId={String(router.query.id)}
-        _exceptions={exceptions}
         _firstAcc={Number(rangeValue[0]) - 1}
         _lastAcc={Number(rangeValue[1]) - 1}
         remainingRaffles={Number(
           allMyData.data?.RaffleBotSubscription?.rafflesLeft
         )}
+        twitterRaffleData={{
+          Link: tweetLink,
+          RetweetStatus: retweetStatus,
+          LikeStatus: likeStatus,
+          FollowIds: followIds,
+          CommentStatus: commentStatus,
+          CommentData: {
+            Sentences: sentences,
+            MaxTags: friendsRangeValue[1],
+            MinTags: friendsRangeValue[0],
+            Friends: friends,
+          },
+        }}
+        _exceptions={exceptions}
         showNotification={() => setShowNoRafflesNotification(true)}
       />
       <OnNoRafflesNotification
         show={showNoRafflesNotification}
         closeFunction={() => setShowNoRafflesNotification(false)}
+      />
+      <OnSentencesLoadNotification
+        show={showSentencesLoadNotification}
+        closeFunction={() => setShowSentencesLoadNotification(false)}
+      />
+      <OnFriendsLoadNotification
+        show={showFriendsLoadNotification}
+        closeFunction={() => setShowFriendsLoadNotification(false)}
       />
     </SidebarLayout>
   );

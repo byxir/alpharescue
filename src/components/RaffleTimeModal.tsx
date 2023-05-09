@@ -39,16 +39,30 @@ export default function RaffleTimeModal({
   remainingRaffles,
   showNotification,
   restart,
+  twitterRaffleData,
 }: {
   open: boolean;
   closeFunction: () => void;
-  _raffleId: string;
+  _raffleId?: string;
   _exceptions?: string[] | null | undefined;
   _firstAcc?: number | undefined;
   _lastAcc?: number | undefined;
   remainingRaffles: number;
   showNotification: () => void;
   restart?: boolean;
+  twitterRaffleData?: {
+    Link?: string;
+    RetweetStatus: boolean;
+    LikeStatus: boolean;
+    FollowIds: string[];
+    CommentStatus: boolean;
+    CommentData?: {
+      Sentences?: string[] | null;
+      MaxTags?: number;
+      MinTags?: number;
+      Friends?: string[] | null;
+    };
+  };
 }) {
   const [value, setValue] = useState(120);
   const handleChange = (event: Event, newValue: number | number[]) => {
@@ -112,6 +126,35 @@ export default function RaffleTimeModal({
           discordId: allMyData.data?.discordId,
           userId: data?.user.id,
           raffleId: _raffleId,
+          time: value * 60,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${String(allMyData.data?.sessionToken)}`,
+          },
+        }
+      );
+    },
+    {
+      onSuccess: () => {
+        toggleEventStream();
+      },
+    }
+  );
+
+  const startTwitterRaffleMutation = useMutation(
+    ["startTwitterRaffle"],
+    async () => {
+      return axios.post(
+        "https://alpharescue.online/startraffle",
+        {
+          discordId: allMyData.data?.discordId,
+          userId: data?.user.id,
+          TwitterRaffle: twitterRaffleData,
+          time: value * 60,
+          firstAcc: _firstAcc,
+          lastAcc: _lastAcc,
+          exceptions: _exceptions,
         },
         {
           headers: {
@@ -128,23 +171,35 @@ export default function RaffleTimeModal({
   );
 
   const startRaffle = () => {
-    if (
-      restart &&
-      data?.user.raffleBotUser &&
-      status === "authenticated" &&
-      allMyData.data
-    ) {
-      restartRaffleMutation.mutate();
-    } else {
+    if (twitterRaffleData) {
       if (
         data?.user.raffleBotUser &&
         status === "authenticated" &&
-        allMyData.data &&
-        _firstAcc != undefined &&
-        _lastAcc != undefined
+        allMyData.data
       ) {
-        startRaffleMutation.mutate();
+        startTwitterRaffleMutation.mutate();
         closeFunction();
+      }
+    } else {
+      if (
+        restart &&
+        data?.user.raffleBotUser &&
+        status === "authenticated" &&
+        allMyData.data
+      ) {
+        restartRaffleMutation.mutate();
+        closeFunction();
+      } else {
+        if (
+          data?.user.raffleBotUser &&
+          status === "authenticated" &&
+          allMyData.data &&
+          _firstAcc != undefined &&
+          _lastAcc != undefined
+        ) {
+          startRaffleMutation.mutate();
+          closeFunction();
+        }
       }
     }
   };

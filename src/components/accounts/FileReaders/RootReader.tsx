@@ -129,7 +129,7 @@ const RootReader = ({
       <div className="mt-4 flex items-center space-x-1 text-subline">
         {isDragActive ? (
           <>
-            <div className="text-xs">Дропайте кошельки сюда</div>
+            <div className="text-xs">Дропайте файл сюда</div>
           </>
         ) : (
           <>

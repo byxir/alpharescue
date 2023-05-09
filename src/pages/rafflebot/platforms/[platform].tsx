@@ -526,7 +526,7 @@ const MemorizedRaffle: React.FC<{
       {data?.user.role === "ADMIN" && (
         <button
           onClick={() => deleteRaffleMutation.mutate()}
-          className="absolute right-0 top-0 z-20 h-8 w-8 text-element"
+          className="absolute right-0 top-0 z-20 h-8 w-8 text-red-500"
         >
           <XCircleIcon />
         </button>
@@ -534,7 +534,7 @@ const MemorizedRaffle: React.FC<{
       {data?.user.role === "ADMIN" && (
         <button
           onClick={() => hideRaffleMutation.mutate()}
-          className="absolute right-8 top-0 z-20 h-8 w-8 text-element"
+          className="absolute right-8 top-0 z-20 h-8 w-8 text-red-500"
         >
           <EyeIcon />
         </button>
