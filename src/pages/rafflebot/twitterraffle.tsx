@@ -453,11 +453,11 @@ const Raffle = () => {
             </div>
             {commentStatus && (
               <div className="grid">
-                {friendStatus && (
+                {friendStatus && friendsName && (
                   <div className="w-max">
                     <div className="mb-6 text-xl">Выберите диапазон друзей</div>
                     <div className="mb-6 mr-5 grid w-2/3 grid-cols-[max-content_auto_max-content] items-center justify-self-center">
-                      <div className="mr-5">1</div>
+                      <div className="mr-5">0</div>
                       <RangeSlider
                         getAriaLabel={() => "Account range"}
                         value={friendsRangeValue}
@@ -465,8 +465,8 @@ const Raffle = () => {
                           setFriendsRangeValue(newValue as number[]);
                         }}
                         valueLabelDisplay="auto"
-                        min={1}
-                        max={friends?.length || 1}
+                        min={0}
+                        max={friends?.length || 0}
                         step={1}
                       />
                       <div className="ml-5">Все</div>
@@ -848,10 +848,10 @@ const Raffle = () => {
           FollowIds: followIds,
           CommentStatus: commentStatus,
           CommentData: {
-            Sentences: sentences,
+            Sentences: sentences ? sentences : [],
             MaxTags: friendsRangeValue[1],
             MinTags: friendsRangeValue[0],
-            Friends: friends,
+            Friends: friends ? (friends.length > 0 ? friends : null) : null,
           },
         }}
         _exceptions={exceptions}
