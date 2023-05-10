@@ -53,7 +53,7 @@ const TwitterRootReader = ({
   return (
     <button
       {...getRootProps()}
-      className={`grid h-52 w-44 justify-items-center rounded-xl border-2 border-dashed border-subline p-4 transition-colors ${
+      className={`grid h-52 w-40 justify-items-center rounded-xl border-2 border-dashed border-subline px-2 py-4 transition-colors sm:w-44 sm:p-4 ${
         data?.user.raffleBotUser && status === "authenticated"
           ? "cursor-pointer hover:bg-neutral-900"
           : "cursor-not-allowed"
@@ -65,7 +65,7 @@ const TwitterRootReader = ({
         <DocumentTextIcon />
       </div>
       <p className="">Загрузить</p>
-      {readerType === "sentences" && <p className="">предложения</p>}
+      {readerType === "sentences" && <p className="">фразы</p>}
       {readerType === "friends" && <p className="">друзей</p>}
       <div className="mt-4 flex items-center space-x-1 text-subline">
         {isDragActive ? (
@@ -77,7 +77,7 @@ const TwitterRootReader = ({
             <div className="h-6 w-6">
               <DocumentTextIcon />
             </div>
-            <div className="text-xs">{name ? name : "файл не выбран"}</div>
+            <div className="text-xs">{name ? name : "нет файла"}</div>
           </>
         )}
       </div>

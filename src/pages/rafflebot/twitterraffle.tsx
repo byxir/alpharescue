@@ -302,11 +302,13 @@ const Raffle = () => {
     <SidebarLayout>
       <div className="grid w-full border-subline text-almostwhite 2xl:h-screen 2xl:grid-cols-[43%_57%]">
         <div className="border-subline 2xl:border-r-2">
-          <div className="grid border-b-2 border-subline pb-14 pl-8 pt-16 font-benzin text-5xl">
+          <div className="grid border-b-2 border-subline pb-14 pl-4 pt-16 font-benzin text-3xl sm:pl-8 sm:text-5xl">
             Twitter Raffle
           </div>
           <div className="grid grid-rows-[max-content_max-content] border-b-2 border-subline px-4 pb-16 md:px-10 2xl:mb-0">
-            <div className="mb-12 mt-8 text-3xl">Основная настройка</div>
+            <div className="mb-12 mt-8 text-2xl sm:text-3xl">
+              Основная настройка
+            </div>
             <div className="">
               <input
                 type="text"
@@ -325,7 +327,35 @@ const Raffle = () => {
               )}
               <br></br>
               <br></br>
-              <div className="flex justify-between">
+              <div className="grid gap-6">
+                <div className="flex space-x-4">
+                  <div className="flex items-center space-x-2">
+                    <div className="">Ретвит</div>
+                    <div className="">
+                      <button
+                        onClick={() => setRetweetStatus(!retweetStatus)}
+                        className="grid h-10 w-10 items-center justify-items-center rounded-lg border border-subline"
+                      >
+                        {retweetStatus && (
+                          <div className="h-5 w-5 rounded-md bg-accent"></div>
+                        )}
+                      </button>
+                    </div>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <div className="">Лайк</div>
+                    <div className="">
+                      <button
+                        onClick={() => setLikeStatus(!likeStatus)}
+                        className="grid h-10 w-10 items-center justify-items-center rounded-lg border border-subline"
+                      >
+                        {likeStatus && (
+                          <div className="h-5 w-5 rounded-md bg-accent"></div>
+                        )}
+                      </button>
+                    </div>
+                  </div>
+                </div>
                 <div className="">
                   <div className="flex items-center space-x-2">
                     <div className="">Подписка</div>
@@ -355,34 +385,6 @@ const Raffle = () => {
                     </button>
                   </div>
                 </div>
-                <div className="flex space-x-4">
-                  <div className="flex items-center space-x-2">
-                    <div className="">Ретвит</div>
-                    <div className="">
-                      <button
-                        onClick={() => setRetweetStatus(!retweetStatus)}
-                        className="grid h-10 w-10 items-center justify-items-center rounded-lg border border-subline"
-                      >
-                        {retweetStatus && (
-                          <div className="h-5 w-5 rounded-md bg-accent"></div>
-                        )}
-                      </button>
-                    </div>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <div className="">Лайк</div>
-                    <div className="">
-                      <button
-                        onClick={() => setLikeStatus(!likeStatus)}
-                        className="grid h-10 w-10 items-center justify-items-center rounded-lg border border-subline"
-                      >
-                        {likeStatus && (
-                          <div className="h-5 w-5 rounded-md bg-accent"></div>
-                        )}
-                      </button>
-                    </div>
-                  </div>
-                </div>
               </div>
               <div className="mt-4 grid">
                 {followIds.map((id) => (
@@ -405,8 +407,10 @@ const Raffle = () => {
             </div>
           </div>
           <div className="grid grid-rows-[max-content_max-content] px-4 pb-16 md:px-10 2xl:mb-0">
-            <div className="mb-6 mt-8 text-3xl">Настройка комментариев</div>
-            <div className="flex space-x-6">
+            <div className="mb-6 mt-8 text-2xl sm:text-3xl">
+              Настройка комментариев
+            </div>
+            <div className="grid sm:flex sm:space-x-6">
               <div className="mb-6 flex items-center space-x-2">
                 <div className="">
                   <button
@@ -447,7 +451,7 @@ const Raffle = () => {
                       )}
                     </button>
                   </div>
-                  <div className="">Предложения</div>
+                  <div className="">Фразы</div>
                 </div>
               )}
             </div>
@@ -473,7 +477,7 @@ const Raffle = () => {
                     </div>
                   </div>
                 )}
-                <div className="flex space-x-20">
+                <div className="flex space-x-6 sm:justify-start sm:space-x-20">
                   {friendStatus && (
                     <div className="grid">
                       <TwitterRootReader
@@ -751,7 +755,7 @@ const Raffle = () => {
           </div>
           <div className="mt-12 block w-full overflow-x-scroll">
             <div className="grid grid-cols-[auto_40px] gap-2">
-              <div className="mb-6 grid grid-cols-[30px_150px_200px] rounded-xl border-2 border-subtext bg-element px-4 py-4 font-montserratBold text-xs text-subtext sm:text-base">
+              <div className="mb-6 grid grid-cols-[20px_110px_auto] rounded-xl border-2 border-subtext bg-element px-4 py-4 font-montserratBold text-xs text-subtext sm:grid-cols-[30px_150px_200px] sm:text-base">
                 <span>#</span>
                 <span>TwitterCsrf</span>
                 <span>TwitterAuthToken</span>
@@ -790,7 +794,7 @@ const Raffle = () => {
                         className="grid w-full grid-cols-[auto_40px] gap-2 overflow-scroll"
                         key={a.name}
                       >
-                        <div className="mb-4 grid w-full grid-cols-[30px_150px_200px] items-center rounded-xl border border-subline px-4 py-4 text-xs text-subtext sm:text-base">
+                        <div className="mb-4 grid w-full grid-cols-[20px_110px_auto] items-center rounded-xl border border-subline px-4 py-4 text-xs text-subtext sm:grid-cols-[30px_150px_200px] sm:text-base">
                           <span>{Number(a.name) + 1}</span>
                           <span>{a.TwitterCsrf?.slice(0, 12)}...</span>
                           <span>{a.TwitterAuthToken?.slice(0, 16)}...</span>

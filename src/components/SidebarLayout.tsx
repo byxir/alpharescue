@@ -184,7 +184,7 @@ export default function SidebarLayout({ children }: { children: ReactNode }) {
                           >
                             <img
                               src={item.icon}
-                              className={`mr-4 rounded-sm ${
+                              className={`mr-4 w-9 rounded-sm ${
                                 item.noScale
                                   ? "h-4 self-start rounded-sm"
                                   : item.noImageOverwrite
