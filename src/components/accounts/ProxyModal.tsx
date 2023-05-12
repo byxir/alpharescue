@@ -8,6 +8,7 @@ import axios from "axios";
 import { api } from "~/utils/api";
 import { useSession } from "next-auth/react";
 import ProxyReader from "./FileReaders/ProxyReader";
+import { QueryClient } from "@tanstack/react-query";
 
 const montserrat = localFont({
   src: [
@@ -52,6 +53,8 @@ export default function ProxyModal({
   const [files, setFiles] = useState<FileObject[]>([]);
   const [currentProxyType, setCurrentProxyType] = useState("http");
 
+  const queryClient = new QueryClient();
+
   const proxyMutation = useMutation({
     mutationFn: () => {
       return axios.post(
@@ -68,27 +71,13 @@ export default function ProxyModal({
         }
       );
     },
-    onSuccess: async () => {
-      console.log("proxies are uploaded successfully");
-      console.log(
-        discordId,
-        data?.user.id,
-        sessionToken,
-        files[0]?.content.split("\n")
-      );
+    onSuccess: () => {
+      void queryClient.invalidateQueries(["accounts"]);
       setFiles([]);
       showNotification();
-      await refetchFunction();
       closeFunction();
     },
     onError: () => {
-      console.error("proxies are not uploaded");
-      console.log(
-        discordId,
-        data?.user.id,
-        sessionToken,
-        files[0]?.content.split("\n")
-      );
       setFiles([]);
     },
   });
