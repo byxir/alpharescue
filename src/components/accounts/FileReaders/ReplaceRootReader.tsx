@@ -7,6 +7,7 @@ import {
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { useSession } from "next-auth/react";
+import localFont from "next/font/local";
 import { useCallback, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 
@@ -15,7 +16,24 @@ interface FileObject {
   content: string;
 }
 
-const RootReader = ({
+const montserrat = localFont({
+  src: [
+    {
+      path: "../../../fonts/Montserrat-Bold.ttf",
+    },
+  ],
+  variable: "--font-montserratBold",
+});
+const montserratRegular = localFont({
+  src: [
+    {
+      path: "../../../fonts/Montserrat-Regular.ttf",
+    },
+  ],
+  variable: "--font-montserratRegular",
+});
+
+const ReplaceRootReader = ({
   raffleBotUser,
   discordId,
   sessionToken,
@@ -38,7 +56,7 @@ const RootReader = ({
     mutationFn: () => {
       if (showNotification) showNotification();
       return axios.post(
-        "https://alpharescue.online/accounts",
+        "https://alpharescue.online/replaceBannedAccounts",
         {
           discordId: discordId,
           userId: data?.user.id,
@@ -91,7 +109,9 @@ const RootReader = ({
   return (
     <button
       {...getRootProps()}
-      className={`grid h-52 min-w-[176px] justify-items-center rounded-xl border-2 border-dashed border-subline p-4 transition-colors ${
+      className={`grid ${montserratRegular.variable} ${
+        montserrat.variable
+      } h-52 w-44 justify-items-center rounded-xl border-2 border-dashed border-subline p-4 transition-colors ${
         data?.user.raffleBotUser && status === "authenticated"
           ? "cursor-pointer hover:bg-neutral-900"
           : "cursor-not-allowed"
@@ -108,23 +128,31 @@ const RootReader = ({
         {readerType === "proxy" && <ServerStackIcon />}
         {readerType === "email" && <AtSymbolIcon />}
       </div>
-      <p className="">Загрузить</p>
-      {readerType === "twitter" && <p className="">твиттеры</p>}
-      {readerType === "discord" && <p className="">дискорды</p>}
-      {readerType === "metamask" && <p className="">кошельки</p>}
-      {readerType === "proxy" && <p className="">прокси</p>}
-      {readerType === "email" && <p className="">почты</p>}
+      <p className="font-montserratBold">Загрузить</p>
+      {readerType === "twitter" && (
+        <p className="font-montserratBold">твиттеры</p>
+      )}
+      {readerType === "discord" && (
+        <p className="font-montserratBold">дискорды</p>
+      )}
+      {readerType === "metamask" && (
+        <p className="font-montserratBold">кошельки</p>
+      )}
+      {readerType === "proxy" && <p className="font-montserratBold">прокси</p>}
+      {readerType === "email" && <p className="font-montserratBold">почты</p>}
       <div className="mt-4 flex items-center space-x-1 text-subline">
         {isDragActive ? (
           <>
-            <div className="text-xs">Дропайте файл сюда</div>
+            <div className="font-montserratBold text-xs">
+              Дропайте файл сюда
+            </div>
           </>
         ) : (
           <>
             <div className="h-6 w-6">
               <DocumentTextIcon />
             </div>
-            <div className="text-xs">.txt файл</div>
+            <div className="font-montserratBold text-xs">.txt файл</div>
           </>
         )}
       </div>
@@ -132,4 +160,4 @@ const RootReader = ({
   );
 };
 
-export default RootReader;
+export default ReplaceRootReader;

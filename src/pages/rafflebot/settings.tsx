@@ -118,7 +118,7 @@ const Settings = () => {
 
   return (
     <SidebarLayout>
-      <div className="px-3 pb-8 pt-10 md:px-8 xl:px-14 xl:pt-16">
+      <div className="px-3 md:px-8 xl:px-14 xl:pt-16">
         <div className="mb-12 font-benzin text-3xl">Настройки</div>
         <div className="grid gap-16 xl:grid-cols-[repeat(2,_max-content)] 2xls:grid-cols-[max-content_max-content_max-content] 2xls:justify-start">
           <div className="xl:max-w-xl">
@@ -301,7 +301,7 @@ const Settings = () => {
               onClick={() => {
                 setCaptchaModalOpen(true);
               }}
-              className={`grid h-52 justify-items-center rounded-xl border-2 border-dashed border-subline p-4 transition-colors ${
+              className={`grid h-52 min-w-[176px] justify-items-center rounded-xl border-2 border-dashed border-subline p-4 transition-colors ${
                 data?.user.raffleBotUser && status === "authenticated"
                   ? "cursor-pointer hover:bg-neutral-900"
                   : "cursor-not-allowed"
@@ -342,7 +342,7 @@ const Settings = () => {
             </button>
             <button
               onClick={() => setProxyModalOpen(true)}
-              className={`grid h-52 justify-items-center rounded-xl border-2 border-dashed border-subline p-4 transition-colors ${
+              className={`grid h-52 min-w-[176px] justify-items-center rounded-xl border-2 border-dashed border-subline p-4 transition-colors ${
                 data?.user.raffleBotUser && status === "authenticated"
                   ? "cursor-pointer hover:bg-neutral-900"
                   : "cursor-not-allowed"
@@ -563,7 +563,10 @@ const Settings = () => {
                 Настроить
               </button>
             </div>
-            <button className="mt-9 w-full cursor-pointer rounded-xl bg-element px-6 py-12 text-2xl shadow-md transition-all hover:bg-opacity-60">
+            <button
+              onClick={() => setReplaceBannedModalOpen(true)}
+              className="mt-9 w-full cursor-pointer rounded-xl bg-element px-6 py-12 text-2xl shadow-md transition-all hover:bg-opacity-60"
+            >
               Заменить забаненные аккаунты
             </button>
           </div>
@@ -599,7 +602,17 @@ const Settings = () => {
         show={onLoadNotificationShow}
         closeFunction={() => setOnLoadNotificationShow(false)}
       />
-      {/* <ReplaceBannedModal /> */}
+      <ReplaceBannedModal
+        open={replaceBannedModalOpen}
+        closeFunction={() => setReplaceBannedModalOpen(false)}
+        raffleBotUser={
+          data?.user.raffleBotUser ? data?.user.raffleBotUser : false
+        }
+        discordId={allMyData.data?.discordId}
+        sessionToken={allMyData.data?.sessionToken}
+        refetchFunction={refetchFunction}
+        showNotification={() => setOnLoadNotificationShow(true)}
+      />
     </SidebarLayout>
   );
 };

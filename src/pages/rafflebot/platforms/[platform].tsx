@@ -86,7 +86,7 @@ const RaffleList = () => {
         _platform
       )}&category=${
         _platform === "Premint" ? _category : "selection"
-      }&page=${_page}&search=${searchText}`
+      }&page=${_page}&search=${searchText}&sort=${sortingMethod}`
     );
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const data: fetchRafflesResponse = await res.data;
@@ -106,7 +106,7 @@ const RaffleList = () => {
   };
 
   const raffles = useInfiniteQuery<fetchRafflesResponse, Error>(
-    ["raffles", router.query.platform, category],
+    ["raffles", router.query.platform, category, sortingMethod],
     queryFn,
     {
       staleTime: Infinity,
@@ -198,11 +198,13 @@ const RaffleList = () => {
   const debouncedUpdate = debounce(updateQuery, 450);
 
   useEffect(() => {
-    if (router.query.platform) {
-      void queryClient.removeQueries(["raffles"]);
+    if (
+      router.query.platform &&
+      (sortingMethod === "subscribers" || sortingMethod === "noHold ")
+    ) {
       void raffles.refetch();
     }
-  }, [category, searchText]);
+  }, [category, searchText, sortingMethod]);
 
   const sentinelRef = useRef<HTMLDivElement | null>(null);
   const [observer, setObserver] = useState<IntersectionObserver | null>(null);
@@ -349,7 +351,9 @@ const RaffleList = () => {
             </div>
           </div>
           <div className="grid grid-flow-row grid-cols-1 gap-7 md:grid-cols-2 xl:grid-cols-3">
-            {sortingMethod === "" && (
+            {(sortingMethod === "" ||
+              sortingMethod === "subscribers" ||
+              sortingMethod === "noHold") && (
               <>
                 {allData.map((r) => (
                   <MemorizedRaffle
@@ -365,7 +369,7 @@ const RaffleList = () => {
               </>
             )}
 
-            {sortingMethod === "hold" && (
+            {/* {sortingMethod === "noHold" && (
               <>
                 {noHoldData().map((r) => (
                   <MemorizedRaffle
@@ -395,7 +399,7 @@ const RaffleList = () => {
                   />
                 ))}
               </>
-            )}
+            )} */}
 
             {sortingMethod === "favorites" && (
               <>

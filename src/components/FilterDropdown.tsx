@@ -37,10 +37,10 @@ export default function FilterDropdown({
             <Menu.Item>
               <div
                 onClick={() => {
-                  setSortingMethod("hold");
+                  setSortingMethod("noHold");
                 }}
                 className={`${
-                  sortingMethod === "hold"
+                  sortingMethod === "noHold"
                     ? "rounded-t-xl bg-subline text-subtext"
                     : "text-subtext"
                 }

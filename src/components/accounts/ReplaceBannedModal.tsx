@@ -7,6 +7,7 @@ import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import ProxyReader from "./FileReaders/ProxyReader";
+import ReplaceRootReader from "./FileReaders/ReplaceRootReader";
 
 const montserrat = localFont({
   src: [
@@ -50,12 +51,12 @@ export default function ReplaceBannedModal({
   const { data, status } = useSession();
   const [files, setFiles] = useState<FileObject[]>([]);
   const [currentProxyType, setCurrentProxyType] = useState("http");
-  const [accountType, setAccountType] = useState("Twitter");
+  const [accountType, setAccountType] = useState("twitter");
 
-  const proxyMutation = useMutation({
+  const replaceProxyMutation = useMutation({
     mutationFn: () => {
       return axios.post(
-        "https://alpharescue.online/accounts",
+        "https://alpharescue.online/replaceBannedAccounts",
         {
           discordId: discordId,
           userId: data?.user.id,
@@ -93,37 +94,6 @@ export default function ReplaceBannedModal({
     },
   });
 
-  // const replaceBannedMutation = useMutation(
-  //   ["replaceBanned"],
-  //   async (accounts) => {
-  //     return axios.post(
-  //       "https://alpharescue.online/accounts",
-  //       {
-  //         discordId: allMyData.data?.discordId,
-  //         userId: data?.user.id,
-  //         type: "proxy",
-  //         proxyType: "http",
-  //         accounts: accounts,
-  //       },
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${String(allMyData.data?.sessionToken)}`,
-  //         },
-  //       }
-  //     );
-  //   }
-  // );
-
-  useEffect(() => {
-    if (raffleBotUser && status === "authenticated") {
-      if (files.length > 0) {
-        proxyMutation.mutate();
-      }
-    } else {
-      //error message not authenticated
-    }
-  }, [files]);
-
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog
@@ -158,11 +128,11 @@ export default function ReplaceBannedModal({
                 <h1 className="mb-4 font-montserratBold text-xl">
                   Тип аккаунтов
                 </h1>
-                <div className="mb-8 grid w-64 grid-cols-2 items-center rounded-xl font-montserratBold">
+                <div className="mb-8 grid w-64 grid-cols-3 items-center rounded-xl font-montserratBold">
                   <div
-                    onClick={() => setCurrentProxyType("http")}
+                    onClick={() => setAccountType("twitter")}
                     className={`cursor-pointer rounded-l-xl py-4 text-center transition-all ${
-                      currentProxyType === "http"
+                      accountType === "twitter"
                         ? "border border-accent bg-accent text-bg"
                         : "border border-subline bg-transparent"
                     }`}
@@ -170,9 +140,9 @@ export default function ReplaceBannedModal({
                     Twitter
                   </div>
                   <div
-                    onClick={() => setCurrentProxyType("socks5")}
-                    className={`cursor-pointer rounded-r-xl py-4 text-center transition-all ${
-                      currentProxyType === "socks5"
+                    onClick={() => setAccountType("discord")}
+                    className={`cursor-pointer py-4 text-center transition-all ${
+                      accountType === "discord"
                         ? "border border-accent bg-accent text-bg"
                         : "border border-subline bg-transparent"
                     }`}
@@ -180,9 +150,9 @@ export default function ReplaceBannedModal({
                     Discord
                   </div>
                   <div
-                    onClick={() => setCurrentProxyType("socks5")}
+                    onClick={() => setAccountType("proxy")}
                     className={`cursor-pointer rounded-r-xl py-4 text-center transition-all ${
-                      currentProxyType === "socks5"
+                      accountType === "proxy"
                         ? "border border-accent bg-accent text-bg"
                         : "border border-subline bg-transparent"
                     }`}
@@ -190,37 +160,59 @@ export default function ReplaceBannedModal({
                     Proxy
                   </div>
                 </div>
-                <div className="">
-                  <h1 className="mb-4 font-montserratBold text-xl">
-                    Тип прокси
-                  </h1>
-                  <div className="mb-8 grid w-64 grid-cols-2 items-center rounded-xl font-montserratBold">
-                    <div
-                      onClick={() => setCurrentProxyType("http")}
-                      className={`cursor-pointer rounded-l-xl py-4 text-center transition-all ${
-                        currentProxyType === "http"
-                          ? "border border-accent bg-accent text-bg"
-                          : "border border-subline bg-transparent"
-                      }`}
-                    >
-                      http
-                    </div>
-                    <div
-                      onClick={() => setCurrentProxyType("socks5")}
-                      className={`cursor-pointer rounded-r-xl py-4 text-center transition-all ${
-                        currentProxyType === "socks5"
-                          ? "border border-accent bg-accent text-bg"
-                          : "border border-subline bg-transparent"
-                      }`}
-                    >
-                      socks5
-                    </div>
+                {accountType === "twitter" && (
+                  <div className="grid h-[278px] items-center justify-items-center">
+                    <ReplaceRootReader
+                      readerType="twitter"
+                      discordId={discordId}
+                      raffleBotUser={raffleBotUser}
+                      sessionToken={sessionToken}
+                    />
                   </div>
-                  <ProxyReader
-                    raffleBotUser={raffleBotUser}
-                    exportFiles={(_files: FileObject[]) => setFiles(_files)}
-                  />
-                </div>
+                )}
+                {accountType === "discord" && (
+                  <div className="grid h-[278px] items-center justify-items-center">
+                    <ReplaceRootReader
+                      readerType="discord"
+                      discordId={discordId}
+                      raffleBotUser={raffleBotUser}
+                      sessionToken={sessionToken}
+                    />
+                  </div>
+                )}
+                {accountType === "proxy" && (
+                  <div className="">
+                    <h1 className="mb-4 font-montserratBold text-xl">
+                      Тип прокси
+                    </h1>
+                    <div className="mb-8 grid w-64 grid-cols-2 items-center rounded-xl font-montserratBold">
+                      <div
+                        onClick={() => setCurrentProxyType("http")}
+                        className={`cursor-pointer rounded-l-xl py-4 text-center transition-all ${
+                          currentProxyType === "http"
+                            ? "border border-accent bg-accent text-bg"
+                            : "border border-subline bg-transparent"
+                        }`}
+                      >
+                        http
+                      </div>
+                      <div
+                        onClick={() => setCurrentProxyType("socks5")}
+                        className={`cursor-pointer rounded-r-xl py-4 text-center transition-all ${
+                          currentProxyType === "socks5"
+                            ? "border border-accent bg-accent text-bg"
+                            : "border border-subline bg-transparent"
+                        }`}
+                      >
+                        socks5
+                      </div>
+                    </div>
+                    <ProxyReader
+                      raffleBotUser={raffleBotUser}
+                      exportFiles={(_files: FileObject[]) => setFiles(_files)}
+                    />
+                  </div>
+                )}
               </Dialog.Panel>
             </Transition.Child>
           </div>

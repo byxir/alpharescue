@@ -53,7 +53,7 @@ const TwitterRootReader = ({
   return (
     <button
       {...getRootProps()}
-      className={`grid h-52 w-40 justify-items-center rounded-xl border-2 border-dashed border-subline px-2 py-4 transition-colors sm:w-44 sm:p-4 ${
+      className={`grid h-52 min-w-[160px] justify-items-center rounded-xl border-2 border-dashed border-subline px-2 py-4 transition-colors sm:w-44 sm:p-4 ${
         data?.user.raffleBotUser && status === "authenticated"
           ? "cursor-pointer hover:bg-neutral-900"
           : "cursor-not-allowed"

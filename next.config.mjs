@@ -47,6 +47,18 @@ const config = {
         pathname: "/profile_banners/**",
       },
       {
+        protocol: "http",
+        hostname: "pbs.twimg.com",
+        port: "",
+        pathname: "/profile_images/**",
+      },
+      {
+        protocol: "http",
+        hostname: "pbs.twimg.com",
+        port: "",
+        pathname: "/profile_banners/**",
+      },
+      {
         protocol: "https",
         hostname: "superful-assets-prod.s3.amazonaws.com",
         port: "",
