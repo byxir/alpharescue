@@ -72,6 +72,7 @@ const ReplaceRootReader = ({
     onSuccess: () => {
       void queryClient.invalidateQueries(["accounts"]);
       setFiles([]);
+      showNotification && showNotification();
     },
     onError: () => {
       console.error("wallets are not uploaded");

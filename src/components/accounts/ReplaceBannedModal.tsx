@@ -94,6 +94,16 @@ export default function ReplaceBannedModal({
     },
   });
 
+  useEffect(() => {
+    if (raffleBotUser && status === "authenticated") {
+      if (files.length > 0) {
+        replaceProxyMutation.mutate();
+      }
+    } else {
+      //error message not authenticated
+    }
+  }, [files]);
+
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog
