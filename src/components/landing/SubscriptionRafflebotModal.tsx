@@ -229,7 +229,7 @@ export default function SubscriptionModal({
   const userRole: UseQueryResult<{ status: boolean }> = useQuery(
     ["userRole"],
     async () => {
-      const res = await axios.post("https://alpharescue.online/", {
+      const res = await axios.post("https://alpharescue.online/checkrole", {
         discordId: discordId,
         role: ["ASSISTANT", "OG"],
       });
