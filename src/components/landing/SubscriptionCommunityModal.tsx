@@ -3,11 +3,21 @@
 import { Dispatch, Fragment, SetStateAction, useEffect, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import localFont from "next/font/local";
-import { useMutation } from "@tanstack/react-query";
+import {
+  type UseQueryResult,
+  useMutation,
+  useQuery,
+} from "@tanstack/react-query";
 import axios from "axios";
 import { api } from "~/utils/api";
 import { useSession } from "next-auth/react";
 import { QueryClient } from "@tanstack/react-query";
+
+interface IQRResponse {
+  image: string;
+  address: string;
+  expiresTime: string;
+}
 
 const durations = [
   { id: 5, name: "1 неделя" },
@@ -55,6 +65,7 @@ export const benzin = localFont({
 interface FileObject {
   name: string;
   content: string;
+  priceDelta: { id: number; price: number }[];
 }
 
 export default function SubscriptionModal({
@@ -71,7 +82,12 @@ export default function SubscriptionModal({
   const { data, status } = useSession();
   const [files, setFiles] = useState<FileObject[]>([]);
   const [currentProxyType, setCurrentProxyType] = useState("http");
+  const [qrUrl, setQrUrl] = useState<string | null>(null);
+  const [address, setAddress] = useState<string | null>(null);
 
+  const [currentPrice, setCurrentPrice] = useState(25);
+
+  // const [weekAccountsSelected, setWeekAccountsSelected] = useState([weekAccounts[0] || {id: 12, name: '1 неделя'}])
   const [durationSelected, setDurationSelected] = useState(
     durations[0] || { id: 5, name: "1 неделя" }
   );
@@ -84,6 +100,7 @@ export default function SubscriptionModal({
   const [paymentCurrencyTRCSelected, setPaymentCurrencyTRCSelected] = useState(
     paymentCurrenciesTRC[0] || { id: 1, name: "USDT" }
   );
+  const [paymentTimer, setPaymentTimer] = useState(599);
 
   const [qrGenerated, setQrGenerated] = useState(false);
 
@@ -91,9 +108,10 @@ export default function SubscriptionModal({
 
   const { encodeString } = useSha256Encoder();
 
+  const [timerStarted, setTimerStarted] = useState(false);
+
   const generateQrMutation = useMutation({
     mutationFn: () => {
-      console.log("made it into mutation func");
       const expiresDate = new Date();
       let newSubscriptionExpiresDate = expiresDate;
       if (durationSelected.id === 5) {
@@ -111,10 +129,9 @@ export default function SubscriptionModal({
           expiresDate.getTime() + 90 * 24 * 60 * 60 * 1000
         );
       }
-      const endTime = new Date();
-      const newEndTime = endTime.getTime() + 10 * 60 * 1000;
       return axios.post("https://alpharescue.online/CreateReplenishment", {
         discordId: discordId,
+        amount: Number(currentPrice),
         coin:
           paymentNetworkSelected.name === "BEP20"
             ? paymentCurrencyBEPSelected.name
@@ -125,12 +142,90 @@ export default function SubscriptionModal({
         hash: encodeString(
           `${env.NEXT_PUBLIC_ALPHA_RESCUE_SECRET_CODE}:${String(
             discordId
-          )}:${newSubscriptionExpiresDate.toISOString()}`
+          )}:${newSubscriptionExpiresDate.toISOString()}}`
         ),
         subscriptionType: "Rafflebot",
       });
     },
+    onSuccess: () => {
+      setQrGenerated(true);
+    },
   });
+
+  const cancelQrMutation = useMutation({
+    mutationFn: async () => {
+      await axios.post("https://alpharescue.online/StopReplenishment", {
+        discordId: discordId,
+      });
+    },
+    onSuccess: () => {
+      setQrGenerated(false);
+      setQrUrl(null);
+      setAddress(null);
+      void queryClient.invalidateQueries(["generatedQr"]);
+    },
+  });
+
+  const qrData: UseQueryResult<IQRResponse> = useQuery(
+    ["generatedQr"],
+    async () => {
+      const res = await axios.get(
+        `https://alpharescue.online/CheckReplenishment?discordId=${String(
+          discordId
+        )}`
+      );
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+      return res.data;
+    },
+    {
+      enabled: false,
+      onSuccess: (data) => {
+        setQrGenerated(true);
+        setQrUrl(data.image);
+        setAddress(data.address);
+      },
+      onError: () => {
+        setQrGenerated(false);
+        setQrUrl(null);
+        setAddress(null);
+        void queryClient.removeQueries(["generatedQr"]);
+      },
+    }
+  );
+
+  useEffect(() => {
+    if (open && discordId && qrGenerated) {
+      void queryClient.removeQueries(["generatedQr"]);
+      void qrData.refetch();
+    }
+  }, [open, qrGenerated]);
+
+  useEffect(() => {
+    if (discordId) {
+      void qrData.refetch();
+    }
+  }, [discordId]);
+
+  useEffect(() => {
+    if (open && qrGenerated) {
+      setPaymentTimer(599);
+      const interval = setInterval(() => {
+        if (paymentTimer <= 0) {
+          cancelQrMutation.mutate();
+          setQrGenerated(false);
+          setQrUrl(null);
+          setAddress(null);
+          clearInterval(interval);
+        }
+        setPaymentTimer((prev) => prev - 1);
+      }, 1000);
+
+      return () => {
+        clearInterval(interval);
+        setPaymentTimer(599);
+      };
+    }
+  }, [qrGenerated]);
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -180,7 +275,6 @@ export default function SubscriptionModal({
                           selected={durationSelected}
                           setSelected={(entry) => setDurationSelected(entry)}
                         />
-                         
                       </div>
                       <div className="text-xl">Срок подписки</div>
                     </div>
@@ -196,7 +290,6 @@ export default function SubscriptionModal({
                             setPaymentNetworkSelected(entry)
                           }
                         />
-                         
                       </div>
                       <div className="text-xl">Сеть</div>
                     </div>
@@ -225,12 +318,28 @@ export default function SubscriptionModal({
                     </div>
                     <h2 className="mt-16 flex space-x-6 justify-self-start font-montserratBold text-2xl">
                       <div className="">Итого:</div>
-                      <div className="">120 USDT</div>
+                      <div className="">
+                        <span className="">{currentPrice}</span>{" "}
+                        {paymentNetworkSelected.name === "BEP20" ? (
+                          <span>{paymentCurrencyBEPSelected.name}</span>
+                        ) : (
+                          <span>{paymentCurrencyTRCSelected.name}</span>
+                        )}
+                      </div>
                     </h2>
                     <div className="mt-7 grid h-full w-full items-center gap-4">
                       <button
-                        onClick={() => generateQrMutation.mutate()}
-                        className="cursor-pointer justify-self-center rounded-xl bg-accent px-6 py-4 text-2xl text-bg shadow-md transition-all hover:bg-opacity-60"
+                        onClick={() => {
+                          setQrGenerated(false);
+                          void queryClient.removeQueries(["generatedQr"]);
+                          generateQrMutation.mutate();
+                        }}
+                        disabled={qrGenerated}
+                        className={`justify-self-center rounded-xl bg-accent px-6 py-4 text-2xl text-bg shadow-md transition-all ${
+                          qrGenerated
+                            ? "cursor-not-allowed opacity-50"
+                            : "cursor-pointer opacity-100 hover:bg-opacity-60"
+                        }`}
                       >
                         Сгенерировать QR
                       </button>
@@ -240,8 +349,19 @@ export default function SubscriptionModal({
                     <h3>Сканируйте QR-код</h3>
                     <div className="grid w-full justify-items-center">
                       <div
-                        className={`mt-8 h-80 w-80 justify-self-center rounded-xl bg-subline`}
-                      ></div>
+                        className={`mt-8 grid h-80 w-80 items-center justify-items-center justify-self-center rounded-xl bg-subline`}
+                      >
+                        {qrUrl && (
+                          <img
+                            src={qrUrl || ""}
+                            alt=""
+                            className="rounded-xl"
+                          />
+                        )}
+                        {!qrUrl && (
+                          <div className="text-2xl text-subtext">QR код</div>
+                        )}
+                      </div>
                     </div>
                     <div className="mt-6 w-full text-center text-base text-subtext">
                       или
@@ -252,14 +372,50 @@ export default function SubscriptionModal({
                       </div>
                       <input
                         type="text"
-                        className="mt-4 w-max justify-self-center rounded-xl bg-subline px-10 py-2 text-xs text-almostwhite outline-none"
-                        value="
-                        0xd5b28386F3F490D7306850daA124acC7b23A275E"
+                        className="mt-4 w-4/5 justify-self-center rounded-xl bg-subline px-10 py-2 text-center text-xs text-almostwhite outline-none"
+                        value={address || "здесь будет адрес"}
                         readOnly
                       />
                     </div>
-                    <div className="grid items-center gap-4 self-end">
-                      <button className="mt-18 cursor-pointer justify-self-center rounded-xl bg-accent px-6 py-4 text-2xl text-bg shadow-md transition-all hover:bg-opacity-60">
+                    {qrGenerated && (
+                      <div className="mt-6">
+                        Осталось{" "}
+                        {paymentTimer > 60
+                          ? `${Math.floor(paymentTimer / 60)} мин ${Math.ceil(
+                              paymentTimer % 60
+                            )} сек`
+                          : `${paymentTimer} сек.`}
+                      </div>
+                    )}
+                    <div className="flex items-center justify-center space-x-4">
+                      {qrGenerated && (
+                        <button
+                          disabled={!qrGenerated}
+                          onClick={() => cancelQrMutation.mutate()}
+                          className={`mt-9 cursor-pointer justify-self-center rounded-xl border-2 border-red-500 bg-sidebarBg px-4 py-3 text-xl text-red-500 shadow-md transition-all hover:bg-opacity-60 ${
+                            !qrGenerated
+                              ? "cursor-not-allowed opacity-50"
+                              : "cursor-pointer opacity-100"
+                          }`}
+                        >
+                          Отмена
+                        </button>
+                      )}
+                      <button
+                        disabled={!qrGenerated}
+                        onClick={() => {
+                          closeFunction();
+                          void queryClient.removeQueries(["generatedQr"]);
+                          setQrGenerated(false);
+                          setAddress(null);
+                          setQrUrl(null);
+                        }}
+                        className={`cursor-pointer justify-self-center rounded-xl bg-accent px-6 py-4 text-2xl text-bg shadow-md transition-all ${
+                          !qrGenerated
+                            ? "mt-18 cursor-not-allowed opacity-50"
+                            : "mt-9 cursor-pointer opacity-100 hover:bg-opacity-60"
+                        }`}
+                      >
                         Оплатил
                       </button>
                     </div>
@@ -278,6 +434,7 @@ import { Listbox } from "@headlessui/react";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
 import { env } from "~/env.mjs";
 import useSha256Encoder from "~/utils/sha256Encoder";
+import { set } from "zod";
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
@@ -288,8 +445,15 @@ function RootDropdown({
   selected,
   setSelected,
 }: {
-  dataArray: { id: number; name: string }[];
-  selected: { id: number; name: string };
+  dataArray: {
+    id: number;
+    name: string;
+    priceDelta?: { id: number; price: number }[];
+  }[];
+  selected: {
+    id: number;
+    name: string;
+  };
   setSelected: (entry: { id: number; name: string }) => void;
 }) {
   return (
@@ -320,9 +484,12 @@ function RootDropdown({
                 {dataArray.map((entry) => (
                   <Listbox.Option
                     key={entry.id}
-                    onClick={() =>
-                      setSelected({ id: entry.id, name: entry.name })
-                    }
+                    onClick={() => {
+                      setSelected({
+                        id: entry.id,
+                        name: entry.name,
+                      });
+                    }}
                     className={({ active }) =>
                       classNames(
                         active

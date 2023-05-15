@@ -3,7 +3,8 @@ import { RadioGroup } from "@headlessui/react";
 import { CheckIcon } from "@heroicons/react/20/solid";
 import { useSession } from "next-auth/react";
 import { api } from "~/utils/api";
-import SubscriptionModal from "./SubscriptionRafflebotModal";
+import SubscriptionRafflebotModal from "./SubscriptionRafflebotModal";
+import SubscriptionCommunityModal from "./SubscriptionCommunityModal";
 
 const tiers = [
   {
@@ -229,13 +230,13 @@ export default function Subscriptions() {
           ))}
         </div>
       </div>
-      <SubscriptionModal
+      <SubscriptionRafflebotModal
         open={subscriptionModalCommunityOpen}
         closeFunction={() => setSubscriptionModalCommunityOpen(false)}
         discordId={protectionData.data?.discordId}
         type="community"
       />
-      <SubscriptionModal
+      <SubscriptionCommunityModal
         open={subscriptionModalRaffleBotOpen}
         closeFunction={() => setSubscriptionModalRaffleBotOpen(false)}
         discordId={protectionData.data?.discordId}

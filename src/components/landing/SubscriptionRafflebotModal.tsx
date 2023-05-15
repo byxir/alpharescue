@@ -160,7 +160,7 @@ export default function SubscriptionModal({
       }
       return axios.post("https://alpharescue.online/CreateReplenishment", {
         discordId: discordId,
-        amount: Number(accountsSelected.name),
+        amount: Number(currentPrice),
         coin:
           paymentNetworkSelected.name === "BEP20"
             ? paymentCurrencyBEPSelected.name
