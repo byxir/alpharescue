@@ -32,7 +32,7 @@ const tiers = [
     href: "#",
     price: [25, 79, 209],
     description:
-      "Доступ к лучшему боту для мультиаккинга в NFT-раффлах. Поддержка Premint, Alphabot, Superfull, FreeNFT.",
+      "Доступ к лучшему боту для мультиаккинга в NFT-раффлах и Twitter-раффлах. Поддержка Premint, Alphabot, Superful и Twitter.",
     features: [
       "Community Pass",
       "Доступ к Raffle Bot",
@@ -197,7 +197,7 @@ export default function Subscriptions() {
                   tier.available ? tier.bg : "bg-element text-red-500"
                 } mt-6 block w-full rounded-md px-3 py-2 text-center font-montserratBold text-sm font-semibold leading-6 text-element`}
               >
-                {tier.available ? "Подписаться" : "Coming soon"}
+                {tier.available ? "Купить подписку" : "Coming soon"}
               </button>
               <ul
                 role="list"

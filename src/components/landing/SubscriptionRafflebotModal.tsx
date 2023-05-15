@@ -158,6 +158,13 @@ export default function SubscriptionModal({
           expiresDate.getTime() + 90 * 24 * 60 * 60 * 1000
         );
       }
+      console.log(
+        `${env.NEXT_PUBLIC_ALPHA_RESCUE_SECRET_CODE}:${String(
+          discordId
+        )}:${newSubscriptionExpiresDate.toISOString()}:${Number(
+          accountsSelected.name
+        )}`
+      );
       return axios.post("https://alpharescue.online/CreateReplenishment", {
         discordId: discordId,
         amount: Number(currentPrice),
@@ -317,8 +324,8 @@ export default function SubscriptionModal({
                 <h1 className="mt-4 font-benzin text-3xl">
                   Подписаться на Raffle Bot
                 </h1>
-                <div className="grid grid-cols-2 pt-12">
-                  <div className="grid h-max border-r-2 border-subline pr-12">
+                <div className="grid pt-12 md:grid-cols-2">
+                  <div className="grid h-max md:border-r-2 md:border-subline md:pr-12">
                     <h2 className="mt-8 justify-self-start font-montserratBold text-2xl">
                       Настроить тариф
                     </h2>
@@ -421,7 +428,7 @@ export default function SubscriptionModal({
                       </button>
                     </div>
                   </div>
-                  <div className="mt-8 pl-12 text-center text-sm text-subtext">
+                  <div className="mt-8 text-center text-sm text-subtext">
                     <h3>Сканируйте QR-код</h3>
                     <div className="grid w-full justify-items-center">
                       <div
@@ -467,7 +474,10 @@ export default function SubscriptionModal({
                       {qrGenerated && (
                         <button
                           disabled={!qrGenerated}
-                          onClick={() => cancelQrMutation.mutate()}
+                          onClick={() => {
+                            cancelQrMutation.mutate();
+                            closeFunction();
+                          }}
                           className={`mt-9 cursor-pointer justify-self-center rounded-xl border-2 border-red-500 bg-sidebarBg px-4 py-3 text-xl text-red-500 shadow-md transition-all hover:bg-opacity-60 ${
                             !qrGenerated
                               ? "cursor-not-allowed opacity-50"

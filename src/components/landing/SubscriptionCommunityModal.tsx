@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable @typescript-eslint/no-misused-promises */
-import { Dispatch, Fragment, SetStateAction, useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import localFont from "next/font/local";
 import {
@@ -9,7 +9,6 @@ import {
   useQuery,
 } from "@tanstack/react-query";
 import axios from "axios";
-import { api } from "~/utils/api";
 import { useSession } from "next-auth/react";
 import { QueryClient } from "@tanstack/react-query";
 
@@ -269,8 +268,8 @@ export default function SubscriptionModal({
                 <h1 className="mt-4 font-benzin text-3xl">
                   Подписаться на Rescue Community
                 </h1>
-                <div className="grid grid-cols-2 pt-12">
-                  <div className="grid h-max border-r-2 border-subline pr-12">
+                <div className="grid grid-cols-1 pt-12 md:grid-cols-2">
+                  <div className="grid h-max md:border-r-2 md:border-subline md:pr-12">
                     <h2 className="mt-8 justify-self-start font-montserratBold text-2xl">
                       Настроить тариф
                     </h2>
@@ -351,7 +350,7 @@ export default function SubscriptionModal({
                       </button>
                     </div>
                   </div>
-                  <div className="mt-8 pl-12 text-center text-sm text-subtext">
+                  <div className="mt-8 text-center text-sm text-subtext md:pl-12">
                     <h3>Сканируйте QR-код</h3>
                     <div className="grid w-full justify-items-center">
                       <div
