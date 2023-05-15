@@ -13,6 +13,7 @@ import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import { ToggleEventStreamContext } from "~/pages/_app";
+import { XMarkIcon } from "@heroicons/react/24/outline";
 
 function valueLabelFormat(value: number) {
   const units = ["min.", "h."];
@@ -329,6 +330,12 @@ export default function RaffleTimeModal({
                     <p className="text-2xl">Запустить</p>
                     <p className="text-2xl">скрипт</p>
                   </TrueLaunchButton>
+                </div>
+                <div
+                  onClick={closeFunction}
+                  className="absolute right-2 top-2 h-12 w-12 cursor-pointer text-subtext"
+                >
+                  <XMarkIcon />
                 </div>
               </Dialog.Panel>
             </Transition.Child>

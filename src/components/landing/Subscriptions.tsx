@@ -32,7 +32,7 @@ const tiers = [
     href: "#",
     price: [25, 79, 209],
     description:
-      "Доступ к лучшему боту для мультиаккинга в NFT-раффлах и Twitter-раффлах. Поддержка Premint, Alphabot, Superful и Twitter.",
+      "Доступ к лучшему боту для мультиаккинга в Twitter и NFT-раффлах. Поддержка Premint, Alphabot, Superful, и других.",
     features: [
       "Community Pass",
       "Доступ к Raffle Bot",

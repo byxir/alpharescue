@@ -129,13 +129,14 @@ export default function SubscriptionModal({
   const [paymentCurrencyTRCSelected, setPaymentCurrencyTRCSelected] = useState(
     paymentCurrenciesTRC[0] || { id: 1, name: "USDT" }
   );
-  const [paymentTimer, setPaymentTimer] = useState(599);
 
   const [qrGenerated, setQrGenerated] = useState(false);
 
   const queryClient = new QueryClient();
 
   const { encodeString } = useSha256Encoder();
+
+  const [addressCopied, setAddressCopied] = useState(false);
 
   const [timerStarted, setTimerStarted] = useState(false);
 
@@ -158,13 +159,6 @@ export default function SubscriptionModal({
           expiresDate.getTime() + 90 * 24 * 60 * 60 * 1000
         );
       }
-      console.log(
-        `${env.NEXT_PUBLIC_ALPHA_RESCUE_SECRET_CODE}:${String(
-          discordId
-        )}:${newSubscriptionExpiresDate.toISOString()}:${Number(
-          accountsSelected.name
-        )}`
-      );
       return axios.post("https://alpharescue.online/CreateReplenishment", {
         discordId: discordId,
         amount: Number(currentPrice),
@@ -227,15 +221,14 @@ export default function SubscriptionModal({
         setQrGenerated(false);
         setQrUrl(null);
         setAddress(null);
-        void queryClient.removeQueries(["generatedQr"]);
+        void queryClient.removeQueries(["generatedQr", "rafflebot"]);
       },
     }
   );
-  console.log("accounts -> ", accountsSelected);
 
   useEffect(() => {
     if (open && discordId && qrGenerated) {
-      void queryClient.removeQueries(["generatedQr"]);
+      void queryClient.removeQueries(["generatedQr", "rafflebot"]);
       void qrData.refetch();
     }
   }, [open, qrGenerated]);
@@ -245,6 +238,8 @@ export default function SubscriptionModal({
       void qrData.refetch();
     }
   }, [discordId]);
+
+  const [paymentTimer, setPaymentTimer] = useState(599);
 
   useEffect(() => {
     if (accountsSelected.id === 1 && durationSelected.id === 5)
@@ -269,24 +264,30 @@ export default function SubscriptionModal({
 
   useEffect(() => {
     if (open && qrGenerated) {
-      setPaymentTimer(599);
-      const interval = setInterval(() => {
+      const intervalRafflebot = setInterval(() => {
         if (paymentTimer <= 0) {
           cancelQrMutation.mutate();
           setQrGenerated(false);
           setQrUrl(null);
           setAddress(null);
-          clearInterval(interval);
+          void queryClient.removeQueries(["generatedQr", "rafflebot"]);
+          clearInterval(intervalRafflebot);
+          closeFunction();
         }
-        setPaymentTimer((prev) => prev - 1);
+        if (qrData.data && qrData.data.expiresTime) {
+          const paymentTimerDestination = new Date(qrData.data?.expiresTime);
+          const timeDifference =
+            paymentTimerDestination.getTime() - new Date().getTime();
+          setPaymentTimer(Math.floor(timeDifference / 1000));
+        }
       }, 1000);
 
       return () => {
-        clearInterval(interval);
-        setPaymentTimer(599);
+        clearInterval(intervalRafflebot);
       };
     }
-  }, [qrGenerated]);
+    return () => queryClient.removeQueries(["generatedQr", "rafflebot"]);
+  }, [qrGenerated, qrData.data, open]);
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -414,7 +415,10 @@ export default function SubscriptionModal({
                       <button
                         onClick={() => {
                           setQrGenerated(false);
-                          void queryClient.removeQueries(["generatedQr"]);
+                          void queryClient.removeQueries([
+                            "generatedQr",
+                            "rafflebot",
+                          ]);
                           generateQrMutation.mutate();
                         }}
                         disabled={qrGenerated}
@@ -453,12 +457,28 @@ export default function SubscriptionModal({
                       <div className="mt-6 text-center text-sm text-subtext">
                         Переведите на этот кошелек:
                       </div>
-                      <input
-                        type="text"
-                        className="mt-4 w-4/5 justify-self-center rounded-xl bg-subline px-10 py-2 text-center text-xs text-almostwhite outline-none"
-                        value={address || "здесь будет адрес"}
-                        readOnly
-                      />
+                      <div className="mt-4 flex w-full justify-center space-x-4">
+                        <input
+                          type="text"
+                          className="w-4/5 justify-self-center rounded-xl bg-subline px-10 py-2 text-center text-xs text-almostwhite outline-none md:ml-10"
+                          value={address || "здесь будет адрес"}
+                          readOnly
+                        />
+                        <button
+                          className={`h-8 w-8 items-center ${
+                            addressCopied ? "text-green-500" : "text-subtext"
+                          }`}
+                          onClick={async () => {
+                            if (address) {
+                              await navigator.clipboard.writeText(address);
+                            }
+                            setAddressCopied(true);
+                          }}
+                        >
+                          {!addressCopied && <ClipboardIcon />}
+                          {addressCopied && <ClipboardDocumentCheckIcon />}
+                        </button>
+                      </div>
                     </div>
                     {qrGenerated && (
                       <div className="mt-6">
@@ -491,7 +511,10 @@ export default function SubscriptionModal({
                         disabled={!qrGenerated}
                         onClick={() => {
                           closeFunction();
-                          void queryClient.removeQueries(["generatedQr"]);
+                          void queryClient.removeQueries([
+                            "generatedQr",
+                            "rafflebot",
+                          ]);
                           setQrGenerated(false);
                           setAddress(null);
                           setQrUrl(null);
@@ -507,6 +530,12 @@ export default function SubscriptionModal({
                     </div>
                   </div>
                 </div>
+                <div
+                  onClick={closeFunction}
+                  className="absolute right-2 top-2 h-12 w-12 cursor-pointer text-subtext"
+                >
+                  <XMarkIcon />
+                </div>
               </Dialog.Panel>
             </Transition.Child>
           </div>
@@ -521,6 +550,11 @@ import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
 import { env } from "~/env.mjs";
 import useSha256Encoder from "~/utils/sha256Encoder";
 import { set } from "zod";
+import {
+  ClipboardIcon,
+  ClipboardDocumentCheckIcon,
+  XMarkIcon,
+} from "@heroicons/react/24/outline";
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");

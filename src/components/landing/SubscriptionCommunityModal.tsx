@@ -187,14 +187,14 @@ export default function SubscriptionModal({
         setQrGenerated(false);
         setQrUrl(null);
         setAddress(null);
-        void queryClient.removeQueries(["generatedQr"]);
+        void queryClient.removeQueries(["generatedQr", "community"]);
       },
     }
   );
 
   useEffect(() => {
     if (open && discordId && qrGenerated) {
-      void queryClient.removeQueries(["generatedQr"]);
+      void queryClient.removeQueries(["generatedQr", "community"]);
       void qrData.refetch();
     }
   }, [open, qrGenerated]);
@@ -207,24 +207,29 @@ export default function SubscriptionModal({
 
   useEffect(() => {
     if (open && qrGenerated) {
-      setPaymentTimer(599);
-      const interval = setInterval(() => {
+      const intervalRafflebot = setInterval(() => {
         if (paymentTimer <= 0) {
           cancelQrMutation.mutate();
           setQrGenerated(false);
           setQrUrl(null);
           setAddress(null);
-          clearInterval(interval);
+          void queryClient.removeQueries(["generatedQr", "community"]);
+          clearInterval(intervalRafflebot);
         }
-        setPaymentTimer((prev) => prev - 1);
+        if (qrData.data && qrData.data.expiresTime) {
+          const paymentTimerDestination = new Date(qrData.data?.expiresTime);
+          const timeDifference =
+            paymentTimerDestination.getTime() - new Date().getTime();
+          setPaymentTimer(Math.floor(timeDifference / 1000));
+        }
       }, 1000);
 
       return () => {
-        clearInterval(interval);
-        setPaymentTimer(599);
+        clearInterval(intervalRafflebot);
       };
     }
-  }, [qrGenerated]);
+    return () => queryClient.removeQueries(["generatedQr", "community"]);
+  }, [qrGenerated, qrData.data, open]);
 
   useEffect(() => {
     if (durationSelected.id === 5) setCurrentPrice(15);
@@ -336,7 +341,10 @@ export default function SubscriptionModal({
                       <button
                         onClick={() => {
                           setQrGenerated(false);
-                          void queryClient.removeQueries(["generatedQr"]);
+                          void queryClient.removeQueries([
+                            "generatedQr",
+                            "community",
+                          ]);
                           generateQrMutation.mutate();
                         }}
                         disabled={qrGenerated}
@@ -410,7 +418,10 @@ export default function SubscriptionModal({
                         disabled={!qrGenerated}
                         onClick={() => {
                           closeFunction();
-                          void queryClient.removeQueries(["generatedQr"]);
+                          void queryClient.removeQueries([
+                            "generatedQr",
+                            "community",
+                          ]);
                           setQrGenerated(false);
                           setAddress(null);
                           setQrUrl(null);
@@ -426,6 +437,12 @@ export default function SubscriptionModal({
                     </div>
                   </div>
                 </div>
+                <div
+                  onClick={closeFunction}
+                  className="absolute right-2 top-2 h-12 w-12 cursor-pointer text-subtext"
+                >
+                  <XMarkIcon />
+                </div>
               </Dialog.Panel>
             </Transition.Child>
           </div>
@@ -437,6 +454,7 @@ export default function SubscriptionModal({
 
 import { Listbox } from "@headlessui/react";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
+import { XMarkIcon } from "@heroicons/react/24/outline";
 import { env } from "~/env.mjs";
 import useSha256Encoder from "~/utils/sha256Encoder";
 import { set } from "zod";
