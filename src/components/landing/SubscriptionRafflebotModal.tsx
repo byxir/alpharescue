@@ -226,6 +226,19 @@ export default function SubscriptionModal({
     }
   );
 
+  const userRole: UseQueryResult<{ status: boolean }> = useQuery(
+    ["userRole"],
+    async () => {
+      const res = await axios.post("https://alpharescue.online/", {
+        discordId: discordId,
+        role: ["ASSISTANT", "OG"],
+      });
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+      return res.data;
+    }
+  );
+
   useEffect(() => {
     if (open && discordId && qrGenerated) {
       void queryClient.removeQueries(["generatedQr", "rafflebot"]);
@@ -242,24 +255,60 @@ export default function SubscriptionModal({
   const [paymentTimer, setPaymentTimer] = useState(599);
 
   useEffect(() => {
-    if (accountsSelected.id === 1 && durationSelected.id === 5)
+    if (accountsSelected.id === 1 && durationSelected.id === 5) {
       setCurrentPrice(25);
-    if (accountsSelected.id === 1 && durationSelected.id === 6)
+      if (userRole.data?.status === true) {
+        setCurrentPrice(25);
+      }
+    }
+    if (accountsSelected.id === 1 && durationSelected.id === 6) {
       setCurrentPrice(79);
-    if (accountsSelected.id === 1 && durationSelected.id === 7)
+      if (userRole.data?.status === true) {
+        setCurrentPrice(51.35);
+      }
+    }
+    if (accountsSelected.id === 1 && durationSelected.id === 7) {
       setCurrentPrice(209);
-    if (accountsSelected.id === 2 && durationSelected.id === 6)
+      if (userRole.data?.status === true) {
+        setCurrentPrice(135.85);
+      }
+    }
+    if (accountsSelected.id === 2 && durationSelected.id === 6) {
       setCurrentPrice(119);
-    if (accountsSelected.id === 2 && durationSelected.id === 7)
+      if (userRole.data?.status === true) {
+        setCurrentPrice(77.35);
+      }
+    }
+    if (accountsSelected.id === 2 && durationSelected.id === 7) {
       setCurrentPrice(319);
-    if (accountsSelected.id === 3 && durationSelected.id === 6)
+      if (userRole.data?.status === true) {
+        setCurrentPrice(207.35);
+      }
+    }
+    if (accountsSelected.id === 3 && durationSelected.id === 6) {
       setCurrentPrice(159);
-    if (accountsSelected.id === 3 && durationSelected.id === 7)
+      if (userRole.data?.status === true) {
+        setCurrentPrice(103.35);
+      }
+    }
+    if (accountsSelected.id === 3 && durationSelected.id === 7) {
       setCurrentPrice(429);
-    if (accountsSelected.id === 4 && durationSelected.id === 6)
+      if (userRole.data?.status === true) {
+        setCurrentPrice(278.85);
+      }
+    }
+    if (accountsSelected.id === 4 && durationSelected.id === 6) {
       setCurrentPrice(199);
-    if (accountsSelected.id === 4 && durationSelected.id === 7)
+      if (userRole.data?.status === true) {
+        setCurrentPrice(129.35);
+      }
+    }
+    if (accountsSelected.id === 4 && durationSelected.id === 7) {
       setCurrentPrice(539);
+      if (userRole.data?.status === true) {
+        setCurrentPrice(350.35);
+      }
+    }
   }, [accountsSelected, durationSelected]);
 
   useEffect(() => {
@@ -473,6 +522,9 @@ export default function SubscriptionModal({
                               await navigator.clipboard.writeText(address);
                             }
                             setAddressCopied(true);
+                            setTimeout(() => {
+                              setAddressCopied(false);
+                            }, 10000);
                           }}
                         >
                           {!addressCopied && <ClipboardIcon />}
