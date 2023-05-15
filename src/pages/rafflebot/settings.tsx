@@ -219,7 +219,7 @@ const Settings = () => {
                     onClick={() => {
                       console.log("whop logic here");
                     }}
-                    className="w-5/6 cursor-pointer self-center justify-self-center rounded-xl bg-raffleBot p-6 text-center font-montserratBold text-2xl text-bg shadow-md transition-all hover:bg-opacity-60"
+                    className="w-5/6 cursor-pointer self-center justify-self-center rounded-xl bg-accent p-6 text-center font-montserratBold text-2xl text-bg shadow-md transition-all hover:bg-opacity-60"
                   >
                     Купить подписку
                   </button>

@@ -39,7 +39,7 @@ export default function Footer() {
               <span className="text-bg">RESCUE</span>
             </div>
             <Link
-              href="t.me"
+              href="https://t.me/rescue_manager"
               className="mt-20 w-max self-end rounded-md bg-bg bg-opacity-0 px-3 py-2 font-montserratBold text-base leading-6 text-element transition-all hover:bg-opacity-5 xl:mt-0"
             >
               Обратиться в тех. поддержку...

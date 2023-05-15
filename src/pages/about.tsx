@@ -112,13 +112,13 @@ export default function About() {
               <h1 className="font-benzin text-5xl xl:text-5xl">
                 RESCUE ROADMAP
               </h1>
-              <div className="mt-6 max-w-md text-start text-xs text-subtext">
+              {/* <div className="mt-6 max-w-md text-start text-xs text-subtext">
                 Раскрытие дорожной карты происходит постепенно. Путем
                 голосования в нашем дискорде, участники постепенно открывают
                 блоки.
-              </div>
+              </div> */}
             </div>
-            <div className="mb-24 mt-10 grid w-full grid-cols-1 gap-10 lg:grid-cols-3">
+            {/* <div className="mb-24 mt-10 grid w-full grid-cols-1 gap-10 lg:grid-cols-3">
               <div className="mt-6 grid">
                 <div className="mb-6 text-center font-montserratBold text-3xl lg:text-2xl">
                   Контент
@@ -161,6 +161,15 @@ export default function About() {
                 </div>
                 <div className="h-60 w-full max-w-md justify-self-center rounded-xl bg-element shadow-md"></div>
               </div>
+            </div> */}
+            <div className="mb-10 mt-10">
+              Посмотрите нашу роадмапу{" "}
+              <a
+                className="text-accent underline"
+                href="https://discord.com/channels/1042832144386494474/1077978999176826933"
+              >
+                здесь.
+              </a>
             </div>
           </div>
         </div>

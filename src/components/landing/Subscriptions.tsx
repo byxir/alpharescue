@@ -11,7 +11,7 @@ const tiers = [
     name: "Community Pass",
     id: "tier-community",
     href: "#",
-    price: [59, 149],
+    price: [15, 49, 149],
     description:
       "Стартовая точка участника нашего сообщества. Дает доступ к зеркалам, дискорд-комьюнити, и другому.",
     features: [
@@ -29,7 +29,7 @@ const tiers = [
     name: "Raffle Bot",
     id: "tier-startup",
     href: "#",
-    price: [119, 319],
+    price: [25, 79, 209],
     description:
       "Доступ к лучшему боту для мультиаккинга в NFT-раффлах. Поддержка Premint, Alphabot, Superfull, FreeNFT.",
     features: [
@@ -48,7 +48,7 @@ const tiers = [
     name: "Speed Mint Bot",
     id: "tier-enterprise",
     href: "#",
-    price: [119, 319],
+    price: null,
     description:
       "Доступ к боту, который поможет вам добиться успеха и забрать NFT на важном минте. Поддержка ETH и SOL минтов.",
     features: [
@@ -154,13 +154,25 @@ export default function Subscriptions() {
               </p>
               <p className="mt-6 flex items-baseline gap-x-1">
                 <span className="font-montserratBold text-4xl  text-almostwhite">
-                  {/* {tier.name === "Community Pass" && (
-                    <span>${tier.price[frequency]}</span>
+                  {tier.name === "Community Pass" && (
+                    <>
+                      {tier.price ? (
+                        <span>${tier.price[frequency]}</span>
+                      ) : (
+                        <span>TBD</span>
+                      )}
+                    </>
                   )}
                   {tier.name === "Raffle Bot" && (
-                    <span>от ${tier.price[frequency]}</span>
-                  )} */}
-                  <span>TBD</span>
+                    <>
+                      {tier.price ? (
+                        <span>от ${tier.price[frequency]}</span>
+                      ) : (
+                        <span>TBD</span>
+                      )}
+                    </>
+                  )}
+                  {tier.name === "Speed Mint Bot" && <span>TBD</span>}
                 </span>
                 <span className="font-montserratBold text-sm leading-6 text-subtext">
                   {frequency === 0

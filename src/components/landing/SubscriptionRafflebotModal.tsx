@@ -20,10 +20,29 @@ interface IQRResponse {
 }
 
 const accounts = [
-  { id: 1, name: "50" },
-  { id: 2, name: "200" },
-  { id: 3, name: "500" },
-  { id: 4, name: "1000" },
+  {
+    id: 1,
+    name: "50",
+  },
+  {
+    id: 2,
+    name: "200",
+  },
+  {
+    id: 3,
+    name: "500",
+  },
+  {
+    id: 4,
+    name: "1000",
+  },
+];
+
+const weekAccounts = [
+  {
+    id: 12,
+    name: "50",
+  },
 ];
 
 const durations = [
@@ -72,6 +91,7 @@ export const benzin = localFont({
 interface FileObject {
   name: string;
   content: string;
+  priceDelta: { id: number; price: number }[];
 }
 
 export default function SubscriptionModal({
@@ -91,9 +111,12 @@ export default function SubscriptionModal({
   const [qrUrl, setQrUrl] = useState<string | null>(null);
   const [address, setAddress] = useState<string | null>(null);
 
+  const [currentPrice, setCurrentPrice] = useState(25);
+
   const [accountsSelected, setAccountsSelected] = useState(
     accounts[0] || { id: 1, name: "50" }
   );
+  // const [weekAccountsSelected, setWeekAccountsSelected] = useState([weekAccounts[0] || {id: 12, name: '1 неделя'}])
   const [durationSelected, setDurationSelected] = useState(
     durations[0] || { id: 5, name: "1 неделя" }
   );
@@ -113,6 +136,8 @@ export default function SubscriptionModal({
   const queryClient = new QueryClient();
 
   const { encodeString } = useSha256Encoder();
+
+  const [timerStarted, setTimerStarted] = useState(false);
 
   const generateQrMutation = useMutation({
     mutationFn: () => {
@@ -208,10 +233,31 @@ export default function SubscriptionModal({
   }, [open, qrGenerated]);
 
   useEffect(() => {
-    if (discordId && open) {
+    if (discordId) {
       void qrData.refetch();
     }
-  }, []);
+  }, [discordId]);
+
+  useEffect(() => {
+    if (accountsSelected.id === 1 && durationSelected.id === 5)
+      setCurrentPrice(25);
+    if (accountsSelected.id === 1 && durationSelected.id === 6)
+      setCurrentPrice(79);
+    if (accountsSelected.id === 1 && durationSelected.id === 7)
+      setCurrentPrice(209);
+    if (accountsSelected.id === 2 && durationSelected.id === 6)
+      setCurrentPrice(119);
+    if (accountsSelected.id === 2 && durationSelected.id === 7)
+      setCurrentPrice(319);
+    if (accountsSelected.id === 3 && durationSelected.id === 6)
+      setCurrentPrice(159);
+    if (accountsSelected.id === 3 && durationSelected.id === 7)
+      setCurrentPrice(429);
+    if (accountsSelected.id === 4 && durationSelected.id === 6)
+      setCurrentPrice(199);
+    if (accountsSelected.id === 4 && durationSelected.id === 7)
+      setCurrentPrice(539);
+  }, [accountsSelected, durationSelected]);
 
   useEffect(() => {
     if (open && qrGenerated) {
@@ -278,8 +324,14 @@ export default function SubscriptionModal({
                     <div className="mt-4 grid h-full w-full grid-cols-[3fr_2fr] grid-rows-1 items-center gap-4">
                       <div className="flex items-center">
                         <RootDropdown
-                          dataArray={accounts}
-                          selected={accountsSelected}
+                          dataArray={
+                            durationSelected.id === 5 ? weekAccounts : accounts
+                          }
+                          selected={
+                            durationSelected.id === 5
+                              ? accounts[0] || { id: 5, name: "1 неделя" }
+                              : accountsSelected
+                          }
                           setSelected={(entry) => setAccountsSelected(entry)}
                         />
                       </div>
@@ -335,7 +387,14 @@ export default function SubscriptionModal({
                     </div>
                     <h2 className="mt-16 flex space-x-6 justify-self-start font-montserratBold text-2xl">
                       <div className="">Итого:</div>
-                      <div className="">120 USDT</div>
+                      <div className="">
+                        <span className="">{currentPrice}</span>{" "}
+                        {paymentNetworkSelected.name === "BEP20" ? (
+                          <span>{paymentCurrencyBEPSelected.name}</span>
+                        ) : (
+                          <span>{paymentCurrencyTRCSelected.name}</span>
+                        )}
+                      </div>
                     </h2>
                     <div className="mt-7 grid h-full w-full items-center gap-4">
                       <button
@@ -413,7 +472,13 @@ export default function SubscriptionModal({
                       )}
                       <button
                         disabled={!qrGenerated}
-                        onClick={closeFunction}
+                        onClick={() => {
+                          closeFunction();
+                          void queryClient.removeQueries(["generatedQr"]);
+                          setQrGenerated(false);
+                          setAddress(null);
+                          setQrUrl(null);
+                        }}
                         className={`cursor-pointer justify-self-center rounded-xl bg-accent px-6 py-4 text-2xl text-bg shadow-md transition-all ${
                           !qrGenerated
                             ? "mt-18 cursor-not-allowed opacity-50"
@@ -449,8 +514,15 @@ function RootDropdown({
   selected,
   setSelected,
 }: {
-  dataArray: { id: number; name: string }[];
-  selected: { id: number; name: string };
+  dataArray: {
+    id: number;
+    name: string;
+    priceDelta?: { id: number; price: number }[];
+  }[];
+  selected: {
+    id: number;
+    name: string;
+  };
   setSelected: (entry: { id: number; name: string }) => void;
 }) {
   return (
@@ -481,9 +553,12 @@ function RootDropdown({
                 {dataArray.map((entry) => (
                   <Listbox.Option
                     key={entry.id}
-                    onClick={() =>
-                      setSelected({ id: entry.id, name: entry.name })
-                    }
+                    onClick={() => {
+                      setSelected({
+                        id: entry.id,
+                        name: entry.name,
+                      });
+                    }}
                     className={({ active }) =>
                       classNames(
                         active

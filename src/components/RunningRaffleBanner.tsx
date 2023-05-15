@@ -234,7 +234,9 @@ const Banner: React.FC<EventStreamComponentProps> = ({
                 {isCancelled && <span>Заход отменен</span>}
               </div>
               <div className="font-montserratBold">
-                {!isCancelled && <span>Осталось {timeLeft} мин.</span>}
+                {!isCancelled && accessedAccounts != totalAccounts && (
+                  <span>Осталось {timeLeft} мин.</span>
+                )}
               </div>
               {!isCancelled && isEventStreamOpen && (
                 <button
