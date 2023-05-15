@@ -167,7 +167,7 @@ export default function SubscriptionModal({
   });
 
   const qrData: UseQueryResult<IQRResponse> = useQuery(
-    ["generatedQr"],
+    ["generatedQr", "community"],
     async () => {
       const res = await axios.get(
         `https://alpharescue.online/CheckReplenishment?discordId=${String(

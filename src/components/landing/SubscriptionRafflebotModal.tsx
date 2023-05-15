@@ -199,7 +199,7 @@ export default function SubscriptionModal({
   });
 
   const qrData: UseQueryResult<IQRResponse> = useQuery(
-    ["generatedQr"],
+    ["generatedQr", "rafflebot"],
     async () => {
       const res = await axios.get(
         `https://alpharescue.online/CheckReplenishment?discordId=${String(
@@ -224,6 +224,7 @@ export default function SubscriptionModal({
       },
     }
   );
+  console.log("accounts -> ", accountsSelected);
 
   useEffect(() => {
     if (open && discordId && qrGenerated) {
@@ -342,7 +343,13 @@ export default function SubscriptionModal({
                         <RootDropdown
                           dataArray={durations}
                           selected={durationSelected}
-                          setSelected={(entry) => setDurationSelected(entry)}
+                          setSelected={(entry) => {
+                            setDurationSelected(entry);
+                            if (entry.id === 5)
+                              setAccountsSelected(
+                                accounts[0] || { id: 5, name: "1 неделя" }
+                              );
+                          }}
                         />
                       </div>
                       <div className="text-xl">Срок подписки</div>
