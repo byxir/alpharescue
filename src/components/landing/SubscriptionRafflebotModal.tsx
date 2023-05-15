@@ -376,6 +376,7 @@ export default function SubscriptionModal({
                       )}
                       <button
                         disabled={!qrGenerated}
+                        onClick={closeFunction}
                         className={`mt-18 cursor-pointer justify-self-center rounded-xl bg-accent px-6 py-4 text-2xl text-bg shadow-md transition-all hover:bg-opacity-60 ${
                           !qrGenerated
                             ? "cursor-not-allowed opacity-50"
