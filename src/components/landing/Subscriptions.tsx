@@ -91,7 +91,7 @@ export default function Subscriptions() {
           <RadioGroup
             value={frequency}
             onChange={setFrequency}
-            className="grid grid-cols-2 gap-x-1 rounded-full p-1 text-center text-xs font-semibold leading-5 ring-2 ring-inset ring-subline"
+            className="grid grid-cols-3 gap-x-1 rounded-full p-1 text-center text-xs font-semibold leading-5 ring-2 ring-inset ring-subline"
           >
             <RadioGroup.Label className="sr-only">
               Payment frequency
@@ -103,13 +103,22 @@ export default function Subscriptions() {
                 frequency === 0 ? "bg-almostwhite text-element" : "text-subtext"
               } cursor-pointer rounded-full px-2.5 py-1 font-montserratBold`}
             >
-              <span>Ежемесячно</span>
+              <span>По неделям</span>
             </button>
             <button
               onClick={() => setFrequency(1)}
               value={frequency}
               className={`${
                 frequency === 1 ? "bg-almostwhite text-element" : "text-subtext"
+              } cursor-pointer rounded-full px-2.5 py-1 font-montserratBold`}
+            >
+              <span>Ежемесячно</span>
+            </button>
+            <button
+              onClick={() => setFrequency(2)}
+              value={frequency}
+              className={`${
+                frequency === 2 ? "bg-almostwhite text-element" : "text-subtext"
               } cursor-pointer rounded-full px-2.5 py-1 font-montserratBold`}
             >
               <span>По кварталам</span>
@@ -154,7 +163,11 @@ export default function Subscriptions() {
                   <span>TBD</span>
                 </span>
                 <span className="font-montserratBold text-sm leading-6 text-subtext">
-                  {frequency === 0 ? "/месяц" : "/3 мес"}
+                  {frequency === 0
+                    ? "/нед."
+                    : frequency === 1
+                    ? "/мес."
+                    : "/3 мес."}
                 </span>
               </p>
               <button

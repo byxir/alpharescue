@@ -106,6 +106,7 @@ export default function SubscriptionModal({
   const [paymentCurrencyTRCSelected, setPaymentCurrencyTRCSelected] = useState(
     paymentCurrenciesTRC[0] || { id: 1, name: "USDT" }
   );
+  const [paymentTimer, setPaymentTimer] = useState(599);
 
   const [qrGenerated, setQrGenerated] = useState(false);
 
@@ -211,6 +212,27 @@ export default function SubscriptionModal({
       void qrData.refetch();
     }
   }, []);
+
+  useEffect(() => {
+    if (open && qrGenerated) {
+      setPaymentTimer(599);
+      const interval = setInterval(() => {
+        if (paymentTimer <= 0) {
+          cancelQrMutation.mutate();
+          setQrGenerated(false);
+          setQrUrl(null);
+          setAddress(null);
+          clearInterval(interval);
+        }
+        setPaymentTimer((prev) => prev - 1);
+      }, 1000);
+
+      return () => {
+        clearInterval(interval);
+        setPaymentTimer(599);
+      };
+    }
+  }, [qrGenerated]);
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -322,7 +344,12 @@ export default function SubscriptionModal({
                           void queryClient.removeQueries(["generatedQr"]);
                           generateQrMutation.mutate();
                         }}
-                        className="cursor-pointer justify-self-center rounded-xl bg-accent px-6 py-4 text-2xl text-bg shadow-md transition-all hover:bg-opacity-60"
+                        disabled={qrGenerated}
+                        className={`justify-self-center rounded-xl bg-accent px-6 py-4 text-2xl text-bg shadow-md transition-all ${
+                          qrGenerated
+                            ? "cursor-not-allowed opacity-50"
+                            : "cursor-pointer opacity-100 hover:bg-opacity-60"
+                        }`}
                       >
                         Сгенерировать QR
                       </button>
@@ -360,12 +387,22 @@ export default function SubscriptionModal({
                         readOnly
                       />
                     </div>
-                    <div className="flex items-center justify-center space-x-4 self-end">
+                    {qrGenerated && (
+                      <div className="mt-6">
+                        Осталось{" "}
+                        {paymentTimer > 60
+                          ? `${Math.floor(paymentTimer / 60)} мин ${Math.ceil(
+                              paymentTimer % 60
+                            )} сек`
+                          : `${paymentTimer} сек.`}
+                      </div>
+                    )}
+                    <div className="flex items-center justify-center space-x-4">
                       {qrGenerated && (
                         <button
                           disabled={!qrGenerated}
                           onClick={() => cancelQrMutation.mutate()}
-                          className={`mt-18 cursor-pointer justify-self-center rounded-xl border-2 border-red-500 bg-sidebarBg px-4 py-3 text-xl text-red-500 shadow-md transition-all hover:bg-opacity-60 ${
+                          className={`mt-9 cursor-pointer justify-self-center rounded-xl border-2 border-red-500 bg-sidebarBg px-4 py-3 text-xl text-red-500 shadow-md transition-all hover:bg-opacity-60 ${
                             !qrGenerated
                               ? "cursor-not-allowed opacity-50"
                               : "cursor-pointer opacity-100"
@@ -377,10 +414,10 @@ export default function SubscriptionModal({
                       <button
                         disabled={!qrGenerated}
                         onClick={closeFunction}
-                        className={`mt-18 cursor-pointer justify-self-center rounded-xl bg-accent px-6 py-4 text-2xl text-bg shadow-md transition-all hover:bg-opacity-60 ${
+                        className={`cursor-pointer justify-self-center rounded-xl bg-accent px-6 py-4 text-2xl text-bg shadow-md transition-all ${
                           !qrGenerated
-                            ? "cursor-not-allowed opacity-50"
-                            : "cursor-pointer opacity-100"
+                            ? "mt-18 cursor-not-allowed opacity-50"
+                            : "mt-9 cursor-pointer opacity-100 hover:bg-opacity-60"
                         }`}
                       >
                         Оплатил

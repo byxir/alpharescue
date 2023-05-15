@@ -1,5 +1,0 @@
-156.238.7.231:6243:eygblzhp:8dkvatehardh
-156.238.9.191:7082:eygblzhp:8dkvatehardh
-179.61.248.101:5192:eygblzhp:8dkvatehardh
-179.61.248.7:5098:eygblzhp:8dkvatehardh
-156.238.9.161:7052:eygblzhp:8dkvatehardh
