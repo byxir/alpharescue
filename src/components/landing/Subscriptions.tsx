@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { RadioGroup } from "@headlessui/react";
 import { CheckIcon } from "@heroicons/react/20/solid";
+import { useSession } from "next-auth/react";
+import { api } from "~/utils/api";
+import SubscriptionModal from "./SubscriptionRafflebotModal";
 
 const tiers = [
   {
@@ -19,6 +22,7 @@ const tiers = [
     ],
     bg: "bg-community",
     ring: "ring-community",
+    type: "community",
   },
   {
     available: true,
@@ -37,6 +41,7 @@ const tiers = [
     new: true,
     bg: "bg-premint",
     ring: "ring-premint",
+    type: "raffleBot",
   },
   {
     available: false,
@@ -55,11 +60,21 @@ const tiers = [
     bg: "bg-speedMint",
     ring: "ring-speedMint",
     comingSoon: true,
+    type: "speedMint",
   },
 ];
 
 export default function Subscriptions() {
   const [frequency, setFrequency] = useState(0);
+  const [subscriptionModalCommunityOpen, setSubscriptionModalCommunityOpen] =
+    useState(false);
+  const [subscriptionModalRaffleBotOpen, setSubscriptionModalRaffleBotOpen] =
+    useState(false);
+
+  const protectionData = api.user.getMyProtectionData.useQuery();
+
+  const { data, status } = useSession();
+
   return (
     <div className="bg-bg py-24 font-montserratRegular sm:py-32">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
@@ -142,15 +157,22 @@ export default function Subscriptions() {
                   {frequency === 0 ? "/месяц" : "/3 мес"}
                 </span>
               </p>
-              <a
-                href={tier.href}
+              <button
+                onClick={() => {
+                  if (tier.type === "community") {
+                    setSubscriptionModalCommunityOpen(true);
+                  }
+                  if (tier.type === "raffleBot") {
+                    setSubscriptionModalRaffleBotOpen(true);
+                  }
+                }}
                 aria-describedby={tier.id}
                 className={`${
                   tier.available ? tier.bg : "bg-element text-red-500"
-                } mt-6 block rounded-md px-3 py-2 text-center font-montserratBold text-sm font-semibold leading-6 text-element`}
+                } mt-6 block w-full rounded-md px-3 py-2 text-center font-montserratBold text-sm font-semibold leading-6 text-element`}
               >
                 {tier.available ? "Подписаться" : "Coming soon"}
-              </a>
+              </button>
               <ul
                 role="list"
                 className="mt-8 space-y-3 text-sm leading-6 text-subtext xl:mt-10"
@@ -182,6 +204,18 @@ export default function Subscriptions() {
           ))}
         </div>
       </div>
+      <SubscriptionModal
+        open={subscriptionModalCommunityOpen}
+        closeFunction={() => setSubscriptionModalCommunityOpen(false)}
+        discordId={protectionData.data?.discordId}
+        type="community"
+      />
+      <SubscriptionModal
+        open={subscriptionModalRaffleBotOpen}
+        closeFunction={() => setSubscriptionModalRaffleBotOpen(false)}
+        discordId={protectionData.data?.discordId}
+        type="raffleBot"
+      />
     </div>
   );
 }

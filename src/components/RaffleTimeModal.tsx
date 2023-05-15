@@ -108,6 +108,10 @@ export default function RaffleTimeModal({
       onSuccess: () => {
         toggleEventStream();
       },
+      onError: () => {
+        showNotification();
+        closeFunction();
+      },
     }
   );
 

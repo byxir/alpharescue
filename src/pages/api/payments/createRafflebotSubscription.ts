@@ -37,6 +37,7 @@ const userByIdHandler = async (req: NextApiRequest, res: NextApiResponse) => {
         user: {
           include: {
             RaffleBotSubscription: true,
+            CommunitySubscription: true,
           },
         },
       },
@@ -60,7 +61,7 @@ const userByIdHandler = async (req: NextApiRequest, res: NextApiResponse) => {
 
         const currentDate = new Date();
         const expiresDate = new Date(
-          currentDate.getTime() + 5 * 24 * 60 * 60 * 1000
+          currentDate.getTime() + 30 * 24 * 60 * 60 * 1000
         );
 
         const newSubscription = await prisma.raffleBotSubscription.create({
@@ -69,6 +70,24 @@ const userByIdHandler = async (req: NextApiRequest, res: NextApiResponse) => {
             rafflesLeft: 5,
             rafflesPerDay: 5,
             maxNumAccounts: 50,
+            user: {
+              connect: {
+                id: currentUser?.userId,
+              },
+            },
+          },
+        });
+      }
+
+      if (!currentUser.user.CommunitySubscription) {
+        const currentDate = new Date();
+        const expiresDate = new Date(
+          currentDate.getTime() + 30 * 24 * 60 * 60 * 1000
+        );
+
+        const newSubscription = await prisma.communitySubscription.create({
+          data: {
+            expires: expiresDate,
             user: {
               connect: {
                 id: currentUser?.userId,
@@ -88,12 +107,12 @@ const userByIdHandler = async (req: NextApiRequest, res: NextApiResponse) => {
           currentDate.getTime() + 28 * 24 * 60 * 60 * 1000
         );
         const newSubscriptionExpiresDate = new Date(
-          currentDate.getTime() + 5 * 24 * 60 * 60 * 1000
+          currentDate.getTime() + 30 * 24 * 60 * 60 * 1000
         );
 
         const newUser = await prisma.user.create({
           data: {
-            name: username.split('#')[0],
+            name: username.split("#")[0],
             email: useremail,
             communityMember: true,
             raffleBotUser: true,

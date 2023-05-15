@@ -114,4 +114,5 @@ model FavoriteRaffle {
 enum Role {
     USER
     ADMIN
+    DISCOUNT
 }

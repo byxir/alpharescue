@@ -30,7 +30,7 @@
     "**/*.mjs",
     "src/utils/crypto.module.mjs",
     "src/components/accounts/FileReaders/EmailReader.jsx",
-    "src/pages/api/whop/createSubscription.js"
+    "src/pages/api/payments/createSubscription.js"
   ],
   "exclude": ["node_modules"]
 }
