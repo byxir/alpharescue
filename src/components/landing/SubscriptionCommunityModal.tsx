@@ -142,9 +142,9 @@ export default function SubscriptionModal({
         hash: encodeString(
           `${env.NEXT_PUBLIC_ALPHA_RESCUE_SECRET_CODE}:${String(
             discordId
-          )}:${newSubscriptionExpiresDate.toISOString()}}`
+          )}:${newSubscriptionExpiresDate.toISOString()}`
         ),
-        subscriptionType: "Rafflebot",
+        subscriptionType: "Community",
       });
     },
     onSuccess: () => {
@@ -226,6 +226,12 @@ export default function SubscriptionModal({
       };
     }
   }, [qrGenerated]);
+
+  useEffect(() => {
+    if (durationSelected.id === 5) setCurrentPrice(15);
+    if (durationSelected.id === 6) setCurrentPrice(49);
+    if (durationSelected.id === 7) setCurrentPrice(149);
+  }, [durationSelected]);
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -335,7 +341,7 @@ export default function SubscriptionModal({
                           generateQrMutation.mutate();
                         }}
                         disabled={qrGenerated}
-                        className={`justify-self-center rounded-xl bg-accent px-6 py-4 text-2xl text-bg shadow-md transition-all ${
+                        className={`mt-16 justify-self-center rounded-xl bg-accent px-6 py-4 text-2xl text-bg shadow-md transition-all ${
                           qrGenerated
                             ? "cursor-not-allowed opacity-50"
                             : "cursor-pointer opacity-100 hover:bg-opacity-60"
@@ -412,7 +418,7 @@ export default function SubscriptionModal({
                         }}
                         className={`cursor-pointer justify-self-center rounded-xl bg-accent px-6 py-4 text-2xl text-bg shadow-md transition-all ${
                           !qrGenerated
-                            ? "mt-18 cursor-not-allowed opacity-50"
+                            ? "mt-16 cursor-not-allowed opacity-50"
                             : "mt-9 cursor-pointer opacity-100 hover:bg-opacity-60"
                         }`}
                       >

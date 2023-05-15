@@ -231,14 +231,14 @@ export default function Subscriptions() {
         </div>
       </div>
       <SubscriptionRafflebotModal
-        open={subscriptionModalCommunityOpen}
-        closeFunction={() => setSubscriptionModalCommunityOpen(false)}
+        open={subscriptionModalRaffleBotOpen}
+        closeFunction={() => setSubscriptionModalRaffleBotOpen(false)}
         discordId={protectionData.data?.discordId}
         type="community"
       />
       <SubscriptionCommunityModal
-        open={subscriptionModalRaffleBotOpen}
-        closeFunction={() => setSubscriptionModalRaffleBotOpen(false)}
+        open={subscriptionModalCommunityOpen}
+        closeFunction={() => setSubscriptionModalCommunityOpen(false)}
         discordId={protectionData.data?.discordId}
         type="raffleBot"
       />
