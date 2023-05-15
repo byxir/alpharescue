@@ -10,14 +10,14 @@ const userByIdHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   let useremail;
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-  if (req.body.data.user.social_accounts[0].id) {
+  if (req.body.data.user.social_account.id) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-    id = req.body.data.user.social_accounts[0].id;
+    id = req.body.data.user.social_account.id;
   }
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-  if (req.body.data.user.social_accounts[0].username) {
+  if (req.body.data.user.social_account.username) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-    username = req.body.data.user.social_accounts[0].username;
+    username = req.body.data.user.social_account.username;
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
