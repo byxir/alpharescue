@@ -114,6 +114,51 @@ function FeaturesDesktop() {
             </LaunchButton>
           </div>
         </div>
+        {selectedIndex === 1 && (
+          <div className="grid grid-rows-[3fr_5fr] gap-y-4">
+            <div className="grid w-full grid-cols-2 gap-x-4">
+              <div className="">
+                <img
+                  src="../../../mirrors2.jpg"
+                  alt=""
+                  className="h-full w-full rounded-xl object-cover"
+                />
+              </div>
+              <div className="">
+                <img
+                  src="../../../mirrors3.jpg"
+                  alt=""
+                  className="h-full w-full rounded-xl object-cover"
+                />
+              </div>
+            </div>
+            <div className="w-full">
+              <img
+                src="../../../mirrors1.jpg"
+                alt=""
+                className="h-full w-full rounded-xl object-cover"
+              />
+            </div>
+          </div>
+        )}
+        {selectedIndex === 2 && (
+          <div className="grid grid-rows-2 gap-y-4">
+            <div className="w-full">
+              <img
+                src="../../services1.jpg"
+                alt=""
+                className="h-full w-full rounded-xl object-cover"
+              />
+            </div>
+            <div className="w-full">
+              <img
+                src="../../../services2.jpg"
+                alt=""
+                className="h-full w-full rounded-xl object-cover"
+              />
+            </div>
+          </div>
+        )}
       </div>
     </Tab.Group>
   );
@@ -179,6 +224,51 @@ function FeaturesMobile() {
                   </LaunchButton>
                 </div>
               </div>
+              {featureIndex === 1 && (
+                <div className="grid grid-rows-[3fr_5fr] gap-y-4">
+                  <div className="grid w-full grid-cols-2 gap-x-4">
+                    <div className="">
+                      <img
+                        src="../../../mirrors2.jpg"
+                        alt=""
+                        className="h-full w-full rounded-xl object-cover"
+                      />
+                    </div>
+                    <div className="">
+                      <img
+                        src="../../../mirrors3.jpg"
+                        alt=""
+                        className="h-full w-full rounded-xl object-cover"
+                      />
+                    </div>
+                  </div>
+                  <div className="w-full">
+                    <img
+                      src="../../../mirrors1.jpg"
+                      alt=""
+                      className="h-full w-full rounded-xl object-cover"
+                    />
+                  </div>
+                </div>
+              )}
+              {featureIndex === 2 && (
+                <div className="grid grid-rows-2 gap-y-4">
+                  <div className="w-full">
+                    <img
+                      src="../../../services1.jpg"
+                      alt=""
+                      className="h-full w-full rounded-xl object-cover"
+                    />
+                  </div>
+                  <div className="w-full">
+                    <img
+                      src="../../../services2.jpg"
+                      alt=""
+                      className="h-full w-full rounded-xl object-cover"
+                    />
+                  </div>
+                </div>
+              )}
             </div>
             <button className="transform overflow-hidden rounded-2xl bg-element px-5">
               <div className="-translate-x-1/2"></div>

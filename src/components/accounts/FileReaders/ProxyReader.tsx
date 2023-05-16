@@ -12,9 +12,11 @@ interface FileObject {
 const ProxyReader = ({
   raffleBotUser,
   exportFiles,
+  showNotification,
 }: {
   raffleBotUser: boolean;
   exportFiles: (_files: FileObject[]) => void;
+  showNotification: () => void;
 }) => {
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
     const loadedFiles = await Promise.all(
@@ -26,6 +28,7 @@ const ProxyReader = ({
 
     if (raffleBotUser) {
       exportFiles(loadedFiles);
+      showNotification();
     }
   }, []);
 

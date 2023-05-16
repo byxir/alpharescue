@@ -149,6 +149,7 @@ export default function ProxyModal({
                 <ProxyReader
                   raffleBotUser={raffleBotUser}
                   exportFiles={(_files: FileObject[]) => setFiles(_files)}
+                  showNotification={showNotification}
                 />
               </Dialog.Panel>
             </Transition.Child>
