@@ -2,8 +2,12 @@
 import Link from "next/link";
 import Footer from "~/components/Footer";
 import Header from "~/components/Header";
+import SubscriptionCommunityModal from "~/components/landing/SubscriptionCommunityModal";
+import SubscriptionRafflebotModal from "~/components/landing/SubscriptionRafflebotModal";
 import { Clock } from "~/design/icons/Clock";
 import { Robot } from "~/design/icons/Robot";
+import { useState } from "react";
+import { api } from "~/utils/api";
 
 export default function Tools() {
   return (
@@ -29,6 +33,11 @@ export default function Tools() {
 }
 
 const CommunityPass = () => {
+  const [subscriptionModalCommunityOpen, setSubscriptionModalCommunityOpen] =
+    useState(false);
+
+  const protectionData = api.user.getMyProtectionData.useQuery();
+
   return (
     <div className="mb-36 grid max-w-5xl sm:justify-items-center xl:max-w-7xl">
       <div className="mb-16 bg-gradient-to-r from-community to-almostwhite bg-clip-text font-benzin text-2xl text-transparent sm:text-3xl lg:justify-self-start">
@@ -64,7 +73,12 @@ const CommunityPass = () => {
             различные проекты.
           </div>
           <div className="mt-10 grid items-center justify-center justify-items-center sm:grid-cols-[repeat(2,_max-content)] sm:flex-row sm:space-x-6 lg:mt-16 lg:flex lg:justify-start">
-            <button className="w-max rounded-xl bg-community px-6 py-4 font-montserratBold text-xl text-bg shadow-md">
+            <button
+              onClick={() => {
+                setSubscriptionModalCommunityOpen(true);
+              }}
+              className="w-max cursor-pointer rounded-xl bg-community px-6 py-4 font-montserratBold text-xl text-bg shadow-md transition-all hover:bg-opacity-60"
+            >
               Купить подписку
             </button>
             <Link href="https://alpharescue.notion.site/Alpha-Rescue-58a5a2bfc2ca4c259f629c0dad8085db">
@@ -75,11 +89,21 @@ const CommunityPass = () => {
           </div>
         </div>
       </div>
+      <SubscriptionCommunityModal
+        open={subscriptionModalCommunityOpen}
+        closeFunction={() => setSubscriptionModalCommunityOpen(false)}
+        discordId={protectionData.data?.discordId}
+        type="raffleBot"
+      />
     </div>
   );
 };
 
 const RaffleBot = () => {
+  const [subscriptionModalRaffleBotOpen, setSubscriptionModalRaffleBotOpen] =
+    useState(false);
+
+  const protectionData = api.user.getMyProtectionData.useQuery();
   return (
     <div className="mb-36 grid max-w-5xl sm:justify-items-center xl:max-w-7xl">
       <div className="mb-16 bg-gradient-to-r from-raffleBot to-almostwhite bg-clip-text font-benzin text-3xl text-transparent lg:justify-self-start ">
@@ -94,7 +118,10 @@ const RaffleBot = () => {
             нём. Взаимодействие с ботом происходит прямо на сайте.
           </div>
           <div className="mt-10 grid items-center justify-center sm:mt-16 sm:grid-cols-[repeat(2,_max-content)] sm:flex-row sm:space-x-6 lg:justify-start">
-            <button className="w-max rounded-xl bg-raffleBot px-6 py-4 font-montserratBold text-xl text-bg shadow-md">
+            <button
+              onClick={() => setSubscriptionModalRaffleBotOpen(true)}
+              className="w-max cursor-pointer rounded-xl bg-raffleBot px-6 py-4 font-montserratBold text-xl text-bg shadow-md transition-all hover:bg-opacity-60"
+            >
               Купить подписку
             </button>
             <Link href="/rafflebot">
@@ -133,6 +160,12 @@ const RaffleBot = () => {
           </div>
         </div>
       </div>
+      <SubscriptionRafflebotModal
+        open={subscriptionModalRaffleBotOpen}
+        closeFunction={() => setSubscriptionModalRaffleBotOpen(false)}
+        discordId={protectionData.data?.discordId}
+        type="community"
+      />
     </div>
   );
 };
