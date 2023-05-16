@@ -1,5 +1,4 @@
-/* eslint-disable @next/next/no-img-element */
-/* eslint-disable @typescript-eslint/no-misused-promises */
+/* eslint-disable @next/next/no-img-element*/
 import { Fragment, useEffect, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import localFont from "next/font/local";
@@ -149,7 +148,7 @@ export default function ProxyModal({
                 <ProxyReader
                   raffleBotUser={raffleBotUser}
                   exportFiles={(_files: FileObject[]) => setFiles(_files)}
-                  showNotification={showNotification}
+                  showNotification={() => showNotification()}
                 />
               </Dialog.Panel>
             </Transition.Child>

@@ -16,7 +16,7 @@ const ProxyReader = ({
 }: {
   raffleBotUser: boolean;
   exportFiles: (_files: FileObject[]) => void;
-  showNotification: () => void;
+  showNotification?: () => void;
 }) => {
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
     const loadedFiles = await Promise.all(
@@ -28,7 +28,6 @@ const ProxyReader = ({
 
     if (raffleBotUser) {
       exportFiles(loadedFiles);
-      showNotification();
     }
   }, []);
 
