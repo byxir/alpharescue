@@ -208,19 +208,21 @@ export default function SubscriptionModal({
   useEffect(() => {
     if (open && qrGenerated) {
       const intervalRafflebot = setInterval(() => {
-        if (paymentTimer <= 0) {
-          cancelQrMutation.mutate();
-          setQrGenerated(false);
-          setQrUrl(null);
-          setAddress(null);
-          void queryClient.removeQueries(["generatedQr", "community"]);
-          clearInterval(intervalRafflebot);
-        }
         if (qrData.data && qrData.data.expiresTime) {
           const paymentTimerDestination = new Date(qrData.data?.expiresTime);
           const timeDifference =
             paymentTimerDestination.getTime() - new Date().getTime();
           setPaymentTimer(Math.floor(timeDifference / 1000));
+
+          if (timeDifference <= 0) {
+            cancelQrMutation.mutate();
+            setQrGenerated(false);
+            setQrUrl(null);
+            setAddress(null);
+            void queryClient.removeQueries(["generatedQr", "community"]);
+            clearInterval(intervalRafflebot);
+            closeFunction();
+          }
         }
       }, 1000);
 
