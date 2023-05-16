@@ -7,7 +7,6 @@ const userByIdHandler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   let id;
   let expiresDate;
-  let accountsQuantity;
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   if (req.body.data.user.social_account.id) {
@@ -18,11 +17,6 @@ const userByIdHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.body.data.user.social_account.expiresDate) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
     expiresDate = req.body.data.user.social_account.expiresDate;
-  }
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-  if (req.body.data.user.social_account.accountsQuantity) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-    accountsQuantity = req.body.data.user.social_account.accountsQuantity;
   }
 
   if (!id || typeof id != "string") {
@@ -35,50 +29,13 @@ const userByIdHandler = async (req: NextApiRequest, res: NextApiResponse) => {
       include: {
         user: {
           include: {
-            RaffleBotSubscription: true,
             CommunitySubscription: true,
           },
         },
       },
     });
 
-    if (
-      currentUser &&
-      typeof expiresDate === "string" &&
-      typeof accountsQuantity === "number"
-    ) {
-      if (!currentUser.user.RaffleBotSubscription) {
-        const newFlags = await prisma.account.update({
-          where: {
-            id: currentUser?.id,
-          },
-          data: {
-            user: {
-              update: {
-                raffleBotUser: true,
-                communityMember: true,
-              },
-            },
-          },
-        });
-
-        const formattedExpiresDate = new Date(expiresDate);
-
-        const newSubscription = await prisma.raffleBotSubscription.create({
-          data: {
-            expires: formattedExpiresDate,
-            rafflesLeft: 5,
-            rafflesPerDay: 5,
-            maxNumAccounts: accountsQuantity,
-            user: {
-              connect: {
-                id: currentUser?.userId,
-              },
-            },
-          },
-        });
-      }
-
+    if (currentUser && typeof expiresDate === "string") {
       if (!currentUser.user.CommunitySubscription) {
         const formattedExpiresDate = new Date(expiresDate);
 
@@ -98,16 +55,13 @@ const userByIdHandler = async (req: NextApiRequest, res: NextApiResponse) => {
         message: "good",
       });
     } else {
-      if (
-        typeof expiresDate === "string" &&
-        typeof accountsQuantity === "number"
-      ) {
+      if (typeof expiresDate === "string") {
         const formattedExpiresDate = new Date(expiresDate);
 
         const newUser = await prisma.user.create({
           data: {
             communityMember: true,
-            raffleBotUser: true,
+            raffleBotUser: false,
             accounts: {
               create: {
                 type: "oauth",
@@ -120,14 +74,6 @@ const userByIdHandler = async (req: NextApiRequest, res: NextApiResponse) => {
                 expires: formattedExpiresDate,
                 // eslint-disable-next-line @typescript-eslint/no-unsafe-call
                 sessionToken: String(uuidv4()),
-              },
-            },
-            RaffleBotSubscription: {
-              create: {
-                expires: formattedExpiresDate,
-                rafflesLeft: 5,
-                rafflesPerDay: 5,
-                maxNumAccounts: accountsQuantity,
               },
             },
           },
