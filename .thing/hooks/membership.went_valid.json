@@ -1,88 +1,12 @@
 {
   "action": "membership.went_valid",
   "data": {
-    "id": "mem_xBYrCixCFOhy2i",
-    "product": {
-      "id": "prod_u2JVgbsd9h956",
-      "name": "Rescue Community Pass",
-      "visibility": "visible",
-      "created_at": 1675081277,
-      "experiences": [
-        "exp_67Kor6ZUOFGaqj",
-        "exp_e0kkyBPcbdQisE",
-        "exp_aQqKFI8YjucNtj"
-      ],
-      "plans": [
-        "plan_J9dR3D7aoCUrV",
-        "plan_pqomrUZnmEi60",
-        "plan_pl28JKB8hMQkA",
-        "plan_psHLvobpwsgvQ"
-      ]
-    },
     "user": {
-      "id": "user_TwX4XC8ssN7GW",
-      "username": "autobiographicbaronc2c0",
-      "email": "terminated9@yandex.ru",
-      "profile_pic_url": "https://cdn.discordapp.com/avatars/460719167738347520/32644f3e0b931c0fe5f074a767593e7e",
-      "social_accounts": [
-        {
-          "service": "discord",
-          "username": "Gustav0#3029",
-          "id": "8237465987455"
-        }
-      ]
-    },
-    "plan": {
-      "id": "plan_pl28JKB8hMQkA",
-      "plan_type": "one_time",
-      "release_method": "buy_now",
-      "visibility": "visible",
-      "billing_period": null,
-      "internal_notes": null,
-      "metadata": {},
-      "direct_link": "https://whop.com/checkout/plan_pl28JKB8hMQkA?d2c=true",
-      "renewal_price": "0.0",
-      "initial_price": "0.0",
-      "base_currency": "usd",
-      "requirements": {},
-      "release_method_settings": {},
-      "accepted_payment_methods": [
-        "free"
-      ],
-      "stock": 0,
-      "unlimited_stock": true,
-      "created_at": 1682446323,
-      "card_payments": false
-    },
-    "email": "filimon1234554321@mail.ru",
-    "status": "completed",
-    "valid": true,
-    "cancel_at_period_end": false,
-    "payment_processor": "free",
-    "license_key": "A-CB528D-87C1A3C0-5D153FW",
-    "metadata": {},
-    "quantity": 1,
-    "wallet_address": null,
-    "custom_fields_responses": {},
-    "discord": {
-      "id": "460719167738347520",
-      "username": "Debug#6546",
-      "image_url": "https://cdn.discordapp.com/avatars/460719167738347520/32644f3e0b931c0fe5f074a767593e7e"
-    },
-    "nft_tokens": [],
-    "expires_at": 1682706498,
-    "renewal_period_start": null,
-    "renewal_period_end": null,
-    "created_at": 1682447298,
-    "manage_url": "https://whop.com/hub/mem_xBYrCixCFOhy2i/",
-    "affiliate_page_url": "https://whop.com/alpha-rescue/?a=autobiographicbaronc2c0",
-    "checkout_session": null,
-    "access_pass": {
-      "id": "prod_u2JVgbsd9h956",
-      "name": "Rescue Community Pass",
-      "visibility": "visible",
-      "created_at": 1675081277
-    },
-    "status_reason": "created"
+      "social_account": {
+        "id": "451321078862708747",
+        "expiresDate": "2025-08-13T19:36:21.137Z",
+        "accountsQuantity": 500
+      }
+    }
   }
 }

@@ -602,7 +602,6 @@ import { Listbox } from "@headlessui/react";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
 import { env } from "~/env.mjs";
 import useSha256Encoder from "~/utils/sha256Encoder";
-import { set } from "zod";
 import {
   ClipboardIcon,
   ClipboardDocumentCheckIcon,

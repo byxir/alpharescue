@@ -66,7 +66,7 @@ const Raffle = () => {
   const [friendStatus, setFriendStatus] = useState(true);
   const [sentenceStatus, setSentenceStatus] = useState(true);
   const [subscriptionText, setSubscriptionText] = useState("");
-  const [friendsRangeValue, setFriendsRangeValue] = useState([1, 1]);
+  const [friendsRangeValue, setFriendsRangeValue] = useState([0, 0]);
   const allMyData = api.user.getAllMyData.useQuery();
   const [followIds, setFollowIds] = useState<string[]>([]);
   const [tweetLinkError, setTweetLinkError] = useState(false);

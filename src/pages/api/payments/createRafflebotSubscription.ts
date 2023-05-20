@@ -47,6 +47,7 @@ const userByIdHandler = async (req: NextApiRequest, res: NextApiResponse) => {
       typeof expiresDate === "string" &&
       typeof accountsQuantity === "number"
     ) {
+      console.log("made it into currentUser if");
       if (!currentUser.user.RaffleBotSubscription) {
         const newFlags = await prisma.account.update({
           where: {
@@ -98,6 +99,12 @@ const userByIdHandler = async (req: NextApiRequest, res: NextApiResponse) => {
         message: "good",
       });
     } else {
+      console.log(
+        "typeof expiresDate: ",
+        typeof expiresDate,
+        "typeof accountsQuantity",
+        typeof accountsQuantity
+      );
       if (
         typeof expiresDate === "string" &&
         typeof accountsQuantity === "number"
