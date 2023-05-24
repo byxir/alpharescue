@@ -1,13 +1,12 @@
 /* eslint-disable @next/next/no-img-element */
 import {
-  useQuery,
   useInfiniteQuery,
   useQueryClient,
   useMutation,
 } from "@tanstack/react-query";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { type ChangeEvent, useEffect, useMemo, useState, useRef } from "react";
+import { type ChangeEvent, useEffect, useState, useRef } from "react";
 import FilterDropdown from "~/components/FilterDropdown";
 import LinkModal from "~/components/LinkModal";
 import SidebarLayout from "~/components/SidebarLayout";
@@ -21,7 +20,6 @@ import { useSession } from "next-auth/react";
 import { type RouterOutputs, api } from "~/utils/api";
 import React from "react";
 import Image from "next/image";
-import { QueryClient } from "@tanstack/react-query";
 import { EyeIcon, XCircleIcon } from "@heroicons/react/24/outline";
 
 type meType = RouterOutputs["user"]["getMeWithFavoriteRaffles"] | undefined;

@@ -36,9 +36,14 @@ const RaffleList = () => {
     _page: number;
   }): Promise<fetchMyRafflesResponse> => {
     const res = await axios.get(
-      `https://alpharescue.online/raffles?discordId=${String(
+      `https://alpharescue.online/myRaffles?discordId=${String(
         protectionData.data?.discordId
-      )}&userId=${String(data?.user.id)}&page=${_page}&search=${searchText}`
+      )}&userId=${String(data?.user.id)}&page=${_page}`,
+      {
+        headers: {
+          Authorization: `Bearer ${String(protectionData.data?.sessionToken)}`,
+        },
+      }
     );
 
     if (res.status != 200) {
@@ -96,6 +101,7 @@ const RaffleList = () => {
       getNextPageParam: (lastPage: fetchMyRafflesResponse) => {
         return lastPage.nextPage;
       },
+      enabled: !!protectionData.data,
     }
   );
 
