@@ -1,8 +1,12 @@
 /* eslint-disable @next/next/no-img-element */
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  useMutation,
+  useInfiniteQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { type ChangeEvent, useState } from "react";
+import { type ChangeEvent, useState, useRef, useEffect } from "react";
 import SidebarLayout from "~/components/SidebarLayout";
 import { Search } from "~/design/icons/Search";
 import debounce from "lodash.debounce";
@@ -11,27 +15,12 @@ import axios from "axios";
 import { useSession } from "next-auth/react";
 import { api } from "~/utils/api";
 import { XCircleIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { type IRaffle } from "../twitterraffle";
 
-type IMyRaffle = {
-  banner: string;
-  captcha: string;
-  category: string;
-  deadline: string;
-  hold: number;
-  id: string;
-  name: string;
-  platform: string;
-  platformLink: string;
-  profilePicture: string;
-  requirements: {
-    action: string;
-    clarification: string;
-    platform: string;
-  }[];
-  subscribers: number;
-  TotalSupply: string;
-  NumberOfWinners: string;
-};
+interface fetchMyRafflesResponse {
+  raffles: IRaffle[];
+  nextPage?: number;
+}
 
 const RaffleList = () => {
   const router = useRouter();
@@ -41,25 +30,34 @@ const RaffleList = () => {
 
   const protectionData = api.user.getMyProtectionData.useQuery();
 
-  const fetchMyRaffles = async (): Promise<IMyRaffle[] | null> => {
+  const fetchMyRaffles = async ({
+    _page,
+  }: {
+    _page: number;
+  }): Promise<fetchMyRafflesResponse> => {
+    if (!_page) {
+      return { nextPage: 0, raffles: [] };
+    }
+
     const res = await axios.get(
-      `https://alpharescue.online/myRaffles?discordId=${String(
+      `https://alpharescue.online/raffles?discordId=${String(
         protectionData.data?.discordId
-      )}&userId=${String(data?.user.id)}`,
-      {
-        headers: {
-          Authorization: `Bearer ${String(protectionData.data?.sessionToken)}`,
-        },
-      }
+      )}&userId=${String(data?.user.id)}&page=${_page}&search=${searchText}`
     );
+
     if (res.status != 200) {
       throw new Error("network error, try again later");
     }
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return res.data;
   };
-  const queryFn = async (): Promise<IMyRaffle[] | null> => {
-    return fetchMyRaffles();
+
+  const queryFn = async ({
+    pageParam = 0,
+  }): Promise<fetchMyRafflesResponse> => {
+    return fetchMyRaffles({
+      _page: pageParam,
+    });
   };
 
   const deleteMyRaffleMutation = useMutation(
@@ -93,11 +91,28 @@ const RaffleList = () => {
     }
   );
 
-  const myraffles = useQuery<IMyRaffle[] | null>(["myraffles"], queryFn, {
-    staleTime: Infinity,
-    cacheTime: Infinity,
-    enabled: !!protectionData.data && !!data?.user.id,
-  });
+  const myraffles = useInfiniteQuery<fetchMyRafflesResponse, Error>(
+    ["myraffles"],
+    queryFn,
+    {
+      staleTime: Infinity,
+      cacheTime: Infinity,
+      getNextPageParam: (lastPage: fetchMyRafflesResponse) => {
+        return lastPage.nextPage;
+      },
+    }
+  );
+
+  const allData: IRaffle[] =
+    myraffles.data?.pages.flatMap(
+      (page: fetchMyRafflesResponse) => page.raffles
+    ) || [];
+
+  const loadMore = () => {
+    if (!myraffles.isFetchingNextPage && myraffles.hasNextPage) {
+      void myraffles.fetchNextPage();
+    }
+  };
 
   const handleDeleteMyRaffle = (id: string) => {
     deleteMyRaffleMutation.mutate(id);
@@ -106,6 +121,36 @@ const RaffleList = () => {
   const updateQuery = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value);
   };
+
+  const sentinelRef = useRef<HTMLDivElement | null>(null);
+  const [observer, setObserver] = useState<IntersectionObserver | null>(null);
+
+  useEffect(() => {
+    if (observer) {
+      observer.disconnect();
+    }
+
+    const newObserver = new IntersectionObserver(
+      (entries) => {
+        const firstEntry = entries[0];
+
+        if (firstEntry?.isIntersecting) {
+          loadMore();
+        }
+      },
+      { threshold: 1.0 }
+    );
+
+    if (sentinelRef.current) {
+      newObserver.observe(sentinelRef.current);
+    }
+
+    setObserver(newObserver);
+
+    return () => {
+      newObserver.disconnect();
+    };
+  }, [myraffles.hasNextPage]);
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
   const debouncedUpdate = debounce(updateQuery, 350);
@@ -151,8 +196,8 @@ const RaffleList = () => {
             </div>
           ) : (
             <div className="grid grid-flow-row grid-cols-1 gap-7 md:grid-cols-2 xl:grid-cols-3">
-              {myraffles.data &&
-                myraffles.data
+              {allData &&
+                allData
                   .filter((r) =>
                     r.name.toLowerCase().includes(searchText.toLowerCase())
                   )
@@ -286,6 +331,12 @@ const RaffleList = () => {
             </div>
           )}
         </div>
+        <div ref={sentinelRef}></div>
+        {(myraffles.isFetchingNextPage || myraffles.isFetching) && (
+          <div className="grid w-full justify-items-center">
+            <Spinner />
+          </div>
+        )}
       </div>
     </SidebarLayout>
   );
