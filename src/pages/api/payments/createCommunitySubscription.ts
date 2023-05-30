@@ -49,6 +49,17 @@ const userByIdHandler = async (req: NextApiRequest, res: NextApiResponse) => {
             },
           },
         });
+      } else {
+        const formattedExpiresDate = new Date(expiresDate);
+
+        const newSubscription = await prisma.communitySubscription.update({
+          where: {
+            userId: currentUser.user.id,
+          },
+          data: {
+            expires: formattedExpiresDate,
+          },
+        });
       }
 
       return res.status(200).json({

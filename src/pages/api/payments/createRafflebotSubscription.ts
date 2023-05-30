@@ -47,7 +47,6 @@ const userByIdHandler = async (req: NextApiRequest, res: NextApiResponse) => {
       typeof expiresDate === "string" &&
       typeof accountsQuantity === "number"
     ) {
-      console.log("made it into currentUser if");
       if (!currentUser.user.RaffleBotSubscription) {
         const newFlags = await prisma.account.update({
           where: {
@@ -78,6 +77,17 @@ const userByIdHandler = async (req: NextApiRequest, res: NextApiResponse) => {
             },
           },
         });
+      } else {
+        const formattedExpiresDate = new Date(expiresDate);
+
+        const newFlags = await prisma.raffleBotSubscription.update({
+          where: {
+            userId: currentUser?.id,
+          },
+          data: {
+            expires: formattedExpiresDate,
+          },
+        });
       }
 
       if (!currentUser.user.CommunitySubscription) {
@@ -93,18 +103,23 @@ const userByIdHandler = async (req: NextApiRequest, res: NextApiResponse) => {
             },
           },
         });
+      } else {
+        const formattedExpiresDate = new Date(expiresDate);
+
+        const newFlags = await prisma.communitySubscription.update({
+          where: {
+            userId: currentUser?.id,
+          },
+          data: {
+            expires: formattedExpiresDate,
+          },
+        });
       }
 
       return res.status(200).json({
         message: "good",
       });
     } else {
-      console.log(
-        "typeof expiresDate: ",
-        typeof expiresDate,
-        "typeof accountsQuantity",
-        typeof accountsQuantity
-      );
       if (
         typeof expiresDate === "string" &&
         typeof accountsQuantity === "number"
