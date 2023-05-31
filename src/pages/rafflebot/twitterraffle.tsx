@@ -470,7 +470,11 @@ const Raffle = () => {
                         }}
                         valueLabelDisplay="auto"
                         min={0}
-                        max={friends?.length || 0}
+                        max={
+                          (friends && friends.length && friends.length > 10
+                            ? 10
+                            : friends?.length) || 0
+                        }
                         step={1}
                       />
                       <div className="ml-5">Все</div>
