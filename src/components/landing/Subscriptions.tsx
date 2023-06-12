@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 import { api } from "~/utils/api";
 import SubscriptionRafflebotModal from "./SubscriptionRafflebotModal";
 import SubscriptionCommunityModal from "./SubscriptionCommunityModal";
+import OnNotAuthed from "../notifications/OnNotAuthed";
 
 const tiers = [
   {
@@ -71,6 +72,7 @@ export default function Subscriptions() {
     useState(false);
   const [subscriptionModalRaffleBotOpen, setSubscriptionModalRaffleBotOpen] =
     useState(false);
+  const [onNotAuthedNotification, setOnNotAuthedNotification] = useState(false);
 
   const protectionData = api.user.getMyProtectionData.useQuery();
 
@@ -185,11 +187,15 @@ export default function Subscriptions() {
               </p>
               <button
                 onClick={() => {
-                  if (tier.type === "community") {
-                    setSubscriptionModalCommunityOpen(true);
-                  }
-                  if (tier.type === "raffleBot") {
-                    setSubscriptionModalRaffleBotOpen(true);
+                  if (status === "authenticated") {
+                    if (tier.type === "community") {
+                      setSubscriptionModalCommunityOpen(true);
+                    }
+                    if (tier.type === "raffleBot") {
+                      setSubscriptionModalRaffleBotOpen(true);
+                    }
+                  } else {
+                    setOnNotAuthedNotification(true);
                   }
                 }}
                 aria-describedby={tier.id}
@@ -241,6 +247,10 @@ export default function Subscriptions() {
         closeFunction={() => setSubscriptionModalCommunityOpen(false)}
         discordId={protectionData.data?.discordId}
         type="raffleBot"
+      />
+      <OnNotAuthed
+        show={onNotAuthedNotification}
+        closeFunction={() => setOnNotAuthedNotification(false)}
       />
     </div>
   );
