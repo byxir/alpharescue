@@ -856,7 +856,7 @@ const Raffle = () => {
           FollowIds: followIds,
           CommentStatus: commentStatus,
           CommentData: {
-            Sentences: sentences ? sentences : [],
+            Sentences: sentences && sentenceStatus ? sentences : null,
             MaxTags: friendsRangeValue[1],
             MinTags: friendsRangeValue[0],
             Friends: friends ? (friends.length > 0 ? friends : null) : null,

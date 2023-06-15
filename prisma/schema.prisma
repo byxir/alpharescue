@@ -48,16 +48,18 @@ model Session {
 }
 
 model User {
-    id              String           @id @default(cuid())
-    name            String?
-    email           String?          @unique
-    emailVerified   DateTime?
-    image           String?
-    accounts        Account[]
-    sessions        Session[]
-    role            Role             @default(USER)
-    configurations  Configuration[]
-    favoriteRaffles FavoriteRaffle[]
+    id                   String           @id @default(cuid())
+    name                 String?
+    email                String?          @unique
+    emailVerified        DateTime?
+    image                String?
+    accounts             Account[]
+    sessions             Session[]
+    role                 Role             @default(USER)
+    configurations       Configuration[]
+    favoriteRaffles      FavoriteRaffle[]
+    referralCode         String?
+    referralRedirectPool Int?
 
     communityMember Boolean @default(false)
     raffleBotUser   Boolean @default(false)
@@ -115,4 +117,5 @@ enum Role {
     USER
     ADMIN
     DISCOUNT
+    REFERRER
 }
