@@ -40,6 +40,7 @@ type IMyRaffle = {
     data: string;
     name: string;
     status: boolean;
+    result?: string;
   }[];
 };
 
@@ -47,6 +48,7 @@ const MyRaffle = () => {
   const router = useRouter();
   const [isRaffleModalOpen, setIsRaffleModalOpen] = useState(false);
   const [noRafflesNotification, setNoRafflesNotification] = useState(false);
+  const [activeDisplay, setActiveDisplay] = useState("status");
 
   const allMyData = api.user.getAllMyData.useQuery();
 
@@ -296,8 +298,27 @@ const MyRaffle = () => {
           <div className="h-100vh overflow-auto border-t-2 border-subline px-4 pt-14 md:px-10 2xl:border-none 2xl:pt-11">
             <div className="grid justify-items-center text-center">
               <div className="grid w-5/6 grid-cols-1 items-center justify-center md:w-full md:grid-cols-[max-content_300px] md:justify-between">
-                <div className="mb-16 w-full text-xl md:mb-0 lg:text-2xl">
-                  Использованные аккаунты
+                <div className="mb-16 flex w-full space-x-4 text-lg md:mb-0 lg:text-xl">
+                  <button
+                    onClick={() => setActiveDisplay("status")}
+                    className={`rounded-xl border-2 transition-colors ${
+                      activeDisplay === "status"
+                        ? "border-accent"
+                        : "border-subline"
+                    } p-4`}
+                  >
+                    Статус захода
+                  </button>
+                  <button
+                    onClick={() => setActiveDisplay("results")}
+                    className={`rounded-xl border-2 transition-colors ${
+                      activeDisplay === "results"
+                        ? "border-accent"
+                        : "border-subline"
+                    } p-4`}
+                  >
+                    Итоги раффла
+                  </button>
                 </div>
                 {myRaffle.data?.platform != "Twitter" && (
                   <div className="justify-self-center">
@@ -318,7 +339,11 @@ const MyRaffle = () => {
                   {myRaffle.data?.platform != "Twitter" && (
                     <span>Metamask адрес</span>
                   )}
-                  <span>Результат</span>
+                  {activeDisplay === "status" ? (
+                    <span>Статус</span>
+                  ) : (
+                    <span>Итог</span>
+                  )}
                 </div>
               </div>
               {data?.user.raffleBotUser && status === "authenticated" ? (
@@ -334,7 +359,9 @@ const MyRaffle = () => {
                           >
                             <div
                               className={`mb-4 grid w-full grid-cols-[20px_auto] items-center rounded-xl border text-xs sm:grid-cols-[40px_200px_auto] sm:text-base ${
-                                a.status === true
+                                activeDisplay != "status"
+                                  ? "border-subline text-subtext"
+                                  : a.status === true
                                   ? "border-green-300 text-green-300"
                                   : "border-red-500 text-red-500"
                               } px-4 py-4`}
@@ -347,7 +374,13 @@ const MyRaffle = () => {
                                   {a.address?.slice(0, 15)}...
                                 </span>
                               )}
-                              <span className="w-full">{a.data}</span>
+                              {activeDisplay === "status" ? (
+                                <span className="w-full">{a.data}</span>
+                              ) : (
+                                <span className="w-full">
+                                  {a.result ? a.result : "Нет итога"}
+                                </span>
+                              )}
                             </div>
                           </div>
                         ))}
