@@ -298,14 +298,14 @@ const MyRaffle = () => {
           <div className="h-100vh overflow-auto border-t-2 border-subline px-4 pt-14 md:px-10 2xl:border-none 2xl:pt-11">
             <div className="grid justify-items-center text-center">
               <div className="grid w-5/6 grid-cols-1 items-center justify-center md:w-full md:grid-cols-[max-content_300px] md:justify-between">
-                <div className="mb-16 flex w-full space-x-4 text-lg md:mb-0 lg:text-xl">
+                <div className="mb-16 flex w-full space-x-4 text-lg md:mb-0 lg:text-lg">
                   <button
                     onClick={() => setActiveDisplay("status")}
                     className={`rounded-xl border-2 transition-colors ${
                       activeDisplay === "status"
                         ? "border-accent"
                         : "border-subline"
-                    } p-4`}
+                    } px-4 py-3`}
                   >
                     Статус захода
                   </button>
@@ -315,7 +315,7 @@ const MyRaffle = () => {
                       activeDisplay === "results"
                         ? "border-accent"
                         : "border-subline"
-                    } p-4`}
+                    } px-4 py-3`}
                   >
                     Итоги раффла
                   </button>
