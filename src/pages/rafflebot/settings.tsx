@@ -203,13 +203,13 @@ const Settings = () => {
                           </div>
                         </div>
                         <div className="mt-4 flex w-full content-center items-center justify-between">
-                          <div className="ml-4 grid h-full items-center text-lg">
+                          <div className="ml-4 grid h-full items-center text-base">
                             {data.user.name}
                           </div>
                           <button
                             // eslint-disable-next-line @typescript-eslint/no-misused-promises
                             onClick={() => signOut()}
-                            className="cursor-pointer rounded-xl bg-red-600 p-3 shadow-md transition-all hover:bg-opacity-60"
+                            className="cursor-pointer rounded-xl bg-red-600 p-3 text-base shadow-md transition-all hover:bg-opacity-60"
                           >
                             Выйти из аккаунта
                           </button>
@@ -232,14 +232,14 @@ const Settings = () => {
                     >
                       Купить подписку
                     </button>
-                    <div className="mt-4 flex w-full content-center items-center justify-between">
-                      <div className="ml-4 grid h-full items-center text-lg">
+                    <div className="mt-4 flex w-full content-center items-center justify-between space-x-4">
+                      <div className="ml-4 grid h-full items-center text-base">
                         {data.user.name}
                       </div>
                       <button
                         // eslint-disable-next-line @typescript-eslint/no-misused-promises
                         onClick={() => signOut()}
-                        className="cursor-pointer rounded-xl bg-red-600 p-3 shadow-md transition-all hover:bg-opacity-60"
+                        className="cursor-pointer rounded-xl bg-red-600 p-3 text-base shadow-md transition-all hover:bg-opacity-60"
                       >
                         Выйти из аккаунта
                       </button>
