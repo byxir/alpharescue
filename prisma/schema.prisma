@@ -59,7 +59,7 @@ model User {
     configurations       Configuration[]
     favoriteRaffles      FavoriteRaffle[]
     referralCode         String?
-    referralRedirectPool Int?
+    referralRedirectPool Decimal?
 
     communityMember Boolean @default(false)
     raffleBotUser   Boolean @default(false)

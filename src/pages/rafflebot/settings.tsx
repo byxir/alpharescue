@@ -27,6 +27,7 @@ import RootReader from "~/components/accounts/FileReaders/RootReader";
 import XLSXExporter from "~/components/XLSXExporter";
 import ReplaceBannedModal from "~/components/accounts/ReplaceBannedModal";
 import Link from "next/link";
+import SubscriptionRafflebotModal from "~/components/landing/SubscriptionRafflebotModal";
 
 export type IAccount = {
   DiscordStatus?: string;
@@ -51,6 +52,8 @@ const Settings = () => {
   const [captchaModalOpen, setCaptchaModalOpen] = useState(false);
   const [proxyModalOpen, setProxyModalOpen] = useState(false);
   const [onLoadNotificationShow, setOnLoadNotificationShow] = useState(false);
+  const [subscriptionModalRaffleBotOpen, setSubscriptionModalRaffleBotOpen] =
+    useState(false);
 
   const queryClient = useQueryClient();
 
@@ -161,7 +164,12 @@ const Settings = () => {
                                   ?.rafflesLeft
                               }
                             </p>
-                            <button className="h-9 w-28 rounded-xl bg-element px-4 py-2 text-xs shadow-md transition-all hover:bg-opacity-60 lg:w-28">
+                            <button
+                              onClick={() =>
+                                setSubscriptionModalRaffleBotOpen(true)
+                              }
+                              className="h-9 w-28 rounded-xl bg-element px-4 py-2 text-xs shadow-md transition-all hover:bg-opacity-60 lg:w-28"
+                            >
                               Докупить
                             </button>
                           </div>
@@ -214,15 +222,29 @@ const Settings = () => {
                     )}
                   </div>
                 ) : status === "authenticated" ? (
-                  <button
-                    // eslint-disable-next-line @typescript-eslint/no-misused-promises
-                    onClick={() => {
-                      console.log("whop logic here");
-                    }}
-                    className="w-5/6 cursor-pointer self-center justify-self-center rounded-xl bg-accent p-6 text-center font-montserratBold text-2xl text-bg shadow-md transition-all hover:bg-opacity-60"
-                  >
-                    Купить подписку
-                  </button>
+                  <>
+                    <button
+                      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+                      onClick={() => {
+                        setSubscriptionModalRaffleBotOpen(true);
+                      }}
+                      className="w-full cursor-pointer self-center justify-self-center rounded-xl bg-accent p-6 text-center font-montserratBold text-2xl text-bg shadow-md transition-all hover:bg-opacity-60"
+                    >
+                      Купить подписку
+                    </button>
+                    <div className="mt-4 flex w-full content-center items-center justify-between">
+                      <div className="ml-4 grid h-full items-center text-lg">
+                        {data.user.name}
+                      </div>
+                      <button
+                        // eslint-disable-next-line @typescript-eslint/no-misused-promises
+                        onClick={() => signOut()}
+                        className="cursor-pointer rounded-xl bg-red-600 p-3 shadow-md transition-all hover:bg-opacity-60"
+                      >
+                        Выйти из аккаунта
+                      </button>
+                    </div>
+                  </>
                 ) : (
                   <button
                     // eslint-disable-next-line @typescript-eslint/no-misused-promises
@@ -612,6 +634,12 @@ const Settings = () => {
         sessionToken={allMyData.data?.sessionToken}
         refetchFunction={refetchFunction}
         showNotification={() => setOnLoadNotificationShow(true)}
+      />
+      <SubscriptionRafflebotModal
+        open={subscriptionModalRaffleBotOpen}
+        closeFunction={() => setSubscriptionModalRaffleBotOpen(false)}
+        discordId={allMyData.data?.discordId}
+        type="community"
       />
     </SidebarLayout>
   );
