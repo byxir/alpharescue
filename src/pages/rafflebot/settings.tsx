@@ -149,7 +149,12 @@ const Settings = () => {
                                   allMyData.data.RaffleBotSubscription?.expires.getFullYear()
                                 )}`}
                               </p>
-                              <button className="h-9 w-28 rounded-xl border-2 border-green-400 bg-bg px-4 py-2 text-xs transition-all hover:bg-opacity-60 lg:w-28">
+                              <button
+                                onClick={() =>
+                                  setSubscriptionModalRaffleBotOpen(true)
+                                }
+                                className="h-9 w-28 rounded-xl border-2 border-green-400 bg-bg px-4 py-2 text-xs transition-all hover:bg-opacity-60 lg:w-28"
+                              >
                                 Продлить
                               </button>
                             </div>
@@ -164,12 +169,7 @@ const Settings = () => {
                                   ?.rafflesLeft
                               }
                             </p>
-                            <button
-                              onClick={() =>
-                                setSubscriptionModalRaffleBotOpen(true)
-                              }
-                              className="h-9 w-28 rounded-xl bg-element px-4 py-2 text-xs shadow-md transition-all hover:bg-opacity-60 lg:w-28"
-                            >
+                            <button className="h-9 w-28 rounded-xl bg-element px-4 py-2 text-xs shadow-md transition-all hover:bg-opacity-60 lg:w-28">
                               Докупить
                             </button>
                           </div>
