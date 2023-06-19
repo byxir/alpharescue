@@ -90,6 +90,7 @@ export default function SubscriptionModal({
   const [address, setAddress] = useState<string | null>(null);
   const [addressCopied, setAddressCopied] = useState(false);
   const [currentPrice, setCurrentPrice] = useState(25);
+  const [referralCode, setReferralCode] = useState<string | null>(null);
 
   // const [weekAccountsSelected, setWeekAccountsSelected] = useState([weekAccounts[0] || {id: 12, name: '1 неделя'}])
   const [durationSelected, setDurationSelected] = useState(
@@ -149,6 +150,7 @@ export default function SubscriptionModal({
           )}:${newSubscriptionExpiresDate.toISOString()}`
         ),
         subscriptionType: "Community",
+        referralCode: referralCode,
       });
     },
     onSuccess: () => {
@@ -333,7 +335,16 @@ export default function SubscriptionModal({
                       </div>
                       <div className="text-xl">Валюта</div>
                     </div>
-                    <h2 className="mt-16 flex space-x-6 justify-self-start font-montserratBold text-2xl">
+                    <div className="mt-10 flex items-center space-x-4">
+                      <input
+                        type="text"
+                        className="rounded-lg bg-subline py-1 pl-3 font-montserratBold text-base text-almostwhite outline-none"
+                        value={referralCode ? referralCode : ""}
+                        onChange={(e) => setReferralCode(e.target.value)}
+                      />
+                      <span>Реферальный код</span>
+                    </div>
+                    <h2 className="mt-6 flex space-x-6 justify-self-start font-montserratBold text-2xl">
                       <div className="">Итого:</div>
                       <div className="">
                         <span className="">{currentPrice}</span>{" "}
@@ -344,7 +355,7 @@ export default function SubscriptionModal({
                         )}
                       </div>
                     </h2>
-                    <div className="mt-7 grid h-full w-full items-center gap-4">
+                    <div className="mt-5 grid h-full w-full items-center gap-4">
                       <button
                         onClick={() => {
                           setQrGenerated(false);
