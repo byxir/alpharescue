@@ -62,6 +62,15 @@ const userByIdHandler = async (req: NextApiRequest, res: NextApiResponse) => {
         });
       }
 
+      const updatedUser = await prisma.user.update({
+        where: {
+          id: currentUser.id,
+        },
+        data: {
+          communityMember: true,
+        },
+      });
+
       return res.status(200).json({
         message: "good",
       });
