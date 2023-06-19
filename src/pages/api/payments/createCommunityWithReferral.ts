@@ -164,6 +164,11 @@ const userByIdHandler = async (req: NextApiRequest, res: NextApiResponse) => {
                 maxNumAccounts: accountsQuantity,
               },
             },
+            CommunitySubscription: {
+              create: {
+                expires: formattedCommunityExpiresDate,
+              },
+            },
           },
         });
         return res.status(200).json({
