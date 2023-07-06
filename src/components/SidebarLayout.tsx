@@ -162,58 +162,28 @@ export default function SidebarLayout({ children }: { children: ReactNode }) {
                       </div>
                     </Link>
                     <nav className="mt-20 grid h-max auto-rows-max gap-2 px-6 font-montserratBold">
-                      {navigation.map((item) =>
-                        !item.noScale ? (
-                          <Link
-                            onClick={() => setSidebarOpen(false)}
-                            href={item.pathname}
-                            key={item.name}
-                            className={classNames(
-                              `/rafflebot/platforms/${current}` ===
-                                item.pathname
-                                ? "bg-bg text-white"
-                                : "text-almostwhite hover:bg-bg hover:bg-opacity-75",
-                              "group flex h-max items-center rounded-xl px-3 py-3 font-montserratBold text-lg transition-colors"
-                            )}
-                          >
-                            <img
-                              src={item.icon}
-                              className={`mr-4 w-9 rounded-sm ${
-                                item.noScale
-                                  ? "h-4 self-start rounded-sm"
-                                  : item.noImageOverwrite
-                                  ? ""
-                                  : "h-9"
-                              } `}
-                              alt="platform icon"
-                            />
-                            {item.name}
-                          </Link>
-                        ) : (
-                          <button
-                            onClick={() => setSidebarOpen(false)}
-                            key={item.name}
-                            className={classNames(
-                              `/rafflebot/platforms/${current}` ===
-                                item.pathname
-                                ? "bg-bg text-white"
-                                : "text-almostwhite hover:bg-bg hover:bg-opacity-75",
-                              "group flex h-max items-center rounded-xl px-3 py-3 text-lg font-bold transition-colors"
-                            )}
-                          >
-                            <img
-                              src={item.icon}
-                              className={`mr-4 w-9 rounded-sm ${
-                                item.noScale
-                                  ? "h-4 w-9 self-start rounded-sm"
-                                  : "h-9"
-                              } `}
-                              alt="platform icon"
-                            />
-                            {item.name}
-                          </button>
-                        )
-                      )}
+                      {navigation.map((item) => (
+                        <Link
+                          onClick={() => setSidebarOpen(false)}
+                          href={item.pathname}
+                          key={item.name}
+                          className={classNames(
+                            `/rafflebot/platforms/${current}` === item.pathname
+                              ? "bg-bg text-white"
+                              : "text-almostwhite hover:bg-bg hover:bg-opacity-75",
+                            "group flex h-max items-center rounded-xl px-3 py-3 font-montserratBold text-lg transition-colors"
+                          )}
+                        >
+                          <img
+                            src={item.icon}
+                            className={`mr-4 w-9 rounded-sm ${
+                              item.noImageOverwrite ? "" : "h-9"
+                            } `}
+                            alt="platform icon"
+                          />
+                          {item.name}
+                        </Link>
+                      ))}
                     </nav>
                   </div>
                   <Link
@@ -265,52 +235,27 @@ export default function SidebarLayout({ children }: { children: ReactNode }) {
                 </div>
               </Link>
               <nav className="grid h-full auto-rows-max content-center gap-2 px-6">
-                {navigation.map((item) =>
-                  !item.noScale ? (
-                    <Link
-                      href={`${item.pathname}`}
-                      key={item.name}
-                      className={classNames(
-                        current === item.pathname
-                          ? "bg-bg text-white"
-                          : "text-almostwhite hover:bg-bg hover:bg-opacity-75",
-                        "group flex h-max items-center rounded-xl px-3 py-3 font-montserratBold text-lg transition-colors"
-                      )}
-                    >
-                      <img
-                        src={item.icon}
-                        className={`mr-4 w-9 rounded-sm ${
-                          item.noScale
-                            ? "h-4 w-9 self-start rounded-sm"
-                            : item.noImageOverwrite
-                            ? ""
-                            : "h-9"
-                        } `}
-                        alt="platform icon"
-                      />
-                      {item.name}
-                    </Link>
-                  ) : (
-                    <button
-                      key={item.name}
-                      className={classNames(
-                        current === item.pathname
-                          ? "bg-bg text-white"
-                          : "text-almostwhite hover:bg-bg hover:bg-opacity-75",
-                        "group flex h-max items-center rounded-xl px-3 py-3 font-montserratBold text-lg transition-colors"
-                      )}
-                    >
-                      <img
-                        src={item.icon}
-                        className={`mr-4 w-9 rounded-sm ${
-                          item.noScale ? "h-4 w-9 self-start rounded-sm" : "h-9"
-                        } `}
-                        alt="platform icon"
-                      />
-                      {item.name}
-                    </button>
-                  )
-                )}
+                {navigation.map((item) => (
+                  <Link
+                    href={`${item.pathname}`}
+                    key={item.name}
+                    className={classNames(
+                      current === item.pathname
+                        ? "bg-bg text-white"
+                        : "text-almostwhite hover:bg-bg hover:bg-opacity-75",
+                      "group flex h-max items-center rounded-xl px-3 py-3 font-montserratBold text-lg transition-colors"
+                    )}
+                  >
+                    <img
+                      src={item.icon}
+                      className={`mr-4 w-9 rounded-sm ${
+                        item.noImageOverwrite ? "" : "h-9"
+                      } `}
+                      alt="platform icon"
+                    />
+                    {item.name}
+                  </Link>
+                ))}
               </nav>
             </div>
             <Link
