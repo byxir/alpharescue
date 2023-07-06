@@ -110,6 +110,10 @@ export default function SubscriptionModal({
   const [currentProxyType, setCurrentProxyType] = useState("http");
   const [qrUrl, setQrUrl] = useState<string | null>(null);
   const [address, setAddress] = useState<string | null>(null);
+  const [rafflebotReferralCode, setRafflebotReferralCode] = useState<
+    string | null
+  >(null);
+  const [refCodeUsed, setRefCodeUsed] = useState(false);
 
   const [currentPrice, setCurrentPrice] = useState(25);
 
@@ -239,6 +243,22 @@ export default function SubscriptionModal({
     }
   );
 
+  const useRefCode = () => {
+    for (let i = 0; i < refcodes.length; i++) {
+      const newRef = refcodes[i];
+      if (newRef != undefined) {
+        if (
+          newRef.code === rafflebotReferralCode &&
+          typeof newRef.discount === "number" &&
+          !refCodeUsed
+        ) {
+          setCurrentPrice((prev) => prev - prev * newRef.discount);
+          setRefCodeUsed(true);
+        }
+      }
+    }
+  };
+
   useEffect(() => {
     if (open && discordId && qrGenerated) {
       void queryClient.removeQueries(["generatedQr", "rafflebot"]);
@@ -255,10 +275,26 @@ export default function SubscriptionModal({
   const [paymentTimer, setPaymentTimer] = useState(599);
 
   useEffect(() => {
+    let coefficient = 0.0;
+    for (let i = 0; i < refcodes.length; i++) {
+      const newRef = refcodes[i];
+      if (newRef != undefined) {
+        if (
+          newRef.code === rafflebotReferralCode &&
+          typeof newRef.discount === "number"
+        ) {
+          coefficient = newRef.discount;
+        }
+      }
+    }
     if (accountsSelected.id === 1 && durationSelected.id === 5) {
       setCurrentPrice(25);
       if (userRole.data?.status === true) {
-        setCurrentPrice(25);
+        setCurrentPrice(16.25);
+      } else {
+        if (refCodeUsed) {
+          setCurrentPrice(25);
+        }
       }
     }
     if (accountsSelected.id === 1 && durationSelected.id === 6) {
@@ -308,6 +344,9 @@ export default function SubscriptionModal({
       if (userRole.data?.status === true) {
         setCurrentPrice(350.35);
       }
+    }
+    if (refCodeUsed && !userRole.data?.status) {
+      setCurrentPrice((prev) => prev - prev * coefficient);
     }
   }, [accountsSelected, durationSelected]);
 
@@ -412,7 +451,7 @@ export default function SubscriptionModal({
                       </div>
                       <div className="text-xl">Срок подписки</div>
                     </div>
-                    <h2 className="mt-16 justify-self-start font-montserratBold text-2xl">
+                    <h2 className="mt-12 justify-self-start font-montserratBold text-2xl">
                       Метод оплаты
                     </h2>
                     <div className="mt-4 grid h-full w-full grid-cols-[3fr_2fr] grid-rows-1 items-center gap-4">
@@ -450,7 +489,25 @@ export default function SubscriptionModal({
                       </div>
                       <div className="text-xl">Валюта</div>
                     </div>
-                    <h2 className="mt-16 flex space-x-6 justify-self-start font-montserratBold text-2xl">
+                    <div className="mt-10 flex items-center space-x-4">
+                      <input
+                        type="text"
+                        className="rounded-lg bg-subline py-1 pl-3 font-montserratBold text-base text-almostwhite outline-none"
+                        value={
+                          rafflebotReferralCode ? rafflebotReferralCode : ""
+                        }
+                        onChange={(e) =>
+                          setRafflebotReferralCode(e.target.value)
+                        }
+                      />
+                      <button
+                        onClick={useRefCode}
+                        className="rounded-lg bg-accent px-2 py-1 text-bg transition-all hover:bg-opacity-60"
+                      >
+                        Использовать реф. Код
+                      </button>
+                    </div>
+                    <h2 className="mt-8 flex space-x-6 justify-self-start font-montserratBold text-2xl">
                       <div className="">Итого:</div>
                       <div className="">
                         <span className="">{currentPrice}</span>{" "}
@@ -461,7 +518,7 @@ export default function SubscriptionModal({
                         )}
                       </div>
                     </h2>
-                    <div className="mt-7 grid h-full w-full items-center gap-4">
+                    <div className="mt-5 grid h-full w-full items-center gap-4">
                       <button
                         onClick={() => {
                           setQrGenerated(false);
@@ -574,7 +631,7 @@ export default function SubscriptionModal({
                         }}
                         className={`cursor-pointer justify-self-center rounded-xl bg-accent px-6 py-4 text-2xl text-bg shadow-md transition-all ${
                           !qrGenerated
-                            ? "mt-18 cursor-not-allowed opacity-50"
+                            ? "mt-22 cursor-not-allowed opacity-50"
                             : "mt-9 cursor-pointer opacity-100 hover:bg-opacity-60"
                         }`}
                       >
@@ -607,6 +664,7 @@ import {
   ClipboardDocumentCheckIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
+import { refcodes } from "~/utils/refcodes";
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");

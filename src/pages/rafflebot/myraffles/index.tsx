@@ -24,7 +24,7 @@ interface fetchMyRafflesResponse {
 
 const RaffleList = () => {
   const router = useRouter();
-  const { data } = useSession();
+  const session = useSession();
   const [searchText, setSearchText] = useState("");
   const queryClient = useQueryClient();
 
@@ -38,7 +38,7 @@ const RaffleList = () => {
     const res = await axios.get(
       `https://alpharescue.online/myRaffles?discordId=${String(
         protectionData.data?.discordId
-      )}&userId=${String(data?.user.id)}&page=${_page}`,
+      )}&userId=${String(session.data?.user.id)}&page=${_page}`,
       {
         headers: {
           Authorization: `Bearer ${String(protectionData.data?.sessionToken)}`,
@@ -67,7 +67,7 @@ const RaffleList = () => {
       const res = await axios.post(
         `https://alpharescue.online/deleteMyRaffle`,
         {
-          userId: String(data?.user.id),
+          userId: String(session.data?.user.id),
           discordId: String(protectionData.data?.discordId),
           raffleId: _id,
         },
@@ -87,32 +87,32 @@ const RaffleList = () => {
     },
     {
       onSuccess: async () => {
-        await myraffles.refetch();
+        await refetch();
       },
     }
   );
 
-  const myraffles = useInfiniteQuery<fetchMyRafflesResponse, Error>(
-    ["myraffles"],
-    queryFn,
-    {
-      staleTime: Infinity,
-      cacheTime: Infinity,
-      getNextPageParam: (lastPage: fetchMyRafflesResponse) => {
-        return lastPage.nextPage;
-      },
-      enabled: !!protectionData.data,
-    }
-  );
-
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isFetching,
+    refetch,
+  } = useInfiniteQuery<fetchMyRafflesResponse, Error>(["myraffles"], queryFn, {
+    staleTime: Infinity,
+    cacheTime: Infinity,
+    getNextPageParam: (lastPage: fetchMyRafflesResponse) => {
+      return lastPage.nextPage;
+    },
+    enabled: !!protectionData.data,
+  });
   const allData: IRaffle[] =
-    myraffles.data?.pages.flatMap(
-      (page: fetchMyRafflesResponse) => page.raffles
-    ) || [];
+    data?.pages.flatMap((page: fetchMyRafflesResponse) => page.raffles) || [];
 
   const loadMore = () => {
-    if (!myraffles.isFetchingNextPage && myraffles.hasNextPage) {
-      void myraffles.fetchNextPage();
+    if (!isFetchingNextPage && hasNextPage) {
+      void fetchNextPage();
     }
   };
 
@@ -152,7 +152,7 @@ const RaffleList = () => {
     return () => {
       newObserver.disconnect();
     };
-  }, [myraffles.hasNextPage]);
+  }, [hasNextPage]);
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
   const debouncedUpdate = debounce(updateQuery, 350);
@@ -328,7 +328,7 @@ const RaffleList = () => {
           </div>
         </div>
         <div ref={sentinelRef}></div>
-        {(myraffles.isFetchingNextPage || myraffles.isFetching) && (
+        {(isFetchingNextPage || isFetching) && (
           <div className="grid w-full justify-items-center">
             <Spinner />
           </div>

@@ -53,12 +53,6 @@ const navigation = [
     pathname: "/rafflebot/platforms/Superful",
   },
   {
-    name: "FreeNFT",
-    icon: "../../../../freenft.png",
-    pathname: "/rafflebot/platforms/FreeNFT",
-    noScale: true,
-  },
-  {
     name: "Twitter",
     icon: "../../../../twitterwhite.png",
     pathname: "/rafflebot/twitterraffle",
