@@ -40,7 +40,7 @@ const accounts = [
 
 const weekAccounts = [
   {
-    id: 12,
+    id: 5,
     name: "50",
   },
 ];
@@ -124,6 +124,12 @@ export default function SubscriptionModal({
   const [durationSelected, setDurationSelected] = useState(
     durations[0] || { id: 5, name: "1 неделя" }
   );
+  const [prevDurationSelected, setPrevDurationSelected] = useState(
+    accounts[6] || { id: 6, name: "1 месяц" }
+  );
+  const [prevAccountsSelected, setPrevAccountsSelected] = useState(
+    accounts[1] || { id: 2, name: "200" }
+  );
   const [paymentNetworkSelected, setPaymentNetworkSelected] = useState(
     paymentNetworks[0] || { id: 8, name: "BEP20" }
   );
@@ -182,6 +188,7 @@ export default function SubscriptionModal({
         ),
         accountsQuantity: Number(accountsSelected.name),
         subscriptionType: "Rafflebot",
+        referralCode: rafflebotReferralCode,
       });
     },
     onSuccess: () => {
@@ -291,10 +298,6 @@ export default function SubscriptionModal({
       setCurrentPrice(25);
       if (userRole.data?.status === true) {
         setCurrentPrice(16.25);
-      } else {
-        if (refCodeUsed) {
-          setCurrentPrice(25);
-        }
       }
     }
     if (accountsSelected.id === 1 && durationSelected.id === 6) {
@@ -345,7 +348,12 @@ export default function SubscriptionModal({
         setCurrentPrice(350.35);
       }
     }
-    if (refCodeUsed && !userRole.data?.status) {
+    if (
+      refCodeUsed &&
+      !userRole.data?.status &&
+      prevAccountsSelected != accountsSelected &&
+      prevDurationSelected != durationSelected
+    ) {
       setCurrentPrice((prev) => prev - prev * coefficient);
     }
   }, [accountsSelected, durationSelected]);
@@ -423,14 +431,19 @@ export default function SubscriptionModal({
                       <div className="flex items-center">
                         <RootDropdown
                           dataArray={
-                            durationSelected.id === 5 ? weekAccounts : accounts
+                            durationSelected.id === 5
+                              ? accounts.slice(0, 1)
+                              : accounts
                           }
                           selected={
                             durationSelected.id === 5
                               ? accounts[0] || { id: 5, name: "1 неделя" }
                               : accountsSelected
                           }
-                          setSelected={(entry) => setAccountsSelected(entry)}
+                          setSelected={(entry) => {
+                            setPrevAccountsSelected(accountsSelected);
+                            setAccountsSelected(entry);
+                          }}
                         />
                       </div>
                       <div className="text-xl">Кол-во аккаунтов</div>
@@ -441,6 +454,7 @@ export default function SubscriptionModal({
                           dataArray={durations}
                           selected={durationSelected}
                           setSelected={(entry) => {
+                            setPrevDurationSelected(durationSelected);
                             setDurationSelected(entry);
                             if (entry.id === 5)
                               setAccountsSelected(
@@ -665,6 +679,7 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { refcodes } from "~/utils/refcodes";
+import { duration } from "@mui/material";
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
