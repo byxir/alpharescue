@@ -57,7 +57,7 @@ export default function ProxyModal({
   const proxyMutation = useMutation({
     mutationFn: () => {
       return axios.post(
-        "https://alpharescue.online/accounts",
+        "https://alpharescue.online:3500/accounts",
         {
           discordId: discordId,
           userId: data?.user.id,

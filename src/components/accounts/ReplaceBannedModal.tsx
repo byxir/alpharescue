@@ -59,7 +59,7 @@ export default function ReplaceBannedModal({
   const replaceProxyMutation = useMutation({
     mutationFn: () => {
       return axios.post(
-        "https://alpharescue.online/replaceBannedAccounts",
+        "https://alpharescue.online:3500/replaceBannedAccounts",
         {
           discordId: discordId,
           userId: data?.user.id,

@@ -36,7 +36,7 @@ const RaffleList = () => {
     _page: number;
   }): Promise<fetchMyRafflesResponse> => {
     const res = await axios.get(
-      `https://alpharescue.online/myRaffles?discordId=${String(
+      `https://alpharescue.online:3500/myRaffles?discordId=${String(
         protectionData.data?.discordId
       )}&userId=${String(session.data?.user.id)}&page=${_page}`,
       {
@@ -65,7 +65,7 @@ const RaffleList = () => {
     ["deleteMyRaffle"],
     async (_id: string) => {
       const res = await axios.post(
-        `https://alpharescue.online/deleteMyRaffle`,
+        `https://alpharescue.online:3500/deleteMyRaffle`,
         {
           userId: String(session.data?.user.id),
           discordId: String(protectionData.data?.discordId),

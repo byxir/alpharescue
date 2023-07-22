@@ -23,7 +23,7 @@ const Home: React.FC = () => {
     // let eventSource: EventSource | undefined;
 
     const eventSource = new EventSource(
-      `https://alpharescue.online/events?userId=clg5dzhmq0000mj08pkwqftop&sessionToken=30fccbe9-cbde-4200-b8de-da2e5567cc97&discordId=460719167738347520`
+      `https://alpharescue.online:3500/events?userId=clg5dzhmq0000mj08pkwqftop&sessionToken=30fccbe9-cbde-4200-b8de-da2e5567cc97&discordId=460719167738347520`
     );
 
     eventSource.onmessage = (event: MessageEvent) => {

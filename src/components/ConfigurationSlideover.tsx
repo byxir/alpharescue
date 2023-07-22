@@ -99,7 +99,7 @@ export default function ConfigurationSlideover({
     ["accounts"],
     async () => {
       const res = await axios.get(
-        `https://alpharescue.online/get_all_accounts?discordId=${String(
+        `https://alpharescue.online:3500/get_all_accounts?discordId=${String(
           discordId
         )}&userId=${String(data?.user.id)}`,
         {

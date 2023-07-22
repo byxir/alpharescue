@@ -56,7 +56,7 @@ const MyRaffle = () => {
     ["myRaffle", router.query.id],
     async () => {
       const res = await axios.get(
-        `https://alpharescue.online/myRaffle/${String(
+        `https://alpharescue.online:3500/myRaffle/${String(
           router.query.id
         )}?discordId=${String(allMyData.data?.discordId)}&userId=${String(
           data?.user.id
@@ -77,7 +77,7 @@ const MyRaffle = () => {
 
   const restartRaffleMutation = useMutation(["restartRaffle"], async () => {
     const res = await axios.post(
-      "https://alpharescue.online/startRaffleAgain",
+      "https://alpharescue.online:3500/startRaffleAgain",
       {
         discordId: String(allMyData.data?.discordId),
         userId: String(data?.user.id),

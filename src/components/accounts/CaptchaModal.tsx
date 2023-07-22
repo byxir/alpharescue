@@ -46,7 +46,7 @@ export default function CaptchaModal({
   const captchaMutation = useMutation({
     mutationFn: () => {
       return axios.post(
-        "https://alpharescue.online/accounts",
+        "https://alpharescue.online:3500/accounts",
         {
           discordId: discordId,
           userId: data?.user.id,
@@ -70,7 +70,7 @@ export default function CaptchaModal({
     ["captchaKey"],
     async () => {
       const res = await axios.get(
-        `https://alpharescue.online/getCaptchaKey?discordId=${String(
+        `https://alpharescue.online:3500/getCaptchaKey?discordId=${String(
           discordId
         )}&userId=${String(data?.user.id)}`,
         {

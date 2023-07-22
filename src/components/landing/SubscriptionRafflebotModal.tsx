@@ -38,13 +38,6 @@ const accounts = [
   },
 ];
 
-const weekAccounts = [
-  {
-    id: 5,
-    name: "50",
-  },
-];
-
 const durations = [
   { id: 5, name: "1 неделя" },
   { id: 6, name: "1 месяц" },
@@ -120,7 +113,6 @@ export default function SubscriptionModal({
   const [accountsSelected, setAccountsSelected] = useState(
     accounts[0] || { id: 1, name: "50" }
   );
-  // const [weekAccountsSelected, setWeekAccountsSelected] = useState([weekAccounts[0] || {id: 12, name: '1 неделя'}])
   const [durationSelected, setDurationSelected] = useState(
     durations[0] || { id: 5, name: "1 неделя" }
   );
@@ -169,7 +161,7 @@ export default function SubscriptionModal({
           expiresDate.getTime() + 90 * 24 * 60 * 60 * 1000
         );
       }
-      return axios.post("https://alpharescue.online/CreateReplenishment", {
+      return axios.post("https://alpharescue.online:3500/CreateReplenishment", {
         discordId: discordId,
         amount: Number(currentPrice),
         coin:
@@ -198,7 +190,7 @@ export default function SubscriptionModal({
 
   const cancelQrMutation = useMutation({
     mutationFn: async () => {
-      await axios.post("https://alpharescue.online/StopReplenishment", {
+      await axios.post("https://alpharescue.online:3500/StopReplenishment", {
         discordId: discordId,
       });
     },
@@ -214,7 +206,7 @@ export default function SubscriptionModal({
     ["generatedQr", "rafflebot"],
     async () => {
       const res = await axios.get(
-        `https://alpharescue.online/CheckReplenishment?discordId=${String(
+        `https://alpharescue.online:3500/CheckReplenishment?discordId=${String(
           discordId
         )}`
       );
@@ -240,10 +232,13 @@ export default function SubscriptionModal({
   const userRole: UseQueryResult<{ status: boolean }> = useQuery(
     ["userRole"],
     async () => {
-      const res = await axios.post("https://alpharescue.online/checkrole", {
-        discordId: discordId,
-        role: ["ASSISTANT", "OG"],
-      });
+      const res = await axios.post(
+        "https://alpharescue.online:3500/checkrole",
+        {
+          discordId: discordId,
+          role: ["ASSISTANT", "OG"],
+        }
+      );
 
       // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       return res.data;

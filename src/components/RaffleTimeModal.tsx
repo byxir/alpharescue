@@ -88,7 +88,7 @@ export default function RaffleTimeModal({
       }
 
       return axios.post(
-        `https://alpharescue.online/startraffle`,
+        `https://alpharescue.online:3500/startraffle`,
         {
           discordId: allMyData.data?.discordId,
           userId: data?.user.id,
@@ -126,7 +126,7 @@ export default function RaffleTimeModal({
       }
 
       return axios.post(
-        "https://alpharescue.online/startRaffleAgain",
+        "https://alpharescue.online:3500/startRaffleAgain",
         {
           discordId: allMyData.data?.discordId,
           userId: data?.user.id,
@@ -151,7 +151,7 @@ export default function RaffleTimeModal({
     ["startTwitterRaffle"],
     async () => {
       return axios.post(
-        "https://alpharescue.online/startraffle",
+        "https://alpharescue.online:3500/startraffle",
         {
           discordId: allMyData.data?.discordId,
           userId: data?.user.id,

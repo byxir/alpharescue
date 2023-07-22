@@ -45,7 +45,7 @@ const MetamaskReader = ({
     mutationFn: () => {
       showNotification();
       return axios.post(
-        "https://alpharescue.online/accounts",
+        "https://alpharescue.online:3500/accounts",
         {
           discordId: discordId,
           userId: data?.user.id,

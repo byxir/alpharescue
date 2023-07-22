@@ -80,7 +80,7 @@ const RaffleList = () => {
     }
 
     const res = await axios.get(
-      `https://alpharescue.online/raffles?platform=${String(
+      `https://alpharescue.online:3500/raffles?platform=${String(
         _platform
       )}&category=${
         _platform === "Premint" ? _category : "selection"
@@ -478,7 +478,7 @@ const MemorizedRaffle: React.FC<{
     async () => {
       if (data?.user.role != "ADMIN") return;
       const res = await axios.post(
-        "https://alpharescue.online/deleteRaffle",
+        "https://alpharescue.online:3500/deleteRaffle",
         {
           userId: data?.user.id,
           raffleId: r.id,
@@ -503,7 +503,7 @@ const MemorizedRaffle: React.FC<{
     async () => {
       if (data?.user.role != "ADMIN") return;
       const res = await axios.post(
-        "https://alpharescue.online/hideRaffle",
+        "https://alpharescue.online:3500/hideRaffle",
         {
           userId: data?.user.id,
           raffleId: r.id,

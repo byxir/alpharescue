@@ -134,7 +134,7 @@ export default function SubscriptionModal({
           expiresDate.getTime() + 90 * 24 * 60 * 60 * 1000
         );
       }
-      return axios.post("https://alpharescue.online/CreateReplenishment", {
+      return axios.post("https://alpharescue.online:3500/CreateReplenishment", {
         discordId: discordId,
         amount: Number(currentPrice),
         coin:
@@ -160,7 +160,7 @@ export default function SubscriptionModal({
 
   const cancelQrMutation = useMutation({
     mutationFn: async () => {
-      await axios.post("https://alpharescue.online/StopReplenishment", {
+      await axios.post("https://alpharescue.online:3500/StopReplenishment", {
         discordId: discordId,
       });
     },
@@ -176,7 +176,7 @@ export default function SubscriptionModal({
     ["generatedQr", "community"],
     async () => {
       const res = await axios.get(
-        `https://alpharescue.online/CheckReplenishment?discordId=${String(
+        `https://alpharescue.online:3500/CheckReplenishment?discordId=${String(
           discordId
         )}`
       );

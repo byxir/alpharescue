@@ -75,7 +75,9 @@ export default function LinkModal({
       ["raffleLinkResponse"],
       async () => {
         const res = await axios.get(
-          `https://alpharescue.online/rafflelink?raffleLink=${String(userLink)}`
+          `https://alpharescue.online:3500/rafflelink?raffleLink=${String(
+            userLink
+          )}`
         );
         // eslint-disable-next-line @typescript-eslint/no-unsafe-return
         return res.data;

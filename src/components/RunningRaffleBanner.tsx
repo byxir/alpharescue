@@ -46,7 +46,7 @@ const Banner: React.FC<EventStreamComponentProps> = ({
   useEffect(() => {
     if (protectionData.data) {
       const source = new EventSource(
-        `https://alpharescue.online/events?userId=${String(
+        `https://alpharescue.online:3500/events?userId=${String(
           data?.user.id
         )}&sessionToken=${String(
           protectionData.data?.sessionToken
@@ -132,7 +132,7 @@ const Banner: React.FC<EventStreamComponentProps> = ({
 
   const stopRaffleMutation = useMutation(["stopRaffle"], async () => {
     return axios.post(
-      "https://alpharescue.online/stopraffle",
+      "https://alpharescue.online:3500/stopraffle",
       {
         discordId: protectionData.data?.discordId,
         userId: data?.user.id,

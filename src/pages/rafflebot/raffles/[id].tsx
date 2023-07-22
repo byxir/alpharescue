@@ -53,7 +53,7 @@ const Raffle = () => {
     ["raffle", router.query],
     async () => {
       const res = await axios.get(
-        `https://alpharescue.online/raffles/${String(router.query.id)}`
+        `https://alpharescue.online:3500/raffles/${String(router.query.id)}`
       );
       // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       return res.data;
@@ -71,7 +71,7 @@ const Raffle = () => {
     ["accounts"],
     async () => {
       const res = await axios.get(
-        `https://alpharescue.online/get_all_accounts?discordId=${String(
+        `https://alpharescue.online:3500/get_all_accounts?discordId=${String(
           allMyData.data?.discordId
         )}&userId=${String(data?.user.id)}`,
         {
@@ -92,7 +92,7 @@ const Raffle = () => {
 
   const stopRaffleMutation = useMutation(["stopRaffle"], async () => {
     return axios.post(
-      "https://alpharescue.online/stopraffle",
+      "https://alpharescue.online:3500/stopraffle",
       {
         discordId: allMyData.data?.discordId,
         userId: data?.user.id,
